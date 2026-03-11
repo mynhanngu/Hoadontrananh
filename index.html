@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trần Anh - Export Envoice</title>
+    <title>Hệ Thống Xuất Hóa Đơn Cloud v8.5</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
@@ -106,7 +106,7 @@
         .draft-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; transition: 0.2s;}
         .draft-item:hover { border-color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05);}
 
-        /* CẤU TRÚC POPUP MODAL MỚI (NẰM CHÍNH GIỮA) */
+        /* CẤU TRÚC POPUP MODAL MỚI */
         .modal-overlay { 
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
             background: rgba(0,0,0,0.6); backdrop-filter: blur(2px);
@@ -140,6 +140,7 @@
             .draft-item > div:last-child { width: 100%; display: flex; gap: 10px; justify-content: flex-start; flex-wrap: wrap; }
             .modal-actions { flex-direction: column; }
             .modal-actions button { width: 100%; }
+            .edit-btn { display: none !important; } /* Ẩn nút Sửa trên đt */
         }
 
         #printArea { display: none; }
@@ -157,15 +158,15 @@
 <body>
 
 <div class="navbar">
-    <h1><i class="fas fa-file-invoice" style="margin-right: 8px;"></i>CÔNG TY TNHH THƯƠNG MẠI PHÁT TRIỂN TRẦN ANH</h1>
-    <div class="user-badge"><i class="fas fa-cloud" style="margin-right: 5px;"></i> Auto Sync</div>
+    <h1><i class="fas fa-file-invoice" style="margin-right: 8px;"></i>CÔNG TY TNHH TM PT TRẦN ANH</h1>
+    <div class="user-badge"><i class="fas fa-cloud" style="margin-right: 5px;"></i> Cloud Sync</div>
 </div>
 
 <div class="container" id="mainApp">
     <div id="status" class="status-bar"><i class="fas fa-circle-notch fa-spin"></i> Đang tải dữ liệu từ kho hàng...</div>
     
-    <div class="mobile-alert">
-        <i class="fas fa-mobile-alt"></i> <b>Chế độ Mobile:</b> Chỉ hỗ trợ Xem và Tải Excel. Mở trên máy tính để tạo/sửa hóa đơn.
+    <div class="mobile-alert" id="mobileAlert">
+        <i class="fas fa-mobile-alt"></i> <b>Chế độ Mobile:</b> Chỉ hỗ trợ xem và tải Excel. Mở trên máy tính để tạo/sửa hóa đơn.
     </div>
 
     <input type="hidden" id="currentDraftId" value="">
@@ -204,7 +205,7 @@
                         <div>
                             <button class="btn btn-outline-info" onclick="printUnit(this)"><i class="fas fa-print"></i> In Phân Loại Này</button>
                             <button class="btn btn-outline-orange" onclick="duplicateUnit(this)"><i class="fas fa-copy"></i> Nhân Bản</button>
-                            <button class="btn-trash" onclick="deleteUnit(this)" title="Xóa toàn bộ khối"><i class="fas fa-trash-alt"></i></button>
+                            <button class="btn-trash" onclick="deleteUnit(this)" title="Xóa khối"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     </div>
                     
@@ -253,10 +254,10 @@
             <div class="grand-total">TỔNG THANH TOÁN: <span id="grandTotal">0</span> VNĐ</div>
             
             <div class="actions-bar">
-                <button class="btn btn-outline-info" onclick="printSummary()"><i class="fas fa-print"></i> 1. In Bảng Tổng Hợp</button>
-                <button class="btn btn-outline-success" onclick="saveCloudDraftOnly()"><i class="fas fa-save"></i> 2. Lưu Nháp Lên Mây</button>
-                <button class="btn btn-outline-primary" onclick="prepareExport()"><i class="fas fa-file-excel"></i> 3. Chỉ Xuất File Excel</button>
-                <button class="btn btn-primary" onclick="saveAndExport()"><i class="fas fa-bolt"></i> 4. Lưu & Xuất Excel Nhanh</button>
+                <button class="btn btn-outline-info" onclick="printSummary()"><i class="fas fa-print"></i> In Bảng Tổng Hợp</button>
+                <button class="btn btn-outline-success" onclick="saveCloudDraftOnly()"><i class="fas fa-save"></i> Lưu Nháp Lên Mây</button>
+                <button class="btn btn-outline-primary" onclick="prepareExport()"><i class="fas fa-file-excel"></i> Chỉ Xuất File Excel</button>
+                <button class="btn btn-primary" onclick="saveAndExport()"><i class="fas fa-bolt"></i> Lưu & Xuất Excel Nhanh</button>
             </div>
         </div>
     </div>
@@ -278,8 +279,8 @@
         <div class="modal-title" id="confirmTitle"><i class="fas fa-question-circle"></i> Xác nhận</div>
         <div class="modal-body" id="confirmBody">Bạn có chắc chắn không?</div>
         <div class="modal-actions">
-            <button class="btn btn-outline" onclick="closeConfirm()"><i class="fas fa-times"></i> Hủy</button>
-            <button class="btn" id="confirmBtn" onclick="executeConfirm()"><i class="fas fa-check"></i> Đồng ý</button>
+            <button class="btn btn-outline" onclick="closeConfirm()">Hủy bỏ</button>
+            <button class="btn" id="confirmBtn" onclick="executeConfirm()">Đồng ý</button>
         </div>
     </div>
 </div>
@@ -307,7 +308,7 @@
     
     const SELLER_INFO = {
         name: "CÔNG TY TNHH THƯƠNG MẠI PHÁT TRIỂN TRẦN ANH",
-        addr: "Số 26/442 Vũ Hữu Lợi, Phường Nam Định, Tỉnh Ninh Bình, Việt Nam",
+        addr: "Khu Công Nghiệp An Xá, TP. Nam Định",
         mst: "0601162291",
         phone: "0228.388.8989"
     };
@@ -318,15 +319,20 @@
     let confirmCallback = null;
 
     window.onload = function() {
-        if(window.innerWidth <= 768) { document.getElementById("mobileAlert").style.display = "block"; }
-        flatpickr("#invoiceDate", { dateFormat: "d/m/Y", locale: "vn", defaultDate: "today", allowInput: true });
+        let isMobile = window.innerWidth <= 768;
+        if(isMobile) { 
+            document.getElementById("mobileAlert").style.display = "block"; 
+            document.getElementById("editorSection").style.display = "none";
+        } else {
+            try { flatpickr("#invoiceDate", { dateFormat: "d/m/Y", locale: "vn", defaultDate: "today", allowInput: true }); } catch(e){}
+        }
 
         fetch(API_URL).then(res => res.json()).then(data => {
-            db = data;
+            db = data || { customers: [], products: [], drafts: [] };
             let statusEl = document.getElementById("status");
             statusEl.innerHTML = "<i class='fas fa-check-circle'></i> Đã kết nối với kho hàng";
             statusEl.style.background = "#d1e7dd"; statusEl.style.color = "#0f5132"; statusEl.style.borderLeftColor = "#0f5132";
-            document.getElementById("cusSearch").disabled = false;
+            if(!isMobile && document.getElementById("cusSearch")) document.getElementById("cusSearch").disabled = false;
             renderDraftList();
         }).catch(e => { 
             let statusEl = document.getElementById("status");
@@ -356,6 +362,14 @@
     function executeConfirm() {
         if (confirmCallback) confirmCallback();
         closeConfirm();
+    }
+
+    function showToast(message, type = "success") {
+        let container = document.getElementById("toast-container"); let toast = document.createElement("div"); toast.className = `toast toast-${type}`;
+        let icon = type === 'success' ? 'check-circle' : (type === 'danger' ? 'exclamation-circle' : 'info-circle');
+        toast.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`; container.appendChild(toast);
+        setTimeout(() => toast.classList.add("show"), 10);
+        setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
     }
 
     // =========================================================
@@ -411,7 +425,8 @@
     }
 
     function resetForm() {
-        document.getElementById("currentDraftId").value = ""; document.getElementById("cusSearch").value = ""; document.getElementById("cusPerson").value = ""; document.getElementById("cusMST").value = ""; document.getElementById("cusAddr").value = ""; document.getElementById("cusEmail").value = ""; document.getElementById("invoiceDate")._flatpickr.setDate(new Date(), true, "d/m/Y");
+        document.getElementById("currentDraftId").value = ""; document.getElementById("cusSearch").value = ""; document.getElementById("cusPerson").value = ""; document.getElementById("cusMST").value = ""; document.getElementById("cusAddr").value = ""; document.getElementById("cusEmail").value = ""; 
+        try { document.getElementById("invoiceDate")._flatpickr.setDate(new Date(), true, "d/m/Y"); } catch(e){}
         let templateBox = document.querySelector('.unit-box').cloneNode(true); let container = document.getElementById("unitsContainer"); container.innerHTML = ""; undoStack = []; 
         templateBox.querySelector('.unit-name').value = "";
         templateBox.querySelector('tbody').innerHTML = `<tr><td class="stt-col">1</td><td class="autocomplete-container"><textarea class="form-control f-name" rows="1" placeholder="Tìm kiếm sản phẩm..." oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)"></textarea><div class="custom-dropdown"></div></td><td><select class="form-control f-unit" onchange="changeUnit(this)"></select></td><td><input type="number" class="form-control f-qty" value="" placeholder="0" step="any" oninput="calcRow(this, 'qty')"></td><td><input type="text" class="form-control f-price" readonly data-val="0" placeholder="0"></td><td><input type="text" class="form-control f-total" value="" placeholder="0" oninput="calcRow(this, 'total')" onblur="formatTotal(this)"></td><td class="text-center"><button class="btn-trash" onclick="deleteRow(this)"><i class="fas fa-times"></i></button></td></tr>`;
@@ -419,14 +434,6 @@
     }
 
     function getInvoiceDateStr() { return document.getElementById('invoiceDate').value || new Date().toLocaleDateString('vi-VN'); }
-
-    function showToast(message, type = "success") {
-        let container = document.getElementById("toast-container"); let toast = document.createElement("div"); toast.className = `toast toast-${type}`;
-        let icon = type === 'success' ? 'check-circle' : (type === 'danger' ? 'exclamation-circle' : 'info-circle');
-        toast.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`; container.appendChild(toast);
-        setTimeout(() => toast.classList.add("show"), 10);
-        setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
-    }
 
     function autoHeight(el) { el.style.height = 'auto'; el.style.height = (el.scrollHeight) + 'px'; }
 
@@ -509,7 +516,7 @@
         tbody.appendChild(tr); updateSTT();
     }
     
-    // TÍNH NĂNG BẤT TỬ KHI XÓA DÒNG
+    // XÓA DÒNG (NẾU CÒN 1 DÒNG THÌ RESET CHỨ KHÔNG XÓA)
     function deleteRow(btn) { 
         let tr = btn.closest('tr'); let tbody = btn.closest('tbody'); 
         if(tbody.querySelectorAll("tr").length > 1) { 
@@ -536,26 +543,24 @@
         tbody.appendChild(tr); document.getElementById("unitsContainer").appendChild(box); updateAllTotals(); updateSTT();
     }
     
-    // TÍNH NĂNG BẤT TỬ KHI XÓA LỚP
+    // XÓA LỚP (NẾU CÒN 1 LỚP THÌ RESET CHỨ KHÔNG XÓA)
     function deleteUnit(btn) { 
         let box = btn.closest('.unit-box'); let container = document.getElementById("unitsContainer");
         if(document.querySelectorAll('.unit-box').length > 1) { 
             showConfirm(
-                '<i class="fas fa-trash-alt" style="color:var(--danger)"></i> Xóa phân loại',
+                '<i class="fas fa-trash-alt" style="color:var(--danger)"></i> Xóa Phân Loại',
                 'Bạn có chắc chắn muốn xóa toàn bộ khối phân loại này không?',
                 '<i class="fas fa-trash"></i> Xóa khối',
                 'btn-danger',
                 () => {
                     undoStack.push({ type: 'deleteUnit', container: container, box: box, nextSibling: box.nextElementSibling }); 
-                    box.remove(); updateAllTotals(); updateSTT(); 
-                    showToast("Đã xóa khối. Ctrl+Z để hoàn tác", "info");
+                    box.remove(); updateAllTotals(); updateSTT(); showToast("Đã xóa khối. Ctrl+Z để hoàn tác", "info");
                 }
             );
         } else {
             box.querySelector('.unit-name').value = '';
             box.querySelector('tbody').innerHTML = `<tr><td class="stt-col">1</td><td class="autocomplete-container"><textarea class="form-control f-name" rows="1" placeholder="Tìm kiếm sản phẩm..." oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)"></textarea><div class="custom-dropdown"></div></td><td><select class="form-control f-unit" onchange="changeUnit(this)"></select></td><td><input type="number" class="form-control f-qty" value="" placeholder="0" step="any" oninput="calcRow(this, 'qty')"></td><td><input type="text" class="form-control f-price" readonly data-val="0" placeholder="0"></td><td><input type="text" class="form-control f-total" value="" placeholder="0" oninput="calcRow(this, 'total')" onblur="formatTotal(this)"></td><td class="text-center"><button class="btn-trash" onclick="deleteRow(this)"><i class="fas fa-times"></i></button></td></tr>`;
-            updateAllTotals(); updateSTT();
-            showToast("Đã làm mới khối phân loại", "info");
+            updateAllTotals(); updateSTT(); showToast("Đã làm mới khối phân loại", "info");
         }
     }
 
@@ -602,7 +607,7 @@
             let data = JSON.parse(d.json); let customerName = d.customer.name || data.customer.name; let dateString = d.dateStr || d.timestampStr;
             let div = document.createElement('div'); div.className = "draft-item";
             
-            // XÓA NÚT XÓA Ở LỊCH SỬ. ĐỔI NÚT EXCEL THÀNH XANH LÁ (btn-success)
+            // XÓA NÚT XÓA. CHUYỂN NÚT EXCEL SANG MÀU XANH LÁ.
             div.innerHTML = `
                 <div>
                     <strong style="color:var(--primary); font-size:15px;">${customerName}</strong> 
@@ -611,7 +616,7 @@
                 </div>
                 <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
                     <button class="btn btn-success" onclick="prepareExport('${d.id}')"><i class="fas fa-file-excel"></i> Tải Excel</button>
-                    <button class="btn btn-outline-primary edit-btn" onclick="loadDraft('${d.id}')"><i class="fas fa-edit"></i> Mở / Sửa</button>
+                    <button class="btn btn-outline-primary edit-btn" onclick="loadDraft('${d.id}')"><i class="fas fa-edit"></i> Sửa</button>
                 </div>`;
             container.appendChild(div);
         });
@@ -619,27 +624,27 @@
 
     function filterDrafts() { let query = document.getElementById("searchDraft").value; renderDraftList(query); }
 
-    // CẢNH BÁO KHI SỬA HÓA ĐƠN
+    // POPUP CẢNH BÁO KHI MỞ SỬA HÓA ĐƠN
     function loadDraft(id) {
         let draftRec = db.drafts.find(d => d.id === id); if (!draftRec) return; 
         let draft = JSON.parse(draftRec.json);
         let cusName = draft.customer.name || draftRec.customer.name;
 
         showConfirm(
-            '<i class="fas fa-edit" style="color:var(--warning)"></i> Chỉnh sửa hóa đơn cũ',
-            `Bạn đang mở lại hóa đơn của đơn vị:<br><b style="color:var(--primary); font-size:16px;">[ ${cusName} ]</b><br><br><b>CẢNH BÁO:</b> Nếu bạn bấm "Lưu Dữ Liệu Lại", nội dung mới sẽ <b>GHI ĐÈ</b> lên bản đang lưu. Bạn có chắc chắn muốn tiếp tục?`,
+            '<i class="fas fa-exclamation-triangle" style="color:var(--warning)"></i> Cảnh báo sửa dữ liệu',
+            `Bạn đang mở lại hóa đơn của đơn vị:<br><b style="color:var(--primary); font-size:16px;">[ ${cusName} ]</b><br><br><b>LƯU Ý:</b> Nếu bạn lưu lại, dữ liệu mới sẽ <b>GHI ĐÈ</b> lên bản gốc của hóa đơn này. Bạn có chắc chắn muốn tiếp tục không?`,
             '<i class="fas fa-pencil-alt"></i> Vẫn tiếp tục',
             'btn-warning',
             () => {
                 undoStack = []; document.getElementById("currentDraftId").value = id; 
-                document.getElementById("invoiceDate")._flatpickr.setDate(draft.invoiceDate || new Date(), true, "d/m/Y");
+                try { document.getElementById("invoiceDate")._flatpickr.setDate(draft.invoiceDate || new Date(), true, "d/m/Y"); } catch(e){}
                 document.getElementById("cusSearch").value = draft.customer.name; document.getElementById("cusPerson").value = draft.customer.person; document.getElementById("cusMST").value = draft.customer.mst; document.getElementById("cusAddr").value = draft.customer.addr; document.getElementById("cusEmail").value = draft.customer.email || "";
                 
                 let container = document.getElementById("unitsContainer"); container.innerHTML = "";
                 draft.units.forEach(u => {
                     let div = document.createElement("div"); div.className = "unit-box";
                     let html = `<div class="unit-header"><input type="text" class="unit-name-input unit-name" value="${u.unitName}">
-                        <div><button class="btn btn-outline-info" onclick="printUnit(this)"><i class="fas fa-print"></i> In Lớp</button> <button class="btn btn-outline-orange" onclick="duplicateUnit(this)"><i class="fas fa-copy"></i> Nhân Bản</button> <button class="btn-trash" onclick="deleteUnit(this)"><i class="fas fa-trash-alt"></i></button></div></div>
+                        <div><button class="btn btn-outline-info" onclick="printUnit(this)"><i class="fas fa-print"></i> In Phân Loại Này</button> <button class="btn btn-outline-orange" onclick="duplicateUnit(this)"><i class="fas fa-copy"></i> Nhân Bản</button> <button class="btn-trash" onclick="deleteUnit(this)"><i class="fas fa-trash-alt"></i></button></div></div>
                         <div class="table-responsive"><table><thead><tr><th width="5%">STT</th><th width="33%">Tên Hàng Hóa</th><th width="11%">ĐVT</th><th width="10%">Số Lượng</th><th width="16%">Đơn Giá</th><th width="20%">Thành Tiền</th><th width="4%"></th></tr></thead><tbody>`;
                     u.products.forEach(p => {
                         let dbProd = db.products.find(x => x.name === p.name); let optionsHtml = `<option value="${p.unit}" data-price="${p.priceRaw}">${p.unit}</option>`;
