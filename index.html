@@ -3,62 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Xuất Hóa Đơn Cloud v8.5</title>
+    <title>Hệ Thống Xuất Hóa Đơn - Portal</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
     
     <style>
-        :root { 
-            --primary: #0b5ed7; --primary-hover: #0a58ca; 
-            --secondary: #e9ecef; --border: #ced4da; 
-            --bg: #f4f6f9; --text: #2b2f32; 
-            --danger: #dc3545; --success: #198754; --warning: #ffc107; --info: #17a2b8; --orange: #fd7e14;
-        }
-        
+        :root { --primary: #0b5ed7; --primary-hover: #0a58ca; --secondary: #e9ecef; --border: #ced4da; --bg: #f4f6f9; --text: #2b2f32; --danger: #dc3545; --success: #28a745; --warning: #ffc107; --info: #17a2b8; --orange: #fd7e14; }
         body { font-family: 'Roboto', sans-serif; background: var(--bg); margin: 0; padding: 0; color: var(--text); }
-        
         .navbar { background: #ffffff; color: var(--text); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-bottom: 2px solid var(--primary);}
         .navbar h1 { margin: 0; font-size: 16px; font-weight: 700; color: var(--primary); text-transform: uppercase; }
-        .user-badge { background: var(--bg); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; color: var(--primary); border: 1px solid var(--secondary);}
+        
+        .user-badge { background: var(--bg); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; color: var(--primary); border: 1px solid var(--secondary); cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 4px;}
+        
+        .user-badge i {
+            transform: translateY(1.10px);
+            font-size: 13px;
+        }
+        .user-badge:hover { background: #fde7e9; color: var(--danger); border-color: #f5c2c7; }
+        
+        #loginApp { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; padding: 20px; }
+        .login-card { background: white; padding: 40px 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        .login-icon { font-size: 50px; color: var(--primary); margin-bottom: 20px; }
+        .login-title { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 5px; }
+        .login-subtitle { font-size: 14px; color: #6c757d; margin-bottom: 25px; }
+        .login-form-group { text-align: left; margin-bottom: 15px; position: relative;}
+        .login-form-group label { display: block; font-size: 13px; font-weight: 600; color: #495057; margin-bottom: 8px; }
+        .login-form-group input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 15px; box-sizing: border-box; outline: none; transition: 0.2s; font-family: 'Roboto', sans-serif;}
+        .login-form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(11, 94, 215, 0.15); }
+        .login-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-size: 13px; }
+        
+        .login-btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: 800; font-family: 'Roboto', sans-serif; letter-spacing: 0.5px; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; }
+        .login-btn:disabled { opacity: 1; cursor: not-allowed; background: #e9ecef; border: 1px solid var(--border);}
+        .login-btn:hover:not(:disabled) { background: #218838 !important; }
+        
+        .login-wavy-text span { display: inline-block; font-size: 15px; font-weight: 700; color: var(--primary); animation: wavy 1.2s ease-in-out infinite; }
+        @keyframes wavy { 0%, 40%, 100% { transform: translateY(0); } 20% { transform: translateY(-4px); } }
 
-        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        .f5-wavy-text span { display: inline-block; font-size: 26px; font-weight: 800; font-family: 'Roboto', sans-serif; background: linear-gradient(90deg, #0b5ed7, #dc3545, #fd7e14); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: wavyColor 1.2s ease-in-out infinite; text-shadow: 0px 4px 10px rgba(0,0,0,0.05); }
+        @keyframes wavyColor { 0%, 40%, 100% { transform: translateY(0); background-position: 0% center; } 20% { transform: translateY(-6px); background-position: 100% center; } }
+
+        .app-loader { width: 220px; text-align: center; }
+        .progress-bar-container { width: 100%; height: 4px; background: var(--secondary); border-radius: 4px; overflow: hidden; position: relative; margin-bottom: 12px; }
+        .progress-bar-indicator { position: absolute; top: 0; left: 0; height: 100%; width: 40%; background: var(--primary); border-radius: 4px; animation: loadingBar 1.5s infinite ease-in-out; }
+        @keyframes loadingBar { 0% { left: -40%; } 100% { left: 100%; } }
+        .blinking-text { font-size: 13px; font-weight: 500; color: #6c757d; font-family: 'Roboto', sans-serif; animation: blinkText 1.5s infinite; letter-spacing: 0.5px; }
+        @keyframes blinkText { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        .password-wrapper { position: relative; }
+        .password-wrapper input { padding-right: 40px !important; }
+        .toggle-eye { position: absolute; right: 12px; bottom: 12px; cursor: pointer; color: #adb5bd; font-size: 16px; transition: 0.2s;}
+        .toggle-eye:hover { color: var(--primary); }
+        
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; display: none; }
         .card { background: #ffffff; border: none; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
         .card-header { font-size: 15px; font-weight: 700; color: var(--text); border-bottom: 2px solid var(--secondary); padding-bottom: 12px; margin-bottom: 20px; text-transform: uppercase; display: flex; align-items: center; justify-content: space-between;}
         .card-header-title { display: flex; align-items: center; gap: 8px; }
         .card-header-title i { color: var(--primary); font-size: 16px;}
-        
-        .status-bar { padding: 12px 15px; background: #fff3cd; color: #856404; font-size: 13px; font-weight: 500; border-radius: 6px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; border-left: 4px solid #ffeeba;}
-        
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;}
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 15px; margin-top: 15px;}
         .form-group { margin-bottom: 5px; }
         .form-group label { display: block; font-size: 13px; font-weight: 500; color: #495057; margin-bottom: 6px; }
-        
         .form-control { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; font-family: 'Roboto', sans-serif; box-sizing: border-box; outline: none; transition: 0.2s; resize: none; vertical-align: middle; background: #fff; }
         textarea.form-control { overflow: hidden; }
         .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(11, 94, 215, 0.15); }
         .form-control[readonly], .form-control:disabled { background: #f8f9fa; color: #6c757d; cursor: not-allowed; border-color: var(--secondary);}
         select.form-control { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23495057%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 10px top 50%; background-size: 10px auto; padding-right: 25px;}
-
         input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
-
         .table-responsive { width: 100%; border: 1px solid var(--secondary); border-radius: 6px;}
         table { width: 100%; border-collapse: collapse; min-width: 800px; } 
         th, td { border: 1px solid var(--secondary); padding: 8px; vertical-align: middle; }
         th { background: #f8f9fa; color: #495057; font-weight: 500; text-align: center; font-size: 13px; padding: 12px 8px;}
         .stt-col { text-align: center; font-weight: 500; background: #f8f9fa; color: #6c757d; font-size: 13px;}
-        
         .f-qty, .f-price, .f-total { text-align: right; font-weight: 500;}
         .f-total { color: var(--danger); font-weight: 700; background: #fffcfc !important;}
-
         .autocomplete-container { position: relative; }
         .custom-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid var(--primary); border-radius: 0 0 6px 6px; max-height: 250px; overflow-y: auto; z-index: 9999; box-shadow: 0 10px 25px rgba(0,0,0,0.15); display: none; margin-top: -1px; }
         .dropdown-item { padding: 10px 15px; cursor: pointer; border-bottom: 1px solid var(--secondary); display: flex; justify-content: space-between; align-items: center; gap: 15px; transition: 0.2s; }
@@ -67,121 +91,151 @@
         .dd-name { flex: 1; word-wrap: break-word; white-space: normal; font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.4;}
         .dd-price-group { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0;}
         .dd-price-item { font-size: 11px; color: var(--danger); font-weight: 500; background: #fff1f0; padding: 4px 8px; border-radius: 4px; border: 1px solid #f5c2c7; white-space: nowrap;}
-
+        
         .btn { padding: 9px 15px; font-size: 13px; font-weight: 500; border: 1px solid transparent; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s; font-family: 'Roboto', sans-serif;}
         .btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
         .btn-primary:hover { background: #004578; }
         .btn-outline-primary { background: white; border: 1px solid var(--primary); color: var(--primary); }
         .btn-outline-primary:hover { background: #e7f1ff; }
         .btn-success { background: var(--success); color: white; border-color: var(--success); }
-        .btn-success:hover { background: #146c43; }
+        .btn-success:hover { background: #218838; }
         .btn-outline-success { background: white; border: 1px solid var(--success); color: var(--success); }
         .btn-outline-success:hover { background: #d1e7dd; }
-        .btn-outline-info { background: white; border: 1px solid var(--info); color: var(--info); }
-        .btn-outline-info:hover { background: #e0f7fa; }
+        .btn-info { background: var(--info); color: white; border-color: var(--info); }
+        .btn-info:hover { background: #117a8b; }
         .btn-warning { background: var(--warning); color: #000; border-color: var(--warning); }
         .btn-warning:hover { background: #e0a800; }
         .btn-outline-orange { background: white; border: 1px solid var(--orange); color: var(--orange); }
         .btn-outline-orange:hover { background: #fff5eb; }
-
         .btn-outline { background: white; border: 1px solid var(--border); color: #495057; }
         .btn-outline:hover { background: #f8f9fa; border-color: #adb5bd;}
         .btn-trash { color: #adb5bd; font-size: 16px; cursor: pointer; background: none; border: none; padding: 6px; transition: 0.2s;}
         .btn-trash:hover { color: var(--danger); background: #fde7e9; border-radius: 6px;}
+        
+        .btn-submit-block { background: var(--success); color: white; padding: 12px 24px; font-size: 15px; font-weight: 800; font-family: 'Roboto', sans-serif; border: none; border-radius: 8px; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.35); cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px; letter-spacing: 0.5px; }
+        .btn-submit-block:hover { background: #218838; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(40, 167, 69, 0.45); color: white;}
+        .btn-submit-block:active { transform: translateY(0); box-shadow: 0 2px 10px rgba(40, 167, 69, 0.3); }
 
         .unit-box { border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 20px; background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.02);}
         .unit-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed var(--border);}
         .unit-name-input { width: 100%; max-width: 300px; font-size: 16px; font-weight: 700; color: var(--primary); border: none; border-bottom: 2px solid var(--primary); padding: 5px 0; background: transparent; outline: none; font-family: 'Roboto', sans-serif;}
-        
         .unit-summary { text-align: right; margin-top: 15px; padding: 12px 15px; background: #f8f9fa; border-radius: 6px; border: 1px dashed var(--border); font-size: 14px;}
         .u-total-val { font-weight: 700; color: var(--primary); font-size: 16px;}
         .grand-total { text-align: right; font-size: 18px; font-weight: 700; color: var(--danger); padding: 20px 0; border-top: 2px solid var(--secondary); margin-top: 10px;}
-        .actions-bar { display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap; padding-top: 15px; border-top: 1px solid var(--secondary);}
-
-        .search-history-box { position: relative; width: 250px; }
-        .search-history-box input { padding-left: 35px; border-radius: 20px; }
-        .search-history-box i { position: absolute; left: 12px; top: 10px; color: #adb5bd; }
-
+        .actions-bar { display: flex; gap: 12px; justify-content: flex-end; align-items: center; flex-wrap: wrap; padding-top: 15px; border-top: 1px solid var(--secondary);}
+        
         .draft-list .card-header { border-bottom: none; margin-bottom: 15px; color: #495057;}
         .draft-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; transition: 0.2s;}
         .draft-item:hover { border-color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05);}
-
-        /* CẤU TRÚC POPUP MODAL MỚI */
-        .modal-overlay { 
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(2px);
-            display: none; align-items: center; justify-content: center; z-index: 100000; padding: 20px;
-        }
-        .modal-content { 
-            background: #fff; padding: 25px; border-radius: 12px; width: 100%; max-width: 420px; 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.25); animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         
+        .pagination-wrapper { display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid var(--secondary); margin-top: 10px; flex-wrap: wrap; gap: 15px;}
+        .page-size-selector { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #495057; font-weight: 500;}
+        .page-size-selector select { padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; outline: none; cursor: pointer; font-family: 'Roboto', sans-serif; font-weight: 600;}
+        .pagination-controls { display: flex; gap: 6px; }
+        .page-btn { width: 34px; height: 34px; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border); background: white; color: #495057; border-radius: 6px; cursor: pointer; transition: 0.2s; font-weight: 600; font-size: 14px; padding: 0; font-family: 'Roboto', sans-serif;}
+        .page-btn:hover:not(:disabled) { background: var(--primary); color: white; border-color: var(--primary); }
+        .page-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 2px 6px rgba(11, 94, 215, 0.3);}
+        .page-btn:disabled { background: #f8f9fa; color: #ced4da; cursor: not-allowed; border-color: #e9ecef; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(2px); display: none; align-items: center; justify-content: center; z-index: 100000; padding: 20px;}
+        .modal-content { background: #fff; padding: 25px; border-radius: 12px; width: 100%; max-width: 420px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--text); display: flex; align-items: center; gap: 8px;}
         .modal-body { font-size: 14.5px; margin-bottom: 25px; color: #495057; line-height: 1.5; }
         .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+        
+        .close-modal-x { position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: var(--danger); font-size: 22px; cursor: pointer; transition: 0.2s; line-height: 1; padding: 0; }
+        .close-modal-x:hover { transform: scale(1.1); color: #bd2130; }
 
         .mobile-alert { display: none; background: #cce5ff; color: #004085; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; border-left: 5px solid #b8daff;}
-
         #toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 10000; display: flex; flex-direction: column; gap: 10px;}
         .toast { background: white; color: var(--text); padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 500; box-shadow: 0 8px 25px rgba(0,0,0,0.15); opacity: 0; transform: translateX(100%); transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); display: flex; align-items: center; gap: 10px;}
         .toast.show { opacity: 1; transform: translateX(0); }
         .toast-success { border-left: 4px solid var(--success);} .toast-success i { color: var(--success); font-size: 18px;}
         .toast-danger { border-left: 4px solid var(--danger);} .toast-danger i { color: var(--danger); font-size: 18px;}
-        .toast-info { border-left: 4px solid var(--primary);} .toast-info i { color: var(--primary); font-size: 18px;}
+        .toast-info { border-left: 4px solid var(--info);} .toast-info i { color: var(--info); font-size: 18px;}
+        .toast-warning { border-left: 4px solid var(--warning);} .toast-warning i { color: var(--warning); font-size: 18px;}
+        .view-only-banner { background: var(--warning); color: #000; padding: 12px; text-align: center; font-weight: bold; border-radius: 6px; margin-bottom: 20px; display: none;}
+        
+        #sessionLoader { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: transparent; z-index: 99999; display: none; flex-direction: column; align-items: center; justify-content: center; }
 
         @media (max-width: 768px) {
             #editorSection { display: none !important; }
             .mobile-alert { display: block; }
             .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 10px; }
-            .search-history-box { width: 100%; }
+            #dualFilterBox { flex-direction: column; align-items: stretch !important; }
+            #dualFilterBox > div { width: 100% !important; }
+            #dualFilterBox input { width: 100% !important; }
             .draft-item { flex-direction: column; align-items: flex-start; gap: 15px; }
             .draft-item > div:last-child { width: 100%; display: flex; gap: 10px; justify-content: flex-start; flex-wrap: wrap; }
             .modal-actions { flex-direction: column; }
             .modal-actions button { width: 100%; }
-            .edit-btn { display: none !important; } /* Ẩn nút Sửa trên đt */
-        }
-
-        #printArea { display: none; }
-        @media print {
-            body { background: white; margin: 0; font-family: 'Times New Roman', serif; color: #000; }
-            #mainApp, .navbar, #toast-container, .modal-overlay { display: none !important; }
-            #printArea { display: block !important; width: 100%; }
-            @page { size: A4; margin: 15mm; }
-            .print-table { width: 100%; border-collapse: collapse; }
-            .print-table th, .print-table td { border: 1px solid #000; padding: 8px; font-size: 14px; font-family: 'Times New Roman', serif;}
-            .text-center { text-align: center; } .text-right { text-align: right; } .text-bold { font-weight: bold; }
         }
     </style>
 </head>
 <body>
 
+<div id="sessionLoader">
+</div>
+
 <div class="navbar">
-    <h1><i class="fas fa-file-invoice" style="margin-right: 8px;"></i>CÔNG TY TNHH TM PT TRẦN ANH</h1>
-    <div class="user-badge"><i class="fas fa-cloud" style="margin-right: 5px;"></i> Cloud Sync</div>
+    <h1><i class="fas fa-file-invoice" style="margin-right: 8px;"></i>CÔNG TY TNHH TM PT TRẦN ANH <span id="adminBadge" style="display:none; color:var(--danger); font-size:12px; margin-left:5px;">(QUẢN TRỊ)</span></h1>
+    <div id="logoutBtn" class="user-badge" style="display: none;" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+    </div>
+</div>
+
+<div id="loginApp">
+    <div class="login-card">
+        <i class="fas fa-user-shield login-icon"></i>
+        <div class="login-title">Đăng Nhập Hệ Thống</div>
+        <div class="login-subtitle">Dành riêng cho Khách hàng & Đối tác</div>
+        
+        <div class="login-form-group">
+            <label>Mã số thuế (Tài khoản)</label>
+            <input type="text" id="loginMST" placeholder="Nhập mã số thuế..." autocomplete="off">
+        </div>
+        <div class="login-form-group password-wrapper">
+            <label>Mật khẩu</label>
+            <input type="password" id="loginPass" placeholder="Nhập mật khẩu..." autocomplete="new-password">
+            <i class="fas fa-eye-slash toggle-eye" onclick="togglePassword('loginPass', this)"></i>
+        </div>
+        <div class="login-actions">
+            <label style="display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="checkbox" id="rememberMe"> Nhớ mật khẩu</label>
+            <a href="javascript:void(0)" onclick="openChangePassModal()" style="color: var(--primary); text-decoration:none; font-weight:600;">Đổi mật khẩu?</a>
+        </div>
+        
+        <button class="login-btn" id="loginBtn" onclick="attemptLogin()" disabled></button>
+        <div id="loginStatus" style="margin-top:15px; font-size:13px; color:var(--danger); font-weight:500; text-align:center;"></div>
+    </div>
 </div>
 
 <div class="container" id="mainApp">
-    <div id="status" class="status-bar"><i class="fas fa-circle-notch fa-spin"></i> Đang tải dữ liệu từ kho hàng...</div>
-    
     <div class="mobile-alert" id="mobileAlert">
-        <i class="fas fa-mobile-alt"></i> <b>Chế độ Mobile:</b> Chỉ hỗ trợ xem và tải Excel. Mở trên máy tính để tạo/sửa hóa đơn.
+        <i class="fas fa-mobile-alt"></i> <b>Chế độ Mobile:</b> Chỉ hỗ trợ Xem và Tải Excel. Mở trên máy tính để thao tác lập bảng kê.
+    </div>
+
+    <div id="viewOnlyBanner" class="view-only-banner">
+        <i class="fas fa-lock"></i> BẢNG KÊ ĐÃ BỊ KHÓA DO ĐÃ QUA GIỜ CHỐT SỔ (BẢO TOÀN ĐƠN GIÁ CŨ)!
     </div>
 
     <input type="hidden" id="currentDraftId" value="">
 
     <div id="editorSection">
+        <div style="display: flex; justify-content: flex-end; margin-bottom:15px;">
+            <button class="btn btn-outline-primary" id="btnCreateNew" onclick="resetForm(true)" style="display:none;"><i class="fas fa-plus"></i> Tạo Bảng Kê Mới</button>
+        </div>
+
         <div class="card">
             <div class="card-header"><div class="card-header-title"><i class="fas fa-building"></i> Thông Tin Hóa Đơn & Đơn Vị Mua</div></div>
             <div class="grid-3">
                 <div class="form-group">
                     <label>Ngày lập phiếu</label>
-                    <input type="text" id="invoiceDate" class="form-control" style="background-color: #fff; cursor: pointer;">
+                    <input type="text" id="invoiceDate" class="form-control" style="background-color: #fff; cursor: pointer;" autocomplete="off">
                 </div>
                 <div class="form-group autocomplete-container">
                     <label>Tên đơn vị mua</label>
-                    <input type="text" id="cusSearch" class="form-control" placeholder="Tìm kiếm đơn vị..." oninput="showCusSuggestions(this)" onfocus="showCusSuggestions(this)" autocomplete="off">
+                    <input type="text" id="cusSearch" class="form-control" readonly style="background:#f8f9fa;" oninput="showCusSuggestions(this)" onfocus="showCusSuggestions(this)" autocomplete="off">
                     <div class="custom-dropdown" id="cusDropdown"></div>
                 </div>
                 <div class="form-group">
@@ -190,87 +244,83 @@
                 </div>
             </div>
             <div class="grid-2" style="grid-template-columns: 1fr 1fr 2fr;">
-                <div class="form-group"><label>Mã số thuế</label><input type="text" id="cusMST" class="form-control" readonly placeholder="Tự động điền"></div>
-                <div class="form-group"><label>Email</label><input type="text" id="cusEmail" class="form-control" readonly placeholder="Tự động điền"></div>
-                <div class="form-group"><label>Địa chỉ đơn vị</label><input type="text" id="cusAddr" class="form-control" readonly placeholder="Tự động điền"></div>
+                <div class="form-group"><label>Mã số thuế</label><input type="text" id="cusMST" class="form-control" readonly autocomplete="off"></div>
+                <div class="form-group"><label>Email</label><input type="text" id="cusEmail" class="form-control" readonly autocomplete="off"></div>
+                <div class="form-group"><label>Địa chỉ đơn vị</label><input type="text" id="cusAddr" class="form-control" readonly autocomplete="off"></div>
             </div>
         </div>
 
         <div class="card">
-            <div class="card-header"><div class="card-header-title"><i class="fas fa-boxes"></i> Chi Tiết Hàng Hóa Theo Phân Loại</div></div>
-            <div id="unitsContainer">
-                <div class="unit-box">
-                    <div class="unit-header">
-                        <input type="text" class="unit-name-input unit-name" placeholder="Nhập tên phân loại / đơn vị con...">
-                        <div>
-                            <button class="btn btn-outline-info" onclick="printUnit(this)"><i class="fas fa-print"></i> In Phân Loại Này</button>
-                            <button class="btn btn-outline-orange" onclick="duplicateUnit(this)"><i class="fas fa-copy"></i> Nhân Bản</button>
-                            <button class="btn-trash" onclick="deleteUnit(this)" title="Xóa khối"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    </div>
-                    
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th width="5%">STT</th>
-                                    <th width="33%">Tên Hàng Hóa / Dịch Vụ</th>
-                                    <th width="11%">ĐVT</th>
-                                    <th width="10%">SL</th>
-                                    <th width="16%">Đơn giá</th>
-                                    <th width="20%">Thành tiền</th>
-                                    <th width="4%"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="stt-col">1</td>
-                                    <td class="autocomplete-container">
-                                        <textarea class="form-control f-name" rows="1" placeholder="Tìm kiếm sản phẩm..." oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)"></textarea>
-                                        <div class="custom-dropdown"></div>
-                                    </td>
-                                    <td><select class="form-control f-unit" onchange="changeUnit(this)"></select></td>
-                                    <td><input type="number" class="form-control f-qty" value="" placeholder="0" step="any" oninput="calcRow(this, 'qty')"></td>
-                                    <td><input type="text" class="form-control f-price" readonly data-val="0" placeholder="0"></td>
-                                    <td><input type="text" class="form-control f-total" value="" placeholder="0" oninput="calcRow(this, 'total')" onblur="formatTotal(this)"></td>
-                                    <td class="text-center"><button class="btn-trash" onclick="deleteRow(this)" title="Xóa dòng"><i class="fas fa-times"></i></button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-                        <button class="btn btn-outline-success" onclick="addRow(this)"><i class="fas fa-plus"></i> Thêm Dòng Trống</button>
-                        <div class="unit-summary">Cộng tiền hàng: <span class="u-total-val">0</span> đ</div>
-                    </div>
-                </div>
-            </div>
+            <div class="card-header"><div class="card-header-title"><i class="fas fa-boxes"></i> Chi Tiết Hàng Hóa Mua</div></div>
+            <div id="unitsContainer"></div>
             
             <div style="margin-bottom: 20px;">
-                <button class="btn btn-outline-primary" onclick="addNewEmptyUnit()">
+                <button class="btn btn-outline-primary" id="btnAddUnitBtn" onclick="addNewEmptyUnit()">
                     <i class="fas fa-plus-circle"></i> Thêm Phân Loại Mới
                 </button>
             </div>
 
             <div class="grand-total">TỔNG THANH TOÁN: <span id="grandTotal">0</span> VNĐ</div>
             
-            <div class="actions-bar">
-                <button class="btn btn-outline-info" onclick="printSummary()"><i class="fas fa-print"></i> In Bảng Tổng Hợp</button>
-                <button class="btn btn-outline-success" onclick="saveCloudDraftOnly()"><i class="fas fa-save"></i> Lưu Nháp Lên Mây</button>
-                <button class="btn btn-outline-primary" onclick="prepareExport()"><i class="fas fa-file-excel"></i> Chỉ Xuất File Excel</button>
-                <button class="btn btn-primary" onclick="saveAndExport()"><i class="fas fa-bolt"></i> Lưu & Xuất Excel Nhanh</button>
+            <div class="actions-bar" id="mainActionsBar">
+                <div id="autoSaveStatus" style="font-size:12px; color:#6c757d; margin-right:auto; display:none; align-items:center; font-weight: 500;"></div>
+                
+                <button class="btn-submit-block" onclick="processSubmit()">
+                    <i class="fas fa-paper-plane"></i> GỬI BẢNG KÊ
+                </button>
             </div>
         </div>
     </div>
 
     <div class="card draft-list">
         <div class="card-header">
-            <div class="card-header-title"><i class="fas fa-history"></i> Lịch Sử Hóa Đơn Đám Mây</div>
-            <div class="search-history-box">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchDraft" class="form-control" placeholder="Tìm theo tên khách hàng..." oninput="filterDrafts()" autocomplete="off">
+            <div class="card-header-title"><i class="fas fa-history"></i> Lịch Sử Hóa Đơn Của Bạn</div>
+            
+            <div style="display:flex; gap:10px; align-items:center;" id="dualFilterBox">
+                <div style="position:relative; width: 250px;">
+                    <i class="fas fa-search" style="position: absolute; left: 12px; top: 10px; color: #adb5bd;"></i>
+                    <input type="text" id="searchDraft" class="form-control" style="padding-left:35px; border-radius:20px;" placeholder="Tìm tên khách, MST..." oninput="filterDrafts()" autocomplete="off">
+                </div>
+                <div id="adminDateFilterWrapper" style="display:none; position:relative; width: 220px;">
+                    <i class="fas fa-calendar-alt" style="position: absolute; left: 12px; top: 10px; color: #adb5bd;"></i>
+                    <input type="text" id="filterDateRange" class="form-control" style="padding-left:35px; border-radius:20px; background:#fff; cursor:pointer;" placeholder="Lọc theo ngày..." onchange="filterDrafts()" autocomplete="off">
+                </div>
             </div>
         </div>
         <div id="draftListContainer"></div>
+        
+        <div id="paginationContainer" class="pagination-wrapper" style="display:none;"></div>
+    </div>
+</div>
+
+<div id="mergeOptionModal" class="modal-overlay">
+    <div class="modal-content" style="padding-top: 35px;">
+        <button class="close-modal-x" onclick="closeMergeModal()"><i class="fas fa-times"></i></button>
+        <div class="modal-title" style="color: var(--primary);"><i class="fas fa-question-circle"></i> Tùy chọn xuất hóa đơn</div>
+        <div class="modal-body" style="font-size: 15px; margin-top: 15px;">
+            Bảng kê của bạn có <b id="mergeUnitCount" style="color: var(--danger)"></b> phân loại.<br>Bạn muốn tách hóa đơn khi xuất hay gộp thành 1 hóa đơn thống nhất?
+        </div>
+        <div class="modal-actions" style="display: flex; gap: 10px; justify-content: center; margin-top: 25px;">
+            <button class="btn btn-primary" style="flex: 1; padding: 12px; font-size: 14px;" onclick="submitWithMergeOption('gộp hóa đơn')"><i class="fas fa-object-group"></i> Hợp nhất</button>
+            <button class="btn btn-outline-orange" style="flex: 1; padding: 12px; font-size: 14px;" onclick="submitWithMergeOption('tách hóa đơn')"><i class="fas fa-object-ungroup"></i> Tách riêng</button>
+        </div>
+    </div>
+</div>
+
+<div id="changePassModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-title" style="color: var(--primary);"><i class="fas fa-key"></i> Đổi Mật Khẩu</div>
+        <div class="modal-body">
+            <div class="form-group"><label>Tài khoản của bạn:</label><input type="text" id="cpMST" class="form-control" readonly style="background:#f8f9fa;" autocomplete="off"></div>
+            <div class="form-group password-wrapper" style="margin-top:10px;"><label>Mật khẩu hiện tại:</label><input type="password" id="cpOld" class="form-control" placeholder="Nhập mật khẩu cũ..." autocomplete="new-password"><i class="fas fa-eye-slash toggle-eye" onclick="togglePassword('cpOld', this)"></i></div>
+            <div class="form-group password-wrapper" style="margin-top:10px;"><label>Mật khẩu mới:</label><input type="password" id="cpNew" class="form-control" placeholder="Ít nhất 4 ký tự..." autocomplete="new-password"><i class="fas fa-eye-slash toggle-eye" onclick="togglePassword('cpNew', this)"></i></div>
+            <div class="form-group password-wrapper" style="margin-top:10px;"><label>Xác nhận mật khẩu mới:</label><input type="password" id="cpConfirm" class="form-control" placeholder="Nhập lại mật khẩu mới..." autocomplete="new-password"><i class="fas fa-eye-slash toggle-eye" onclick="togglePassword('cpConfirm', this)"></i></div>
+            <div id="cpStatus" style="margin-top:10px; font-size:13px; color:var(--danger); font-weight:600; text-align:center;"></div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-outline" onclick="closeChangePassModal()">Hủy</button>
+            <button class="btn btn-primary" onclick="executeChangePass()">Lưu Thay Đổi</button>
+        </div>
     </div>
 </div>
 
@@ -278,20 +328,14 @@
     <div class="modal-content">
         <div class="modal-title" id="confirmTitle"><i class="fas fa-question-circle"></i> Xác nhận</div>
         <div class="modal-body" id="confirmBody">Bạn có chắc chắn không?</div>
-        <div class="modal-actions">
-            <button class="btn btn-outline" onclick="closeConfirm()">Hủy bỏ</button>
-            <button class="btn" id="confirmBtn" onclick="executeConfirm()">Đồng ý</button>
-        </div>
+        <div class="modal-actions"><button class="btn btn-outline" onclick="closeConfirm(true)">Hủy bỏ</button><button class="btn" id="confirmBtn" onclick="executeConfirm()">Đồng ý</button></div>
     </div>
 </div>
 
 <div id="excelModal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-title" style="color: var(--primary);"><i class="fas fa-file-excel"></i> Tùy chọn Xuất Excel</div>
-        <div class="modal-body">
-            Hóa đơn này chứa nhiều phân loại. Hệ thống sẽ tách riêng các Sheet.<br><br>
-            <b>Bạn có muốn tạo thêm một "Sheet Tổng Hợp" để cộng dồn toàn bộ dữ liệu không?</b>
-        </div>
+        <div class="modal-body">Hóa đơn này chứa nhiều phân loại. Hệ thống sẽ tách riêng các Sheet.<br><br><b>Bạn có muốn tạo thêm một "Sheet Tổng Hợp" để cộng dồn toàn bộ dữ liệu không?</b></div>
         <div class="modal-actions" style="flex-direction: column;">
             <button class="btn btn-primary" style="width: 100%" onclick="confirmExport(true)"><i class="fas fa-check-circle"></i> Có, kèm Sheet Tổng Hợp</button>
             <button class="btn btn-outline-primary" style="width: 100%" onclick="confirmExport(false)"><i class="fas fa-minus-circle"></i> Không, chỉ xuất chi tiết</button>
@@ -300,157 +344,374 @@
     </div>
 </div>
 
-<div id="printArea"></div>
 <div id="toast-container"></div>
 
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbw7vMo02yOzjXU2zhbG_5kMzRxV2ipOL8xDD2_lEYMwBKymCqywZHSg1sLi9KCvtwTYbA/exec"; 
+    const API_URL = "https://script.google.com/macros/s/AKfycbyfHmm0Vt5eQwEIGsQPMSNu2j2PS6uJ4cdzQSWuER-lS9LUIOyqHKDZNN77echckkpDwQ/exec"; 
     
-    const SELLER_INFO = {
-        name: "CÔNG TY TNHH THƯƠNG MẠI PHÁT TRIỂN TRẦN ANH",
-        addr: "Khu Công Nghiệp An Xá, TP. Nam Định",
-        mst: "0601162291",
-        phone: "0228.388.8989"
-    };
+    const WORK_START_HOUR = 6; 
+    const WORK_END_HOUR = 24;  
+    const CUTOFF_HOUR = 14; 
 
-    let db = { customers: [], products: [], drafts: [] };
-    let undoStack = [];
-    let tempExportData = null;
-    let confirmCallback = null;
+    const SELLER_INFO = { name: "CÔNG TY TNHH THƯƠNG MẠI PHÁT TRIỂN TRẦN ANH", addr: "Khu Công Nghiệp An Xá, TP. Nam Định", mst: "0601162291", phone: "0228.388.8989" };
+
+    let db = { customers: [], products: [], drafts: [], admins: [] };
+    let undoStack = []; let tempExportData = null; let confirmCallback = null; let cancelCallback = null;
+    let loggedInCustomer = null; let isAdmin = false; let isViewOnlyMode = false; let saveDraftTimeout; 
+    
+    let currentPage = 1;
+    let itemsPerPage = 10;
+    let pendingSubmitData = null;
+
+    function createWavyHtml(text) {
+        let html = "";
+        for(let i=0; i<text.length; i++) html += `<span style="animation-delay: ${i * 0.05}s">${text[i] === ' ' ? '&nbsp;' : text[i]}</span>`;
+        return html;
+    }
+
+    function setBtnWavyLoading(btnId, text) {
+        let btn = document.getElementById(btnId);
+        if(btn.tagName === 'BUTTON') {
+            btn.disabled = true; btn.style.background = "#e9ecef"; btn.style.border = "1px solid var(--border)"; btn.style.color = "var(--primary)";
+            btn.innerHTML = `<div class="login-wavy-text">${createWavyHtml(text)}</div>`;
+        }
+    }
+
+    function setBtnReady() {
+        let btn = document.getElementById("loginBtn");
+        btn.disabled = false; btn.style.background = "var(--success)"; btn.style.border = "none"; btn.innerHTML = "ĐĂNG NHẬP"; btn.style.color = "white";
+    }
 
     window.onload = function() {
         let isMobile = window.innerWidth <= 768;
-        if(isMobile) { 
-            document.getElementById("mobileAlert").style.display = "block"; 
-            document.getElementById("editorSection").style.display = "none";
+        if(isMobile) { document.getElementById("editorSection").style.display = "none"; document.getElementById("mobileAlert").style.display = "block"; }
+        
+        let activeSession = sessionStorage.getItem("activeSessionMST");
+
+        if (activeSession) {
+            document.getElementById("sessionLoader").innerHTML = `
+                <div class="app-loader">
+                    <div class="progress-bar-container"><div class="progress-bar-indicator"></div></div>
+                    <div class="blinking-text">Đang cập nhật lại dữ liệu...</div>
+                </div>
+            `;
+            document.getElementById("sessionLoader").style.background = "rgba(255,255,255,0.9)";
+            document.getElementById("loginApp").style.display = "none";
+            document.getElementById("mainApp").style.display = "block";
+            document.getElementById("sessionLoader").style.display = "flex";
         } else {
-            try { flatpickr("#invoiceDate", { dateFormat: "d/m/Y", locale: "vn", defaultDate: "today", allowInput: true }); } catch(e){}
+            document.getElementById("sessionLoader").innerHTML = '<div class="f5-wavy-text large" id="f5WavyText"></div>';
+            document.getElementById("f5WavyText").innerHTML = createWavyHtml("Đang kết nối...");
+            document.getElementById("sessionLoader").style.background = "transparent";
+            document.getElementById("sessionLoader").style.display = "none";
+            document.getElementById("loginApp").style.display = "flex";
+            setBtnWavyLoading("loginBtn", "Đang kết nối...");
         }
-
-        fetch(API_URL).then(res => res.json()).then(data => {
-            db = data || { customers: [], products: [], drafts: [] };
-            let statusEl = document.getElementById("status");
-            statusEl.innerHTML = "<i class='fas fa-check-circle'></i> Đã kết nối với kho hàng";
-            statusEl.style.background = "#d1e7dd"; statusEl.style.color = "#0f5132"; statusEl.style.borderLeftColor = "#0f5132";
-            if(!isMobile && document.getElementById("cusSearch")) document.getElementById("cusSearch").disabled = false;
-            renderDraftList();
-        }).catch(e => { 
-            let statusEl = document.getElementById("status");
-            statusEl.innerHTML = "<i class='fas fa-exclamation-triangle'></i> Lỗi kết nối CSDL!"; 
-            statusEl.style.background = "#f8d7da"; statusEl.style.color = "#842029"; statusEl.style.borderLeftColor = "#842029";
+        
+        fetch(API_URL + "?t=" + new Date().getTime(), { cache: "no-store" }).then(function(res) { return res.json(); }).then(function(data) {
+            db = data || { customers: [], products: [], drafts: [], admins: [] };
+            if (activeSession) {
+                document.getElementById("sessionLoader").style.display = "none";
+                restoreSession(activeSession);
+            } else {
+                setBtnReady(); checkAutoLogin();
+            }
+        }).catch(function(e) { 
+            document.getElementById("sessionLoader").style.display = "none";
+            document.getElementById("loginApp").style.display = "flex";
+            let btn = document.getElementById("loginBtn"); btn.innerHTML = "LỖI MẠNG"; btn.style.background = "var(--danger)"; btn.style.color = "white";
+            document.getElementById("loginStatus").innerText = "Lỗi kết nối Máy chủ. Vui lòng F5 tải lại!"; 
         });
-    }
 
-    // =========================================================
-    // HỆ THỐNG POPUP XÁC NHẬN CHÍNH GIỮA MÀN HÌNH
-    // =========================================================
-    function showConfirm(titleHtml, bodyHtml, btnText, btnClass, callback) {
-        document.getElementById("confirmTitle").innerHTML = titleHtml;
-        document.getElementById("confirmBody").innerHTML = bodyHtml;
-        let btn = document.getElementById("confirmBtn");
-        btn.innerHTML = btnText;
-        btn.className = "btn " + btnClass;
-        confirmCallback = callback;
-        document.getElementById("customConfirmModal").style.display = "flex";
-    }
-
-    function closeConfirm() {
-        document.getElementById("customConfirmModal").style.display = "none";
-        confirmCallback = null;
-    }
-
-    function executeConfirm() {
-        if (confirmCallback) confirmCallback();
-        closeConfirm();
-    }
-
-    function showToast(message, type = "success") {
-        let container = document.getElementById("toast-container"); let toast = document.createElement("div"); toast.className = `toast toast-${type}`;
-        let icon = type === 'success' ? 'check-circle' : (type === 'danger' ? 'exclamation-circle' : 'info-circle');
-        toast.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`; container.appendChild(toast);
-        setTimeout(() => toast.classList.add("show"), 10);
-        setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
-    }
-
-    // =========================================================
-    // XỬ LÝ DỮ LIỆU
-    // =========================================================
-    function groupProducts(products) {
-        let grouped = {};
-        products.forEach(p => {
-            let key = p.name.trim() + "|" + p.unit.trim() + "|" + p.priceRaw;
-            if (!grouped[key]) { grouped[key] = { name: p.name, unit: p.unit, qty: p.qty, priceRaw: p.priceRaw }; } 
-            else { grouped[key].qty += p.qty; }
-        });
-        return Object.values(grouped).map(p => {
-            p.priceStr = p.priceRaw.toLocaleString('vi-VN'); p.totalStr = Math.round(p.qty * p.priceRaw).toLocaleString('vi-VN');
-            return p;
-        });
-    }
-
-    function undoLastAction() {
-        if (undoStack.length === 0) { showToast("Không có thao tác nào để hoàn tác!", "info"); return; }
-        let action = undoStack.pop();
-        if (action.type === 'deleteRow') {
-            if(action.nextSibling) action.tbody.insertBefore(action.tr, action.nextSibling); else action.tbody.appendChild(action.tr);
-            showToast("Đã khôi phục 1 dòng", "success");
-        } else if (action.type === 'deleteUnit') {
-            if(action.nextSibling) action.container.insertBefore(action.box, action.nextSibling); else action.container.appendChild(action.box);
-            showToast("Đã khôi phục phân loại", "success");
-        }
-        updateAllTotals(); updateSTT();
-    }
-    document.addEventListener('keydown', function(e) { if (e.ctrlKey && e.key === 'z') { e.preventDefault(); undoLastAction(); } });
-
-    function getFormData() {
-        let cusName = document.getElementById('cusSearch').value; if (!cusName) return null;
-        let unitsData = [];
-        document.querySelectorAll('.unit-box').forEach(unit => {
-            let rawProducts = [];
-            unit.querySelectorAll('tbody tr').forEach(row => {
-                let name = row.querySelector('.f-name').value;
-                if(name) rawProducts.push({ name: name, unit: row.querySelector('.f-unit').value, qty: parseFloat(row.querySelector('.f-qty').value) || 0, priceRaw: parseFloat(row.querySelector('.f-price').getAttribute('data-val')) || 0 });
-            });
-            if(rawProducts.length > 0) {
-                let mergedProducts = groupProducts(rawProducts);
-                unitsData.push({ unitName: unit.querySelector('.unit-name').value, products: mergedProducts });
+        document.addEventListener('input', function(e) {
+            if(isViewOnlyMode) return; 
+            if(e.target.matches('.f-name, .unit-name-input, #cusPerson, #invoiceDate, .f-qty, .f-total')) {
+                clearTimeout(saveDraftTimeout); saveDraftTimeout = setTimeout(saveLocalDraft, 500);
             }
         });
+    }
+
+    function initDatePickers() {
+        if(window.innerWidth > 768) {
+            let fpConfig = { dateFormat: "d/m/Y", locale: "vn", allowInput: true };
+            let defaultD = new Date();
+            if (!isAdmin) {
+                let minD = new Date();
+                if (minD.getHours() >= CUTOFF_HOUR) { minD.setDate(minD.getDate() + 1); defaultD = new Date(minD); }
+                minD.setHours(0,0,0,0); fpConfig.minDate = minD; 
+            }
+            fpConfig.defaultDate = defaultD;
+            document.getElementById("invoiceDate")._flatpickr = flatpickr("#invoiceDate", fpConfig);
+        }
+
+        if(isAdmin) {
+            document.getElementById("adminDateFilterWrapper").style.display = "block";
+            flatpickr("#filterDateRange", { mode: "range", dateFormat: "d/m/Y", locale: "vn" });
+        } else {
+            document.getElementById("adminDateFilterWrapper").style.display = "none";
+        }
+    }
+
+    function restoreSession(mst) {
+        let adminAcc = db.admins ? db.admins.find(function(a) { return String(a.username).trim() === String(mst).trim(); }) : null;
+        if (adminAcc) { isAdmin = true; loggedInCustomer = { mst: "ADMIN", name: "TÀI KHOẢN QUẢN TRỊ" }; } 
+        else {
+            isAdmin = false; let cus = db.customers.find(function(c) { return String(c.mst).trim() === String(mst).trim(); });
+            if(cus) { loggedInCustomer = cus; } else { sessionStorage.removeItem("activeSessionMST"); document.getElementById("mainApp").style.display = "none"; document.getElementById("loginApp").style.display = "flex"; setBtnReady(); return; }
+        }
+        document.getElementById("logoutBtn").style.display = "inline-flex";
+        if(isAdmin) document.getElementById("adminBadge").style.display = "inline";
+        initDatePickers(); initClientPortal();
+    }
+
+    function togglePassword(inputId, iconEl) { let input = document.getElementById(inputId); if (input.type === "password") { input.type = "text"; iconEl.classList.remove("fa-eye-slash"); iconEl.classList.add("fa-eye"); iconEl.style.color = "var(--primary)"; } else { input.type = "password"; iconEl.classList.remove("fa-eye"); iconEl.classList.add("fa-eye-slash"); iconEl.style.color = "#adb5bd"; } }
+    function showToast(message, type = "success") { let container = document.getElementById("toast-container"); let toast = document.createElement("div"); toast.className = `toast toast-${type}`; let icon = type === 'success' ? 'check-circle' : (type === 'danger' ? 'exclamation-circle' : 'info-circle'); toast.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`; container.appendChild(toast); setTimeout(function() { toast.classList.add("show"); }, 10); setTimeout(function() { toast.classList.remove("show"); setTimeout(function() { toast.remove(); }, 300); }, 3000); }
+    function showConfirm(titleHtml, bodyHtml, btnText, btnClass, onConfirm, onCancel = null) { document.getElementById("confirmTitle").innerHTML = titleHtml; document.getElementById("confirmBody").innerHTML = bodyHtml; let btn = document.getElementById("confirmBtn"); btn.innerHTML = btnText; btn.className = "btn " + btnClass; confirmCallback = onConfirm; cancelCallback = onCancel; document.getElementById("customConfirmModal").style.display = "flex"; }
+    function closeConfirm(isCancel = true) { document.getElementById("customConfirmModal").style.display = "none"; if (isCancel && cancelCallback) cancelCallback(); confirmCallback = null; cancelCallback = null; }
+    function executeConfirm() { if (confirmCallback) confirmCallback(); closeConfirm(false); }
+
+    function checkAutoLogin() {
+        let savedMST = localStorage.getItem("savedMST"); let savedPass = localStorage.getItem("savedPass");
+        if (savedMST && savedPass) { document.getElementById("loginMST").value = savedMST; document.getElementById("loginPass").value = savedPass; document.getElementById("rememberMe").checked = true; attemptLogin(); }
+    }
+
+    function attemptLogin() {
+        let mst = document.getElementById("loginMST").value.trim(); let pass = document.getElementById("loginPass").value.trim(); let status = document.getElementById("loginStatus"); let btn = document.getElementById("loginBtn");
+        if (!mst || !pass) { status.innerText = "Vui lòng nhập MST/Tài khoản và Mật khẩu!"; return; }
+
+        setBtnWavyLoading("loginBtn", "Đang xác thực..."); status.innerText = "";
+
+        setTimeout(function() {
+            let adminAcc = db.admins ? db.admins.find(function(a) { return String(a.username).trim() === String(mst).trim(); }) : null;
+            if (adminAcc) {
+                if (String(adminAcc.pass).trim() !== String(pass).trim()) { status.innerText = "Mật khẩu Admin sai!"; setBtnReady(); return; }
+                isAdmin = true; loggedInCustomer = { mst: "ADMIN", name: "TÀI KHOẢN QUẢN TRỊ" }; 
+            } else {
+                isAdmin = false; let cus = db.customers.find(function(c) { return String(c.mst).trim() === String(mst).trim(); });
+                if (!cus) { status.innerText = "Tài khoản không tồn tại!"; setBtnReady(); return; }
+                let validPass = cus.pass ? String(cus.pass).trim() : (localStorage.getItem("customPass_" + mst) || mst);
+                if (pass !== validPass) { status.innerText = "Mật khẩu không chính xác!"; setBtnReady(); return; }
+                let currentHour = new Date().getHours();
+                if (currentHour < WORK_START_HOUR || currentHour >= WORK_END_HOUR) { status.innerText = `Ngoài giờ làm việc. Hệ thống chỉ mở từ ${WORK_START_HOUR}h đến ${WORK_END_HOUR}h!`; setBtnReady(); return; }
+                loggedInCustomer = cus;
+            }
+
+            sessionStorage.setItem("activeSessionMST", mst);
+            if (document.getElementById("rememberMe").checked) { localStorage.setItem("savedMST", mst); localStorage.setItem("savedPass", pass); } else { localStorage.removeItem("savedMST"); localStorage.removeItem("savedPass"); }
+            document.getElementById("loginApp").style.display = "none"; document.getElementById("mainApp").style.display = "block"; document.getElementById("logoutBtn").style.display = "inline-flex";
+            if(isAdmin) document.getElementById("adminBadge").style.display = "inline";
+            
+            initDatePickers(); initClientPortal(); setBtnReady();
+        }, 500);
+    }
+
+    function logout() { sessionStorage.removeItem("activeSessionMST"); localStorage.removeItem("savedMST"); localStorage.removeItem("savedPass"); window.location.reload(); }
+
+    function openChangePassModal() {
+        if(isAdmin) { showToast("Admin vui lòng đổi mật khẩu trên Google Sheets!", "warning"); return; }
+        let currentMST = document.getElementById("loginMST").value.trim() || (loggedInCustomer ? loggedInCustomer.mst : "");
+        document.getElementById("cpMST").value = currentMST; document.getElementById("cpOld").value = ""; document.getElementById("cpNew").value = ""; document.getElementById("cpConfirm").value = ""; document.getElementById("cpStatus").innerText = "";
+        document.querySelectorAll('.toggle-eye').forEach(function(eye) { eye.classList.remove('fa-eye'); eye.classList.add('fa-eye-slash'); eye.style.color = '#adb5bd'; eye.previousElementSibling.type = 'password'; });
+        document.getElementById("changePassModal").style.display = "flex";
+    }
+    function closeChangePassModal() { document.getElementById("changePassModal").style.display = "none"; }
+    function executeChangePass() {
+        let mst = document.getElementById("cpMST").value.trim(); let oldP = document.getElementById("cpOld").value.trim(); let newP = document.getElementById("cpNew").value.trim(); let confirmP = document.getElementById("cpConfirm").value.trim(); let status = document.getElementById("cpStatus");
+        if(!mst || !oldP || !newP || !confirmP) { status.innerText = "Vui lòng điền đầy đủ!"; return; }
+        if(newP !== confirmP) { status.innerText = "Mật khẩu xác nhận không khớp!"; return; }
+        if(newP.length < 4) { status.innerText = "Mật khẩu quá ngắn!"; return; }
+        let cus = db.customers.find(function(c) { return String(c.mst).trim() === mst; }); if (!cus) return;
+        let validPass = cus.pass ? String(cus.pass).trim() : (localStorage.getItem("customPass_" + mst) || mst);
+        if (oldP !== validPass) { status.innerText = "Mật khẩu cũ không chính xác!"; return; }
+        status.style.color = "var(--primary)"; status.innerText = "Đang gửi lên máy chủ...";
+        
+        let payload = { action: 'changePassword', mst: mst, newPass: newP };
+        fetch(API_URL, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } }).then(function(res) { return res.json(); }).then(function(res) {
+            if(res.success) { cus.pass = newP; localStorage.setItem("customPass_" + mst, newP); if(localStorage.getItem("savedMST") === mst) { localStorage.setItem("savedPass", newP); } closeChangePassModal(); showToast("Đổi mật khẩu thành công!", "success"); document.getElementById("loginPass").value = newP; } else { status.innerText = "Lỗi Server: " + res.message; }
+        }).catch(function(err) { cus.pass = newP; localStorage.setItem("customPass_" + mst, newP); if(localStorage.getItem("savedMST") === mst) { localStorage.setItem("savedPass", newP); } closeChangePassModal(); showToast("Đã đổi Mật khẩu (Lưu cục bộ).", "warning"); });
+    }
+
+    function setFormViewMode(isLocked) {
+        isViewOnlyMode = isLocked;
+        let inputs = document.querySelectorAll('#editorSection input, #editorSection textarea, #editorSection select');
+        inputs.forEach(function(el) { el.disabled = isLocked; });
+        let trashingBtns = document.querySelectorAll('.btn-trash, .btn-outline-orange, .btn-outline-success');
+        trashingBtns.forEach(function(el) { el.style.display = isLocked ? 'none' : 'inline-flex'; });
+        document.getElementById('btnAddUnitBtn').style.display = isLocked ? 'none' : 'inline-flex';
+        document.getElementById('mainActionsBar').style.display = isLocked ? 'none' : 'flex';
+        document.getElementById('viewOnlyBanner').style.display = isLocked ? 'block' : 'none';
+        document.getElementById('btnCreateNew').style.display = isLocked ? 'inline-flex' : 'none'; 
+        
+        if(!isLocked) {
+            if(isAdmin) { document.getElementById('cusSearch').disabled = false; document.getElementById('cusSearch').readOnly = false; document.getElementById('cusSearch').style.background = '#fff'; } 
+            else { document.getElementById('cusSearch').disabled = false; document.getElementById('cusSearch').readOnly = true; document.getElementById('cusSearch').style.background = '#f8f9fa'; }
+        }
+    }
+
+    function initClientPortal() {
+        setFormViewMode(false); 
+        renderDraftList(); 
+        if(!isAdmin) checkLocalDraft(); 
+        else resetForm(true); 
+    }
+
+    function getFormData() {
+        let cusName = document.getElementById("cusSearch").value.trim(); let cusMST = document.getElementById("cusMST").value.trim(); let cusAddr = document.getElementById("cusAddr").value.trim(); let cusEmail = document.getElementById("cusEmail").value.trim();
+        if(!cusName) return null;
+        let unitsData = [];
+        document.querySelectorAll('.unit-box').forEach(function(unit) {
+            let rawProducts = [];
+            unit.querySelectorAll('tbody tr').forEach(function(row) {
+                let name = row.querySelector('.f-name').value;
+                if(name) { let totalRaw = parseFloat(row.querySelector('.f-total').value.replace(/\./g, '')) || 0; rawProducts.push({ name: name, unit: row.querySelector('.f-unit').value, qty: parseFloat(row.querySelector('.f-qty').value) || 0, priceRaw: parseFloat(row.querySelector('.f-price').getAttribute('data-val')) || 0, totalRaw: totalRaw }); }
+            });
+            if(rawProducts.length > 0) { unitsData.push({ unitName: unit.querySelector('.unit-name').value, products: rawProducts }); }
+        });
         if (unitsData.length === 0) return { empty: true };
-        return {
-            invoiceDate: document.getElementById("invoiceDate").value,
-            customer: { name: cusName, person: document.getElementById("cusPerson").value, mst: document.getElementById("cusMST").value, addr: document.getElementById("cusAddr").value, email: document.getElementById("cusEmail").value },
-            units: unitsData, grandTotal: document.getElementById("grandTotal").innerText
-        };
+        return { invoiceDate: document.getElementById("invoiceDate").value, customer: { name: cusName, person: document.getElementById("cusPerson").value, mst: cusMST, addr: cusAddr, email: cusEmail }, units: unitsData, grandTotal: document.getElementById("grandTotal").innerText };
     }
 
-    function resetForm() {
-        document.getElementById("currentDraftId").value = ""; document.getElementById("cusSearch").value = ""; document.getElementById("cusPerson").value = ""; document.getElementById("cusMST").value = ""; document.getElementById("cusAddr").value = ""; document.getElementById("cusEmail").value = ""; 
-        try { document.getElementById("invoiceDate")._flatpickr.setDate(new Date(), true, "d/m/Y"); } catch(e){}
-        let templateBox = document.querySelector('.unit-box').cloneNode(true); let container = document.getElementById("unitsContainer"); container.innerHTML = ""; undoStack = []; 
-        templateBox.querySelector('.unit-name').value = "";
-        templateBox.querySelector('tbody').innerHTML = `<tr><td class="stt-col">1</td><td class="autocomplete-container"><textarea class="form-control f-name" rows="1" placeholder="Tìm kiếm sản phẩm..." oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)"></textarea><div class="custom-dropdown"></div></td><td><select class="form-control f-unit" onchange="changeUnit(this)"></select></td><td><input type="number" class="form-control f-qty" value="" placeholder="0" step="any" oninput="calcRow(this, 'qty')"></td><td><input type="text" class="form-control f-price" readonly data-val="0" placeholder="0"></td><td><input type="text" class="form-control f-total" value="" placeholder="0" oninput="calcRow(this, 'total')" onblur="formatTotal(this)"></td><td class="text-center"><button class="btn-trash" onclick="deleteRow(this)"><i class="fas fa-times"></i></button></td></tr>`;
-        container.appendChild(templateBox); updateAllTotals(); updateSTT();
+    function saveLocalDraft() {
+        if (isAdmin || isViewOnlyMode || !loggedInCustomer) {
+            document.getElementById('autoSaveStatus').style.display = 'none';
+            return; 
+        }
+        let dataObj = getFormData();
+        if (!dataObj) return; 
+        if (dataObj.empty) { 
+            localStorage.removeItem('localDraft_' + loggedInCustomer.mst); 
+            document.getElementById('autoSaveStatus').style.display = 'none';
+            return; 
+        } 
+        dataObj.currentDraftId = document.getElementById("currentDraftId").value;
+        localStorage.setItem('localDraft_' + loggedInCustomer.mst, JSON.stringify(dataObj));
+        
+        let now = new Date();
+        let timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0') + ':' + now.getSeconds().toString().padStart(2,'0');
+        document.getElementById('autoSaveStatus').style.display = 'flex';
+        document.getElementById('autoSaveStatus').innerHTML = `<i class="fas fa-check-circle" style="color:var(--success); margin-right:5px;"></i> Hệ thống đã ghi nhận tạm thời lúc ${timeStr}`;
     }
 
-    function getInvoiceDateStr() { return document.getElementById('invoiceDate').value || new Date().toLocaleDateString('vi-VN'); }
+    function checkLocalDraft() {
+        let savedDraftStr = localStorage.getItem('localDraft_' + loggedInCustomer.mst);
+        if (savedDraftStr) {
+            try {
+                let draft = JSON.parse(savedDraftStr);
+                if(!draft.customer || !draft.units || !Array.isArray(draft.units)) throw "Bản nháp hỏng";
+                showConfirm(
+                    '<i class="fas fa-undo" style="color:var(--info)"></i> Khôi phục dữ liệu',
+                    'Hệ thống đang giữ một bảng kê dở dang của bạn. Bạn có muốn khôi phục lại để làm tiếp không?',
+                    '<i class="fas fa-check"></i> Khôi phục ngay',
+                    'btn-info',
+                    function() { restoreDataToForm(draft, false); showToast("Đã khôi phục an toàn!", "success"); },
+                    function() { localStorage.removeItem('localDraft_' + loggedInCustomer.mst); resetForm(); }
+                );
+            } catch(e) { localStorage.removeItem('localDraft_' + loggedInCustomer.mst); resetForm(); }
+        } else {
+            resetForm();
+        }
+    }
+
+    function resetForm(forceClear = false) {
+        setFormViewMode(false);
+        document.getElementById("currentDraftId").value = ""; document.getElementById("cusPerson").value = ""; 
+        initDatePickers(); 
+        
+        if(isAdmin) {
+            document.getElementById("cusSearch").value = ""; document.getElementById("cusMST").value = ""; document.getElementById("cusAddr").value = ""; document.getElementById("cusEmail").value = "";
+        } else if(loggedInCustomer) {
+            document.getElementById("cusSearch").value = loggedInCustomer.name || ""; document.getElementById("cusMST").value = loggedInCustomer.mst || ""; document.getElementById("cusAddr").value = loggedInCustomer.address || ""; document.getElementById("cusEmail").value = loggedInCustomer.email || "";
+        }
+
+        let templateBox = document.createElement("div"); templateBox.className = "unit-box";
+        templateBox.innerHTML = `<div class="unit-header"><input type="text" class="unit-name-input unit-name" placeholder="Nhập phân loại..." autocomplete="off"><div><button class="btn btn-outline-orange" onclick="duplicateUnit(this)"><i class="fas fa-copy"></i> Nhân Bản</button> <button class="btn-trash" onclick="deleteUnit(this)" title="Xóa khối"><i class="fas fa-trash-alt"></i></button></div></div><div class="table-responsive"><table><thead><tr><th width="5%">STT</th><th width="33%">Tên Hàng Hóa / Dịch Vụ</th><th width="11%">ĐVT</th><th width="10%">SL</th><th width="16%">Đơn giá</th><th width="20%">Thành tiền</th><th width="4%"></th></tr></thead><tbody><tr><td class="stt-col">1</td><td class="autocomplete-container"><textarea class="form-control f-name" rows="1" placeholder="Tìm kiếm sản phẩm..." oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)" autocomplete="off"></textarea><div class="custom-dropdown"></div></td><td><select class="form-control f-unit" onchange="changeUnit(this)"></select></td><td><input type="number" class="form-control f-qty" value="" placeholder="0" step="any" oninput="calcRow(this, 'qty')" autocomplete="off"></td><td><input type="text" class="form-control f-price" readonly data-val="0" placeholder="0" autocomplete="off"></td><td><input type="text" class="form-control f-total" value="" placeholder="0" oninput="calcRow(this, 'total')" onblur="formatTotal(this)" autocomplete="off"></td><td class="text-center"><button class="btn-trash" onclick="deleteRow(this)" title="Xóa dòng"><i class="fas fa-times"></i></button></td></tr></tbody></table></div><div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;"><button class="btn btn-outline-success" onclick="addRow(this)"><i class="fas fa-plus"></i> Thêm Dòng</button><div class="unit-summary">Cộng tiền hàng: <span class="u-total-val">0</span> đ</div></div>`;
+        let container = document.getElementById("unitsContainer"); container.innerHTML = ""; container.appendChild(templateBox); 
+        undoStack = []; updateAllTotals(); updateSTT();
+        if(!forceClear) saveLocalDraft();
+    }
+
+    function isTimePastCutoff(dateStr) {
+        if(!dateStr) return false;
+        let parts = dateStr.split('/');
+        if(parts.length !== 3) return false;
+        let invDate = new Date(parts[2], parts[1] - 1, parts[0]);
+        invDate.setHours(0,0,0,0);
+        let now = new Date();
+        let today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        
+        if (invDate < today) return true; 
+        if (invDate.getTime() === today.getTime()) {
+            if (now.getHours() >= CUTOFF_HOUR) return true; 
+            return false;
+        }
+        return false;
+    }
+
+    function checkLockStatus(dateStr) {
+        if(isAdmin) return false; 
+        return isTimePastCutoff(dateStr);
+    }
+
+    function restoreDataToForm(draft, isViewOnly = false) {
+        undoStack = []; document.getElementById("currentDraftId").value = draft.currentDraftId || draft.id || ""; 
+        try { document.getElementById("invoiceDate")._flatpickr.setDate(draft.invoiceDate || new Date(), true, "d/m/Y"); } catch(e){} 
+        
+        if(draft.customer) {
+            document.getElementById("cusPerson").value = draft.customer.person || ""; document.getElementById("cusSearch").value = draft.customer.name || ""; document.getElementById("cusMST").value = draft.customer.mst || ""; document.getElementById("cusAddr").value = draft.customer.addr || ""; document.getElementById("cusEmail").value = draft.customer.email || "";
+        }
+
+        let container = document.getElementById("unitsContainer"); container.innerHTML = "";
+        if(!draft.units || !Array.isArray(draft.units)) return; 
+
+        let pastCutoff = isTimePastCutoff(draft.invoiceDate);
+        let shouldUpdatePrice = !pastCutoff; 
+
+        draft.units.forEach(function(u) {
+            let div = document.createElement("div"); div.className = "unit-box";
+            let html = `<div class="unit-header"><input type="text" class="unit-name-input unit-name" value="${u.unitName || ''}" placeholder="Nhập phân loại..." autocomplete="off"><div><button class="btn btn-outline-orange" onclick="duplicateUnit(this)"><i class="fas fa-copy"></i> Nhân Bản</button> <button class="btn-trash" onclick="deleteUnit(this)"><i class="fas fa-trash-alt"></i></button></div></div><div class="table-responsive"><table><thead><tr><th width="5%">STT</th><th width="33%">Tên Hàng Hóa</th><th width="11%">ĐVT</th><th width="10%">Số Lượng</th><th width="16%">Đơn Giá</th><th width="20%">Thành Tiền</th><th width="4%"></th></tr></thead><tbody>`;
+            
+            if(u.products && Array.isArray(u.products)) {
+                u.products.forEach(function(p) {
+                    let dbProd = db.products.find(function(x) { return x.name === p.name; }); 
+                    let currentPrice = p.priceRaw || 0;
+                    let currentUnit = p.unit || "";
+
+                    if (!isViewOnly && shouldUpdatePrice && dbProd) {
+                        if (currentUnit === dbProd.u1) currentPrice = dbProd.p1;
+                        else if (dbProd.u2 && currentUnit === dbProd.u2) currentPrice = dbProd.p2;
+                    }
+
+                    let totalRaw = p.totalRaw || ((p.qty||0) * (p.priceRaw||0));
+                    if (!isViewOnly && shouldUpdatePrice && dbProd) { totalRaw = (p.qty || 0) * currentPrice; }
+
+                    let priceStr = currentPrice ? currentPrice.toLocaleString('vi-VN') : "0"; 
+                    let totalStr = Math.round(totalRaw).toLocaleString('vi-VN');
+
+                    let optionsHtml = `<option value="${currentUnit}" data-price="${currentPrice}">${currentUnit}</option>`;
+                    if(dbProd) { 
+                        optionsHtml = `<option value="${dbProd.u1}" data-price="${dbProd.p1}" ${currentUnit===dbProd.u1?'selected':''}>${dbProd.u1}</option>`; 
+                        if(dbProd.u2) optionsHtml += `<option value="${dbProd.u2}" data-price="${dbProd.p2}" ${currentUnit===dbProd.u2?'selected':''}>${dbProd.u2}</option>`; 
+                    }
+                    
+                    html += `<tr><td class="stt-col"></td><td class="autocomplete-container"><textarea class="form-control f-name" rows="1" oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)" autocomplete="off">${p.name || ''}</textarea><div class="custom-dropdown"></div></td><td><select class="form-control f-unit" onchange="changeUnit(this)">${optionsHtml}</select></td><td><input type="number" class="form-control f-qty" value="${p.qty||''}" step="any" oninput="calcRow(this, 'qty')" autocomplete="off"></td><td><input type="text" class="form-control f-price" value="${priceStr}" readonly data-val="${currentPrice}" autocomplete="off"></td><td><input type="text" class="form-control f-total" value="${totalStr}" oninput="calcRow(this, 'total')" onblur="formatTotal(this)" autocomplete="off"></td><td class="text-center"><button class="btn-trash" onclick="deleteRow(this)"><i class="fas fa-times"></i></button></td></tr>`;
+                });
+            }
+            html += `</tbody></table></div><div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;"><button class="btn btn-outline-success" onclick="addRow(this)"><i class="fas fa-plus"></i> Thêm Dòng</button><div class="unit-summary">Cộng tiền: <span class="u-total-val">0</span> đ</div></div>`;
+            div.innerHTML = html; container.appendChild(div);
+        });
+        document.querySelectorAll('.f-name').forEach(function(ta) { autoHeight(ta); }); updateAllTotals(); updateSTT(); window.scrollTo(0, 0); 
+    }
 
     function autoHeight(el) { el.style.height = 'auto'; el.style.height = (el.scrollHeight) + 'px'; }
-
-    function updateSTT() {
-        document.querySelectorAll('.unit-box').forEach(box => { box.querySelectorAll('tbody tr').forEach((tr, index) => { let sttTd = tr.querySelector('.stt-col'); if(sttTd) sttTd.innerText = index + 1; }); });
-    }
-
-    document.addEventListener("click", e => {
-        if (!e.target.classList.contains("f-name") && !e.target.closest('.custom-dropdown')) { document.querySelectorAll("#unitsContainer .custom-dropdown").forEach(d => d.style.display = "none"); }
-        if (e.target.id !== "cusSearch" && !e.target.closest('#cusDropdown')) { let cusDrop = document.getElementById("cusDropdown"); if(cusDrop) cusDrop.style.display = "none"; }
-    });
+    function updateSTT() { document.querySelectorAll('.unit-box').forEach(function(box) { box.querySelectorAll('tbody tr').forEach(function(tr, index) { let sttTd = tr.querySelector('.stt-col'); if(sttTd) sttTd.innerText = index + 1; }); }); }
+    document.addEventListener("click", function(e) { if (!e.target.classList.contains("f-name") && !e.target.closest('.custom-dropdown')) { document.querySelectorAll("#unitsContainer .custom-dropdown").forEach(function(d) { d.style.display = "none"; }); } if (e.target.id !== "cusSearch" && !e.target.closest('#cusDropdown')) { let cusDrop = document.getElementById("cusDropdown"); if(cusDrop) cusDrop.style.display = "none"; }});
 
     function showCusSuggestions(inputEl) {
+        if(!isAdmin) return; 
         let val = inputEl.value.toLowerCase().trim(); let dropdown = document.getElementById("cusDropdown"); dropdown.innerHTML = "";
-        let filtered = db.customers.filter(c => c.name.toLowerCase().includes(val));
+        let filtered = db.customers.filter(function(c) { return c.name.toLowerCase().includes(val); });
         if (filtered.length === 0) { dropdown.style.display = "none"; return; }
-        filtered.forEach(c => {
+        filtered.forEach(function(c) {
             let itemDiv = document.createElement("div"); itemDiv.className = "dropdown-item"; itemDiv.innerHTML = `<span class="dd-name">${c.name}</span>`;
             itemDiv.onclick = function() { inputEl.value = c.name; document.getElementById("cusMST").value = c.mst; document.getElementById("cusAddr").value = c.address; document.getElementById("cusEmail").value = c.email || ""; dropdown.style.display = "none"; };
             dropdown.appendChild(itemDiv);
@@ -459,229 +720,281 @@
 
     function showSuggestions(inputEl) {
         let val = inputEl.value.toLowerCase().trim(); let dropdown = inputEl.nextElementSibling; dropdown.innerHTML = "";
-        let filtered = db.products.filter(p => p.name.toLowerCase().includes(val));
+        let filtered = db.products.filter(function(p) { return p.name.toLowerCase().includes(val); });
         if (filtered.length === 0) { dropdown.style.display = "none"; return; }
-        filtered.forEach(p => {
+        filtered.forEach(function(p) {
             let itemDiv = document.createElement("div"); itemDiv.className = "dropdown-item";
-            let priceHtml = `<div class="dd-price-group"><span class="dd-price-item">${p.p1.toLocaleString()}đ / ${p.u1}</span>`;
-            if (p.u2 && p.p2) { priceHtml += `<span class="dd-price-item">${p.p2.toLocaleString()}đ / ${p.u2}</span>`; }
-            priceHtml += `</div>`;
+            let priceHtml = `<div class="dd-price-group"><span class="dd-price-item">${p.p1.toLocaleString()}đ / ${p.u1}</span>`; if (p.u2 && p.p2) { priceHtml += `<span class="dd-price-item">${p.p2.toLocaleString()}đ / ${p.u2}</span>`; } priceHtml += `</div>`;
             itemDiv.innerHTML = `<span class="dd-name">${p.name}</span> ${priceHtml}`;
-            itemDiv.onclick = function() { inputEl.value = p.name; autoHeight(inputEl); dropdown.style.display = "none"; applyProductData(inputEl, p); };
-            dropdown.appendChild(itemDiv);
+            itemDiv.onclick = function() { inputEl.value = p.name; autoHeight(inputEl); dropdown.style.display = "none"; applyProductData(inputEl, p); }; dropdown.appendChild(itemDiv);
         }); dropdown.style.display = "block";
     }
 
-    function applyProductData(inputEl, p) {
-        let row = inputEl.closest('tr'); let selectUnit = row.querySelector(".f-unit");
-        selectUnit.innerHTML = `<option value="${p.u1}" data-price="${p.p1}">${p.u1}</option>`;
-        if (p.u2 && p.p2) { selectUnit.innerHTML += `<option value="${p.u2}" data-price="${p.p2}">${p.u2}</option>`; }
-        let pInput = row.querySelector(".f-price"); pInput.value = p.p1.toLocaleString('vi-VN'); pInput.setAttribute('data-val', p.p1); 
-        row.querySelector(".f-qty").value = 1; calcRow(row.querySelector(".f-qty"), 'qty');
-    }
+    function applyProductData(inputEl, p) { let row = inputEl.closest('tr'); let selectUnit = row.querySelector(".f-unit"); selectUnit.innerHTML = `<option value="${p.u1}" data-price="${p.p1}">${p.u1}</option>`; if (p.u2 && p.p2) { selectUnit.innerHTML += `<option value="${p.u2}" data-price="${p.p2}">${p.u2}</option>`; } let pInput = row.querySelector(".f-price"); pInput.value = p.p1.toLocaleString('vi-VN'); pInput.setAttribute('data-val', p.p1); row.querySelector(".f-qty").value = 1; calcRow(row.querySelector(".f-qty"), 'qty'); saveLocalDraft(); }
+    function changeUnit(selectEl) { let option = selectEl.options[selectEl.selectedIndex]; let newPrice = option.getAttribute('data-price'); let row = selectEl.closest('tr'); let pInput = row.querySelector(".f-price"); pInput.value = Number(newPrice).toLocaleString('vi-VN'); pInput.setAttribute('data-val', newPrice); calcRow(row.querySelector(".f-qty"), 'qty'); saveLocalDraft(); }
+    function calcRow(el, source) { let row = el.closest('tr'); let price = parseFloat(row.querySelector('.f-price').getAttribute('data-val')) || 0; if (price === 0) return; if (source === 'qty') { let q = parseFloat(row.querySelector('.f-qty').value) || 0; if(q === 0) row.querySelector('.f-total').value = ""; else row.querySelector('.f-total').value = Math.round(q * price).toLocaleString('vi-VN'); } else { let rawTotal = parseFloat(row.querySelector('.f-total').value.replace(/\./g, '')) || 0; if(rawTotal === 0) row.querySelector('.f-qty').value = ""; else row.querySelector('.f-qty').value = Number((rawTotal / price).toFixed(5)); } updateAllTotals(); saveLocalDraft(); }
+    function formatTotal(el) { if(!el.value) return; el.value = (parseFloat(el.value.replace(/\./g, '')) || 0).toLocaleString('vi-VN'); updateAllTotals(); saveLocalDraft(); }
+    function updateAllTotals() { let grandTotal = 0; document.querySelectorAll('.unit-box').forEach(function(unit) { let unitTotal = 0; unit.querySelectorAll('.f-total').forEach(function(el) { unitTotal += parseFloat(el.value.replace(/\./g, '')) || 0; }); unit.querySelector('.u-total-val').innerText = unitTotal.toLocaleString('vi-VN'); grandTotal += unitTotal; }); document.getElementById("grandTotal").innerText = grandTotal.toLocaleString('vi-VN'); }
 
-    function changeUnit(selectEl) {
-        let option = selectEl.options[selectEl.selectedIndex]; let newPrice = option.getAttribute('data-price');
-        let row = selectEl.closest('tr'); let pInput = row.querySelector(".f-price");
-        pInput.value = Number(newPrice).toLocaleString('vi-VN'); pInput.setAttribute('data-val', newPrice); calcRow(row.querySelector(".f-qty"), 'qty');
-    }
+    function addRow(btn) { let tbody = btn.closest('.unit-box').querySelector('tbody'); let tr = document.createElement("tr"); tr.innerHTML = `<td class="stt-col"></td><td class="autocomplete-container"><textarea class="form-control f-name" rows="1" oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)" autocomplete="off"></textarea><div class="custom-dropdown"></div></td><td><select class="form-control f-unit" onchange="changeUnit(this)"></select></td><td><input type="number" class="form-control f-qty" value="" placeholder="0" step="any" oninput="calcRow(this, 'qty')" autocomplete="off"></td><td><input type="text" class="form-control f-price" readonly data-val="0" placeholder="0" autocomplete="off"></td><td><input type="text" class="form-control f-total" value="" placeholder="0" oninput="calcRow(this, 'total')" onblur="formatTotal(this)" autocomplete="off"></td><td class="text-center"><button class="btn-trash" onclick="deleteRow(this)" title="Xóa dòng"><i class="fas fa-times"></i></button></td>`; tbody.appendChild(tr); updateSTT(); saveLocalDraft(); }
+    function deleteRow(btn) { let tr = btn.closest('tr'); let tbody = btn.closest('tbody'); if(tbody.querySelectorAll("tr").length > 1) { undoStack.push({ type: 'deleteRow', tbody: tbody, tr: tr, nextSibling: tr.nextElementSibling }); tr.remove(); updateAllTotals(); updateSTT(); showToast("Đã xóa dòng", "info"); } else { tr.querySelector('.f-name').value = ''; tr.querySelector('.f-unit').innerHTML = ''; tr.querySelector('.f-qty').value = ''; tr.querySelector('.f-price').value = ''; tr.querySelector('.f-price').setAttribute('data-val', 0); tr.querySelector('.f-total').value = ''; updateAllTotals(); showToast("Đã làm mới dòng hiện tại", "info"); } saveLocalDraft(); }
+    function duplicateUnit(btn) { let clone = btn.closest('.unit-box').cloneNode(true); let originals = btn.closest('.unit-box').querySelectorAll('textarea, input, select'); let clones = clone.querySelectorAll('textarea, input, select'); originals.forEach(function(el, i) { clones[i].value = el.value; }); document.getElementById("unitsContainer").appendChild(clone); updateAllTotals(); updateSTT(); saveLocalDraft(); }
+    function addNewEmptyUnit() { let box = document.querySelector('.unit-box').cloneNode(true); box.querySelector('.unit-name').value = ""; box.querySelector('tbody').innerHTML = ""; let tbody = box.querySelector('tbody'); let tr = document.createElement("tr"); tr.innerHTML = `<td class="stt-col"></td><td class="autocomplete-container"><textarea class="form-control f-name" rows="1" oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)" autocomplete="off"></textarea><div class="custom-dropdown"></div></td><td><select class="form-control f-unit" onchange="changeUnit(this)"></select></td><td><input type="number" class="form-control f-qty" value="" placeholder="0" step="any" oninput="calcRow(this, 'qty')" autocomplete="off"></td><td><input type="text" class="form-control f-price" readonly data-val="0" placeholder="0" autocomplete="off"></td><td><input type="text" class="form-control f-total" value="" placeholder="0" oninput="calcRow(this, 'total')" onblur="formatTotal(this)" autocomplete="off"></td><td class="text-center"><button class="btn-trash" onclick="deleteRow(this)" title="Xóa dòng"><i class="fas fa-times"></i></button></td>`; tbody.appendChild(tr); document.getElementById("unitsContainer").appendChild(box); updateAllTotals(); updateSTT(); saveLocalDraft(); }
+    function deleteUnit(btn) { let box = btn.closest('.unit-box'); let container = document.getElementById("unitsContainer"); if(document.querySelectorAll('.unit-box').length > 1) { showConfirm('<i class="fas fa-trash-alt" style="color:var(--danger)"></i> Xóa Phân Loại', 'Bạn có chắc chắn muốn xóa toàn bộ khối phân loại này không?', 'Xóa khối', 'btn-danger', function() { undoStack.push({ type: 'deleteUnit', container: container, box: box, nextSibling: box.nextElementSibling }); box.remove(); updateAllTotals(); updateSTT(); saveLocalDraft(); showToast("Đã xóa khối", "info"); }); } else { box.querySelector('.unit-name').value = ''; box.querySelector('tbody').innerHTML = `<tr><td class="stt-col">1</td><td class="autocomplete-container"><textarea class="form-control f-name" rows="1" oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)" autocomplete="off"></textarea><div class="custom-dropdown"></div></td><td><select class="form-control f-unit" onchange="changeUnit(this)"></select></td><td><input type="number" class="form-control f-qty" value="" placeholder="0" step="any" oninput="calcRow(this, 'qty')" autocomplete="off"></td><td><input type="text" class="form-control f-price" readonly data-val="0" placeholder="0" autocomplete="off"></td><td><input type="text" class="form-control f-total" value="" placeholder="0" oninput="calcRow(this, 'total')" onblur="formatTotal(this)" autocomplete="off"></td><td class="text-center"><button class="btn-trash" onclick="deleteRow(this)"><i class="fas fa-times"></i></button></td></tr>`; updateAllTotals(); updateSTT(); saveLocalDraft(); showToast("Đã làm mới khối phân loại", "info"); } }
 
-    function calcRow(el, source) {
-        let row = el.closest('tr'); let price = parseFloat(row.querySelector('.f-price').getAttribute('data-val')) || 0;
-        if (price === 0) return;
-        if (source === 'qty') {
-            let q = parseFloat(row.querySelector('.f-qty').value) || 0;
-            if(q === 0) row.querySelector('.f-total').value = ""; else row.querySelector('.f-total').value = Math.round(q * price).toLocaleString('vi-VN');
-        } else {
-            let rawTotal = parseFloat(row.querySelector('.f-total').value.replace(/\./g, '')) || 0;
-            if(rawTotal === 0) row.querySelector('.f-qty').value = ""; else row.querySelector('.f-qty').value = Number((rawTotal / price).toFixed(5));
-        }
-        updateAllTotals();
-    }
-
-    function formatTotal(el) { if(!el.value) return; el.value = (parseFloat(el.value.replace(/\./g, '')) || 0).toLocaleString('vi-VN'); updateAllTotals(); }
-
-    function updateAllTotals() {
-        let grandTotal = 0;
-        document.querySelectorAll('.unit-box').forEach(unit => {
-            let unitTotal = 0; unit.querySelectorAll('.f-total').forEach(el => { unitTotal += parseFloat(el.value.replace(/\./g, '')) || 0; });
-            unit.querySelector('.u-total-val').innerText = unitTotal.toLocaleString('vi-VN'); grandTotal += unitTotal;
-        });
-        document.getElementById("grandTotal").innerText = grandTotal.toLocaleString('vi-VN');
-    }
-
-    function addRow(btn) {
-        let tbody = btn.closest('.unit-box').querySelector('tbody'); let tr = document.createElement("tr");
-        tr.innerHTML = `<td class="stt-col"></td><td class="autocomplete-container"><textarea class="form-control f-name" rows="1" oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)"></textarea><div class="custom-dropdown"></div></td><td><select class="form-control f-unit" onchange="changeUnit(this)"></select></td><td><input type="number" class="form-control f-qty" value="" placeholder="0" step="any" oninput="calcRow(this, 'qty')"></td><td><input type="text" class="form-control f-price" readonly data-val="0" placeholder="0"></td><td><input type="text" class="form-control f-total" value="" placeholder="0" oninput="calcRow(this, 'total')" onblur="formatTotal(this)"></td><td class="text-center"><button class="btn-trash" onclick="deleteRow(this)" title="Xóa dòng"><i class="fas fa-times"></i></button></td>`;
-        tbody.appendChild(tr); updateSTT();
-    }
-    
-    // XÓA DÒNG (NẾU CÒN 1 DÒNG THÌ RESET CHỨ KHÔNG XÓA)
-    function deleteRow(btn) { 
-        let tr = btn.closest('tr'); let tbody = btn.closest('tbody'); 
-        if(tbody.querySelectorAll("tr").length > 1) { 
-            undoStack.push({ type: 'deleteRow', tbody: tbody, tr: tr, nextSibling: tr.nextElementSibling }); 
-            tr.remove(); updateAllTotals(); updateSTT(); 
-            showToast("Đã xóa 1 dòng. Ctrl+Z để hoàn tác", "info"); 
-        } else {
-            tr.querySelector('.f-name').value = ''; tr.querySelector('.f-unit').innerHTML = ''; tr.querySelector('.f-qty').value = '';
-            tr.querySelector('.f-price').value = ''; tr.querySelector('.f-price').setAttribute('data-val', 0); tr.querySelector('.f-total').value = '';
-            updateAllTotals(); showToast("Đã làm mới dòng hiện tại", "info");
-        }
-    }
-    
-    function duplicateUnit(btn) { 
-        let clone = btn.closest('.unit-box').cloneNode(true); 
-        let originals = btn.closest('.unit-box').querySelectorAll('textarea, input, select'); let clones = clone.querySelectorAll('textarea, input, select');
-        originals.forEach((el, i) => clones[i].value = el.value); document.getElementById("unitsContainer").appendChild(clone); updateAllTotals(); updateSTT();
-    }
-    
-    function addNewEmptyUnit() { 
-        let box = document.querySelector('.unit-box').cloneNode(true); box.querySelector('.unit-name').value = ""; box.querySelector('tbody').innerHTML = ""; 
-        let tbody = box.querySelector('tbody'); let tr = document.createElement("tr");
-        tr.innerHTML = `<td class="stt-col"></td><td class="autocomplete-container"><textarea class="form-control f-name" rows="1" oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)"></textarea><div class="custom-dropdown"></div></td><td><select class="form-control f-unit" onchange="changeUnit(this)"></select></td><td><input type="number" class="form-control f-qty" value="" placeholder="0" step="any" oninput="calcRow(this, 'qty')"></td><td><input type="text" class="form-control f-price" readonly data-val="0" placeholder="0"></td><td><input type="text" class="form-control f-total" value="" placeholder="0" oninput="calcRow(this, 'total')" onblur="formatTotal(this)"></td><td class="text-center"><button class="btn-trash" onclick="deleteRow(this)" title="Xóa dòng"><i class="fas fa-times"></i></button></td>`;
-        tbody.appendChild(tr); document.getElementById("unitsContainer").appendChild(box); updateAllTotals(); updateSTT();
-    }
-    
-    // XÓA LỚP (NẾU CÒN 1 LỚP THÌ RESET CHỨ KHÔNG XÓA)
-    function deleteUnit(btn) { 
-        let box = btn.closest('.unit-box'); let container = document.getElementById("unitsContainer");
-        if(document.querySelectorAll('.unit-box').length > 1) { 
-            showConfirm(
-                '<i class="fas fa-trash-alt" style="color:var(--danger)"></i> Xóa Phân Loại',
-                'Bạn có chắc chắn muốn xóa toàn bộ khối phân loại này không?',
-                '<i class="fas fa-trash"></i> Xóa khối',
-                'btn-danger',
-                () => {
-                    undoStack.push({ type: 'deleteUnit', container: container, box: box, nextSibling: box.nextElementSibling }); 
-                    box.remove(); updateAllTotals(); updateSTT(); showToast("Đã xóa khối. Ctrl+Z để hoàn tác", "info");
+    function processSubmit() {
+        let dataObj = getFormData();
+        if(!dataObj) { showToast("Vui lòng chọn khách hàng và nhập hàng hóa!", "danger"); return; }
+        
+        let unitCount = dataObj.units.length;
+        
+        if(unitCount >= 2) {
+            let isMissingName = false;
+            for(let i = 0; i < unitCount; i++) {
+                if(!dataObj.units[i].unitName || dataObj.units[i].unitName.trim() === "") {
+                    isMissingName = true;
+                    break;
                 }
-            );
+            }
+            
+            if(isMissingName) {
+                showToast("Bạn có nhiều phân loại. Vui lòng nhập đầy đủ TÊN PHÂN LOẠI ở các ô gạch chân!", "warning");
+                return; 
+            }
+
+            pendingSubmitData = dataObj;
+            document.getElementById('mergeUnitCount').innerText = unitCount;
+            document.getElementById('mergeOptionModal').style.display = 'flex';
         } else {
-            box.querySelector('.unit-name').value = '';
-            box.querySelector('tbody').innerHTML = `<tr><td class="stt-col">1</td><td class="autocomplete-container"><textarea class="form-control f-name" rows="1" placeholder="Tìm kiếm sản phẩm..." oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)"></textarea><div class="custom-dropdown"></div></td><td><select class="form-control f-unit" onchange="changeUnit(this)"></select></td><td><input type="number" class="form-control f-qty" value="" placeholder="0" step="any" oninput="calcRow(this, 'qty')"></td><td><input type="text" class="form-control f-price" readonly data-val="0" placeholder="0"></td><td><input type="text" class="form-control f-total" value="" placeholder="0" oninput="calcRow(this, 'total')" onblur="formatTotal(this)"></td><td class="text-center"><button class="btn-trash" onclick="deleteRow(this)"><i class="fas fa-times"></i></button></td></tr>`;
-            updateAllTotals(); updateSTT(); showToast("Đã làm mới khối phân loại", "info");
+            doSaveCloudData(dataObj);
         }
     }
 
-    function saveCloudDraftOnly() {
-        let dataObj = getFormData();
-        if(!dataObj) { showToast("Vui lòng chọn Khách hàng trước khi lưu!", "danger"); return; }
-        if(dataObj.empty) { showToast("Hóa đơn trống, không thể lưu!", "danger"); return; }
-        doSaveCloudData(dataObj); resetForm();
+    function closeMergeModal() {
+        document.getElementById('mergeOptionModal').style.display = 'none';
+        pendingSubmitData = null; 
     }
 
-    function saveAndExport() {
-        let dataObj = getFormData();
-        if(!dataObj) { showToast("Vui lòng chọn Khách hàng trước!", "danger"); return; }
-        if(dataObj.empty) { showToast("Hóa đơn trống!", "danger"); return; }
-        doSaveCloudData(dataObj); resetForm(); triggerExcelExport(dataObj);
+    function submitWithMergeOption(option) {
+        if(pendingSubmitData) {
+            pendingSubmitData.mergeOption = option; 
+            doSaveCloudData(pendingSubmitData);
+        }
+        closeMergeModal();
     }
 
     function doSaveCloudData(dataObj) {
-        let draftId = document.getElementById("currentDraftId").value || "HD_" + Date.now();
-        let timestampStr = new Date().toLocaleString('vi-VN');
-        let payload = { id: draftId, customerName: dataObj.customer.name, timestampStr: timestampStr, json: JSON.stringify(dataObj) };
-        let existingIdx = db.drafts.findIndex(d => d.id === draftId);
-        let localDraftRecord = { id: draftId, customer: { name: dataObj.customer.name }, dateStr: timestampStr, json: payload.json };
+        let draftId = document.getElementById("currentDraftId").value || "HD_" + Date.now(); let timestampStr = new Date().toLocaleString('vi-VN');
+        
+        let payload = { action: 'saveDraft', id: draftId, customerName: dataObj.customer.name, timestampStr: timestampStr, json: JSON.stringify(dataObj) };
+        let existingIdx = db.drafts.findIndex(function(d) { return d.id === draftId; }); let localDraftRecord = { id: draftId, customer: { name: dataObj.customer.name, mst: dataObj.customer.mst }, dateStr: timestampStr, json: payload.json };
         if (existingIdx > -1) db.drafts[existingIdx] = localDraftRecord; else db.drafts.push(localDraftRecord);
 
-        document.getElementById("searchDraft").value = ""; renderDraftList(); 
-        showToast("Đang đồng bộ dữ liệu lên Cloud...", "info");
-        fetch(API_URL + "?action=saveDraft", { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-        }).then(res => res.json()).then(res => { showToast("Đã lưu an toàn trên Google Sheets!", "success"); }).catch(err => showToast("Lỗi mạng khi đồng bộ!", "danger"));
+        document.getElementById("searchDraft").value = ""; 
+        currentPage = 1; 
+        renderDraftList(); 
+        
+        showToast("Đang đồng bộ Máy chủ...", "info");
+        
+        fetch(API_URL, { method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+        .then(function(res) { return res.json(); })
+        .then(function(res) { 
+            if(res.success) {
+                if(!isAdmin) localStorage.removeItem('localDraft_' + loggedInCustomer.mst); 
+                document.getElementById('autoSaveStatus').style.display = 'none';
+                showToast("Đã gửi bảng kê thành công!", "success"); 
+                resetForm(true); 
+            } else { showToast("Lỗi từ Google: " + (res.error || "Không rõ"), "danger"); }
+        }).catch(function(err) { showToast("Lỗi mạng! Bảng kê tạm lưu trên máy.", "warning"); });
+    }
+
+    function filterDrafts() { 
+        currentPage = 1; 
+        renderDraftList(document.getElementById("searchDraft").value); 
+    }
+
+    function changePage(page) {
+        currentPage = page;
+        renderDraftList(document.getElementById("searchDraft").value);
+    }
+
+    function changeItemsPerPage(selectEl) {
+        itemsPerPage = parseInt(selectEl.value);
+        currentPage = 1;
+        renderDraftList(document.getElementById("searchDraft").value);
     }
 
     function renderDraftList(searchQuery = "") {
-        let container = document.getElementById("draftListContainer"); container.innerHTML = "";
-        if(!db.drafts || db.drafts.length === 0) { container.innerHTML = "<div style='color:#6c757d; font-size: 14px; text-align:center; padding: 20px;'>Chưa có dữ liệu.</div>"; return; }
-
-        let filteredDrafts = db.drafts;
-        if (searchQuery) {
-            let lowerQuery = searchQuery.toLowerCase();
-            filteredDrafts = db.drafts.filter(d => { let name = d.customer.name || JSON.parse(d.json).customer.name; return name.toLowerCase().includes(lowerQuery); });
+        let container = document.getElementById("draftListContainer"); 
+        let paginationContainer = document.getElementById("paginationContainer");
+        container.innerHTML = "";
+        
+        let filterStartDate = null, filterEndDate = null;
+        if(isAdmin) {
+            let fp = document.getElementById("filterDateRange")._flatpickr;
+            if(fp && fp.selectedDates.length > 0) {
+                filterStartDate = fp.selectedDates[0]; filterStartDate.setHours(0,0,0,0);
+                if(fp.selectedDates.length === 2) { filterEndDate = fp.selectedDates[1]; filterEndDate.setHours(23,59,59,999); } 
+                else { filterEndDate = new Date(filterStartDate); filterEndDate.setHours(23,59,59,999); }
+            }
         }
-        if(filteredDrafts.length === 0) { container.innerHTML = "<div style='color:#6c757d; font-size: 14px; text-align:center; padding: 20px;'>Không tìm thấy kết quả.</div>"; return; }
 
-        filteredDrafts.slice().reverse().forEach(d => {
-            let data = JSON.parse(d.json); let customerName = d.customer.name || data.customer.name; let dateString = d.dateStr || d.timestampStr;
-            let div = document.createElement('div'); div.className = "draft-item";
+        let filteredDrafts = db.drafts.filter(function(d) { 
+            try {
+                let data = JSON.parse(d.json); 
+                let jsonMst = data.customer ? String(data.customer.mst).trim() : "";
+                if(!isAdmin && (jsonMst === "" || jsonMst !== String(loggedInCustomer.mst).trim())) return false;
+                
+                let textMatch = true;
+                if (searchQuery) {
+                    let q = searchQuery.toLowerCase();
+                    textMatch = (data.customer.name && data.customer.name.toLowerCase().includes(q)) || 
+                                (data.customer.mst && data.customer.mst.toLowerCase().includes(q)) || 
+                                (data.invoiceDate && data.invoiceDate.includes(q));
+                }
+
+                let dateMatch = true;
+                if(isAdmin && filterStartDate) {
+                    if(data.invoiceDate) {
+                        let p = data.invoiceDate.split('/');
+                        let iD = new Date(p[2], p[1]-1, p[0]);
+                        if(iD < filterStartDate || iD > filterEndDate) dateMatch = false;
+                    } else { dateMatch = false; }
+                }
+                return textMatch && dateMatch;
+            } catch(e) { return false; }
+        }).reverse(); 
+        
+        if(filteredDrafts.length === 0) { 
+            container.innerHTML = "<div style='color:#6c757d; font-size: 14px; text-align:center; padding: 20px;'>Không tìm thấy dữ liệu phù hợp.</div>"; 
+            paginationContainer.style.display = "none";
+            return; 
+        }
+
+        let totalItems = filteredDrafts.length;
+        let totalPages = Math.ceil(totalItems / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        let startIndex = (currentPage - 1) * itemsPerPage;
+        let endIndex = startIndex + itemsPerPage;
+        let paginatedDrafts = filteredDrafts.slice(startIndex, endIndex);
+
+        paginatedDrafts.forEach(function(d) {
+            let data = JSON.parse(d.json); let dateString = d.dateStr || d.timestampStr;
+            let isLocked = checkLockStatus(data.invoiceDate);
+
+            let nameHtml = isAdmin ? `<strong style="color:var(--primary); font-size:15px;">[${data.customer.name}] - Phiếu: ${data.invoiceDate || 'Không ngày'}</strong>` : `<strong style="color:var(--primary); font-size:15px;">Phiếu: ${data.invoiceDate || 'Không ngày'}</strong>`;
             
-            // XÓA NÚT XÓA. CHUYỂN NÚT EXCEL SANG MÀU XANH LÁ.
-            div.innerHTML = `
-                <div>
-                    <strong style="color:var(--primary); font-size:15px;">${customerName}</strong> 
-                    <span style="color:var(--danger); font-size:13px; margin-left:5px;">(${data.units.length} Phân loại)</span><br>
-                    <span style="font-size:13px; color:#6c757d; display:inline-block; margin-top:4px;">Tổng: <b style="color:var(--text);">${data.grandTotal} đ</b> &nbsp;|&nbsp; Lưu: ${dateString}</span>
-                </div>
-                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
-                    <button class="btn btn-success" onclick="prepareExport('${d.id}')"><i class="fas fa-file-excel"></i> Tải Excel</button>
-                    <button class="btn btn-outline-primary edit-btn" onclick="loadDraft('${d.id}')"><i class="fas fa-edit"></i> Sửa</button>
-                </div>`;
+            let btnHtml = ``;
+            if(isLocked) {
+                btnHtml = `<button class="btn btn-outline-info edit-btn" onclick="loadDraft('${d.id}', true)"><i class="fas fa-eye"></i> Xem Bảng Kê</button>`;
+            } else {
+                btnHtml = `<button class="btn btn-success" onclick="prepareExport('${d.id}')"><i class="fas fa-file-excel"></i> Tải Excel</button><button class="btn btn-outline-primary edit-btn" onclick="loadDraft('${d.id}', false)"><i class="fas fa-edit"></i> Mở / Sửa</button>`;
+            }
+
+            let div = document.createElement('div'); div.className = "draft-item";
+            if(isLocked) div.style.background = "#f8f9fa"; 
+            
+            let mergeText = data.mergeOption ? ` - ${data.mergeOption}` : '';
+            div.innerHTML = `<div>${nameHtml} <span style="color:var(--danger); font-size:13px; margin-left:5px;">(${data.units.length} Phân loại${mergeText})</span><br><span style="font-size:13px; color:#6c757d; display:inline-block; margin-top:4px;">Tổng: <b style="color:var(--text);">${data.grandTotal} đ</b> &nbsp;|&nbsp; Lưu: ${dateString}</span></div><div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">${btnHtml}</div>`;
             container.appendChild(div);
         });
+
+        renderPaginationUI(totalPages);
     }
 
-    function filterDrafts() { let query = document.getElementById("searchDraft").value; renderDraftList(query); }
+    function renderPaginationUI(totalPages) {
+        let container = document.getElementById("paginationContainer");
+        container.style.display = "flex";
 
-    // POPUP CẢNH BÁO KHI MỞ SỬA HÓA ĐƠN
-    function loadDraft(id) {
-        let draftRec = db.drafts.find(d => d.id === id); if (!draftRec) return; 
-        let draft = JSON.parse(draftRec.json);
-        let cusName = draft.customer.name || draftRec.customer.name;
+        let html = `
+            <div class="page-size-selector">
+                Hiển thị:
+                <select onchange="changeItemsPerPage(this)">
+                    <option value="10" ${itemsPerPage === 10 ? 'selected' : ''}>10</option>
+                    <option value="20" ${itemsPerPage === 20 ? 'selected' : ''}>20</option>
+                    <option value="50" ${itemsPerPage === 50 ? 'selected' : ''}>50</option>
+                </select>
+                dòng
+            </div>
+            <div class="pagination-controls">
+                <button class="page-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+        `;
 
-        showConfirm(
-            '<i class="fas fa-exclamation-triangle" style="color:var(--warning)"></i> Cảnh báo sửa dữ liệu',
-            `Bạn đang mở lại hóa đơn của đơn vị:<br><b style="color:var(--primary); font-size:16px;">[ ${cusName} ]</b><br><br><b>LƯU Ý:</b> Nếu bạn lưu lại, dữ liệu mới sẽ <b>GHI ĐÈ</b> lên bản gốc của hóa đơn này. Bạn có chắc chắn muốn tiếp tục không?`,
-            '<i class="fas fa-pencil-alt"></i> Vẫn tiếp tục',
-            'btn-warning',
-            () => {
-                undoStack = []; document.getElementById("currentDraftId").value = id; 
-                try { document.getElementById("invoiceDate")._flatpickr.setDate(draft.invoiceDate || new Date(), true, "d/m/Y"); } catch(e){}
-                document.getElementById("cusSearch").value = draft.customer.name; document.getElementById("cusPerson").value = draft.customer.person; document.getElementById("cusMST").value = draft.customer.mst; document.getElementById("cusAddr").value = draft.customer.addr; document.getElementById("cusEmail").value = draft.customer.email || "";
-                
-                let container = document.getElementById("unitsContainer"); container.innerHTML = "";
-                draft.units.forEach(u => {
-                    let div = document.createElement("div"); div.className = "unit-box";
-                    let html = `<div class="unit-header"><input type="text" class="unit-name-input unit-name" value="${u.unitName}">
-                        <div><button class="btn btn-outline-info" onclick="printUnit(this)"><i class="fas fa-print"></i> In Phân Loại Này</button> <button class="btn btn-outline-orange" onclick="duplicateUnit(this)"><i class="fas fa-copy"></i> Nhân Bản</button> <button class="btn-trash" onclick="deleteUnit(this)"><i class="fas fa-trash-alt"></i></button></div></div>
-                        <div class="table-responsive"><table><thead><tr><th width="5%">STT</th><th width="33%">Tên Hàng Hóa</th><th width="11%">ĐVT</th><th width="10%">Số Lượng</th><th width="16%">Đơn Giá</th><th width="20%">Thành Tiền</th><th width="4%"></th></tr></thead><tbody>`;
-                    u.products.forEach(p => {
-                        let dbProd = db.products.find(x => x.name === p.name); let optionsHtml = `<option value="${p.unit}" data-price="${p.priceRaw}">${p.unit}</option>`;
-                        if(dbProd) { optionsHtml = `<option value="${dbProd.u1}" data-price="${dbProd.p1}" ${p.unit===dbProd.u1?'selected':''}>${dbProd.u1}</option>`; if(dbProd.u2) optionsHtml += `<option value="${dbProd.u2}" data-price="${dbProd.p2}" ${p.unit===dbProd.u2?'selected':''}>${dbProd.u2}</option>`; }
-                        html += `<tr><td class="stt-col"></td><td class="autocomplete-container"><textarea class="form-control f-name" rows="1" oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)">${p.name}</textarea><div class="custom-dropdown"></div></td><td><select class="form-control f-unit" onchange="changeUnit(this)">${optionsHtml}</select></td><td><input type="number" class="form-control f-qty" value="${p.qty}" step="any" oninput="calcRow(this, 'qty')"></td><td><input type="text" class="form-control f-price" value="${p.priceStr}" readonly data-val="${p.priceRaw}"></td><td><input type="text" class="form-control f-total" value="${p.totalStr}" oninput="calcRow(this, 'total')" onblur="formatTotal(this)"></td><td class="text-center"><button class="btn-trash" onclick="deleteRow(this)"><i class="fas fa-times"></i></button></td></tr>`;
-                    });
-                    html += `</tbody></table></div><div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;"><button class="btn btn-outline-success" onclick="addRow(this)"><i class="fas fa-plus"></i> Thêm Dòng</button><div class="unit-summary">Cộng tiền: <span class="u-total-val">0</span> đ</div></div>`;
-                    div.innerHTML = html; container.appendChild(div);
-                });
-                document.querySelectorAll('.f-name').forEach(ta => autoHeight(ta)); updateAllTotals(); updateSTT(); window.scrollTo(0, 0); showToast("Đã tải dữ liệu thành công!", "success");
-            }
-        );
-    }
+        let startP = Math.max(1, currentPage - 2);
+        let endP = Math.min(totalPages, startP + 4);
+        if (endP - startP < 4) { startP = Math.max(1, endP - 4); }
 
-    function prepareExport(draftId = null) {
-        let exportData = null;
-        if (typeof draftId === 'string') {
-            let draftRec = db.drafts.find(d => d.id === draftId); if (!draftRec) return; exportData = JSON.parse(draftRec.json);
-            let dateStr = exportData.invoiceDate;
-            if (dateStr && dateStr.includes('-')) { let parts = dateStr.split('-'); exportData.dateStr = `${parts[2]}/${parts[1]}/${parts[0]}`; } else { exportData.dateStr = new Date().toLocaleDateString('vi-VN'); }
-        } else {
-            exportData = getFormData(); if(!exportData) { showToast("Vui lòng chọn Khách hàng!", "danger"); return; } if(exportData.empty) { showToast("Phiếu xuất trống!", "danger"); return; }
-            exportData.dateStr = getInvoiceDateStr();
+        for (let i = startP; i <= endP; i++) {
+            html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
         }
-        triggerExcelExport(exportData);
+
+        html += `
+                <button class="page-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        `;
+        container.innerHTML = html;
     }
 
-    function triggerExcelExport(dataObj) {
-        if (dataObj.units.length > 1) { tempExportData = dataObj; document.getElementById('excelModal').style.display = 'flex'; } 
-        else { generateExcel(dataObj, false); }
+    function loadDraft(id, isViewOnly) {
+        let draftRec = db.drafts.find(function(d) { return d.id === id; }); 
+        if (!draftRec) return; 
+        let draft = JSON.parse(draftRec.json);
+        
+        if(isViewOnly) {
+            restoreDataToForm(draft, true); 
+            setFormViewMode(true); 
+            showToast("Đang mở ở chế độ CHỈ XEM (Giá cũ được bảo lưu)", "warning");
+        } else {
+            let pastCutoff = isTimePastCutoff(draft.invoiceDate);
+            if (pastCutoff) {
+                showConfirm(
+                    '<i class="fas fa-lock" style="color:var(--danger)"></i> Sửa phiếu đã chốt', 
+                    `Bạn đang mở lại phiếu ngày: <b>${draft.invoiceDate || ''}</b><br><br><b>LƯU Ý:</b> Hóa đơn đã qua giờ chốt sổ. Hệ thống sẽ <b>BẢO LƯU GIỮ NGUYÊN ĐƠN GIÁ CŨ</b>, tuyệt đối không tự động cập nhật giá mới. Bạn có muốn tiếp tục?`, 
+                    '<i class="fas fa-pencil-alt"></i> Tiếp tục', 
+                    'btn-danger', 
+                    function() { setFormViewMode(false); restoreDataToForm(draft, false); saveLocalDraft(); }
+                );
+            } else {
+                showConfirm(
+                    '<i class="fas fa-sync" style="color:var(--info)"></i> Cập nhật dữ liệu', 
+                    `Bạn đang mở lại phiếu ngày: <b>${draft.invoiceDate || ''}</b><br><br><b>LƯU Ý:</b> Phiếu này chưa chốt sổ. Hệ thống sẽ tự động dò và <b>CẬP NHẬT ĐƠN GIÁ MỚI NHẤT</b> từ kho (nếu có). Tiếp tục?`, 
+                    '<i class="fas fa-folder-open"></i> Đồng ý', 
+                    'btn-info', 
+                    function() { setFormViewMode(false); restoreDataToForm(draft, false); saveLocalDraft(); }
+                );
+            }
+        }
     }
 
+    function getInvoiceDateStr() { return document.getElementById('invoiceDate').value || new Date().toLocaleDateString('vi-VN'); }
+    function groupProducts(products) { let grouped = {}; products.forEach(function(p) { let key = p.name.trim() + "|" + p.unit.trim() + "|" + p.priceRaw; if (!grouped[key]) { grouped[key] = { name: p.name, unit: p.unit, qty: p.qty, priceRaw: p.priceRaw, totalRaw: p.totalRaw }; } else { grouped[key].qty += p.qty; grouped[key].totalRaw += p.totalRaw; } }); return Object.values(grouped).map(function(p) { p.priceStr = p.priceRaw.toLocaleString('vi-VN'); p.totalStr = Math.round(p.totalRaw).toLocaleString('vi-VN'); return p; }); }
+    function prepareExport(draftId) { let draftRec = db.drafts.find(function(d) { return d.id === draftId; }); if (!draftRec) return; let exportData = JSON.parse(draftRec.json); let dateStr = exportData.invoiceDate; if (dateStr && dateStr.includes('-')) { let parts = dateStr.split('-'); exportData.dateStr = `${parts[2]}/${parts[1]}/${parts[0]}`; } else { exportData.dateStr = dateStr || new Date().toLocaleDateString('vi-VN'); } triggerExcelExport(exportData); }
+    function triggerExcelExport(dataObj) { if (dataObj.units.length > 1) { tempExportData = dataObj; document.getElementById('excelModal').style.display = 'flex'; } else { generateExcel(dataObj, false); } }
     function closeExcelModal() { document.getElementById('excelModal').style.display = 'none'; tempExportData = null; }
     function confirmExport(includeSummary) { if (tempExportData) generateExcel(tempExportData, includeSummary); closeExcelModal(); }
 
     async function generateExcel(data, includeSummary) {
         const wb = new ExcelJS.Workbook(); let summaryData = {}; let grandTotalAll = 0; let cusName = data.customer.name || "Chua_Chon_Khach";
+
+        let pastCutoff = isTimePastCutoff(data.invoiceDate);
+        if (!pastCutoff) {
+            data.units.forEach(function(u) {
+                u.products.forEach(function(p) {
+                    let dbProd = db.products.find(function(x) { return x.name === p.name; });
+                    if (dbProd) {
+                        if (p.unit === dbProd.u1) p.priceRaw = dbProd.p1;
+                        else if (dbProd.u2 && p.unit === dbProd.u2) p.priceRaw = dbProd.p2;
+                        p.totalRaw = (p.qty || 0) * p.priceRaw;
+                    }
+                });
+            });
+        }
 
         function createSheet(name, isSum = false, title = "") {
             const ws = wb.addWorksheet(name); ws.columns = [{width:6},{width:40},{width:10},{width:15},{width:15},{width:20}];
@@ -689,54 +1002,34 @@
             ws.mergeCells('A5:F5'); ws.getCell('A5').value = isSum ? "BẢNG TỔNG HỢP XUẤT KHO" : "PHIẾU XUẤT KHO - " + title; ws.getCell('A5').font = {name:'Times New Roman', bold:true, size:16}; ws.getCell('A5').alignment = {horizontal:'center'};
             ws.getCell('A6').value = "Ngày xuất: " + data.dateStr; ws.mergeCells('A6:F6'); ws.getCell('A6').alignment = {horizontal:'center'};
             ws.getCell('A8').value = "Đơn vị mua:"; ws.getCell('B8').value = data.customer.name; ws.getCell('B8').font = {bold:true}; ws.getCell('A9').value = "Đại diện:"; ws.getCell('B9').value = data.customer.person; ws.getCell('E9').value = "MST:"; ws.getCell('F9').value = data.customer.mst; ws.getCell('A10').value = "Địa chỉ:"; ws.getCell('B10').value = data.customer.addr; ws.getCell('E10').value = "Email:"; ws.getCell('F10').value = data.customer.email;
-            let hr = ws.getRow(12); hr.values = ['STT','Tên Hàng Hóa','ĐVT',isSum?'Tổng SL':'Số lượng','Đơn giá','Thành tiền']; hr.eachCell(c => { c.font = {bold:true, name:'Times New Roman'}; c.alignment={horizontal:'center'}; c.border={top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}}; c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'F2F2F2'}}; });
+            let hr = ws.getRow(12); hr.values = ['STT','Tên Hàng Hóa','ĐVT',isSum?'Tổng SL':'Số lượng','Đơn giá','Thành tiền']; hr.eachCell(function(c) { c.font = {bold:true, name:'Times New Roman'}; c.alignment={horizontal:'center'}; c.border={top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}}; c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'F2F2F2'}}; });
             return ws;
         }
 
         let sheetNames = new Set();
-        data.units.forEach((unit, idx) => {
+        data.units.forEach(function(unit, idx) {
             let baseName = unit.unitName ? unit.unitName.substring(0,25).replace(/[:\\\/?*\[\]]/g, '') : `Phan_Loai_${idx+1}`;
             let uName = baseName; let counter = 1; while(sheetNames.has(uName)) { uName = baseName + "_" + counter; counter++; } sheetNames.add(uName);
-
             let ws = createSheet(uName, false, uName); let stt = 1, rIdx = 13, uTotal = 0;
-            unit.products.forEach(p => {
-                let t = p.qty * p.priceRaw;
-                let row = ws.getRow(rIdx); row.values = [stt++, p.name, p.unit, p.qty, p.priceRaw, t]; row.getCell(4).numFmt = '#,##0.00###'; row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.eachCell(c => c.border = {top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}});
+            
+            let mergedProducts = groupProducts(unit.products);
+            mergedProducts.forEach(function(p) {
+                let t = p.totalRaw || (p.qty * p.priceRaw);
+                let row = ws.getRow(rIdx); row.values = [stt++, p.name, p.unit, p.qty, p.priceRaw, t]; row.getCell(4).numFmt = '#,##0.00###'; row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.eachCell(function(c) { c.border = {top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}}; });
                 uTotal += t; rIdx++; let sumKey = p.name + "|" + p.unit; if(!summaryData[sumKey]) summaryData[sumKey] = {name: p.name, u:p.unit, p:p.priceRaw, q:0, t:0}; summaryData[sumKey].q += p.qty; summaryData[sumKey].t += t;
             });
-            let tr = ws.getRow(rIdx); ws.mergeCells(`A${rIdx}:E${rIdx}`); tr.getCell(1).value = "CỘNG TIỀN HÀNG:"; tr.getCell(1).alignment={horizontal:'right'}; tr.getCell(6).value = uTotal; tr.getCell(6).numFmt = '#,##0'; ws.eachRow(row => row.eachCell(c => c.font = Object.assign({}, c.font, {name:'Times New Roman'}))); grandTotalAll += uTotal;
+            let tr = ws.getRow(rIdx); ws.mergeCells(`A${rIdx}:E${rIdx}`); tr.getCell(1).value = "CỘNG TIỀN HÀNG:"; tr.getCell(1).alignment={horizontal:'right'}; tr.getCell(6).value = uTotal; tr.getCell(6).numFmt = '#,##0'; ws.eachRow(function(row) { row.eachCell(function(c) { c.font = Object.assign({}, c.font, {name:'Times New Roman'}); }); }); grandTotalAll += uTotal;
         });
 
         if(includeSummary && data.units.length > 1) {
             let wsSum = createSheet("TONG_HOP", true); let sStt = 1, srIdx = 13;
             for (let k in summaryData) {
-                let item = summaryData[k]; let row = wsSum.getRow(srIdx); row.values = [sStt++, item.name, item.u, item.q, item.p, item.t]; row.getCell(4).numFmt = '#,##0.00###'; row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.eachCell(c => c.border = {top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}}); srIdx++;
+                let item = summaryData[k]; let row = wsSum.getRow(srIdx); row.values = [sStt++, item.name, item.u, item.q, item.p, item.t]; row.getCell(4).numFmt = '#,##0.00###'; row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.eachCell(function(c) { c.border = {top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}}; }); srIdx++;
             }
-            let totalRow = wsSum.getRow(srIdx); wsSum.mergeCells(`A${srIdx}:E${srIdx}`); totalRow.getCell(1).value = "TỔNG CỘNG TOÀN BỘ:"; totalRow.getCell(1).alignment = {horizontal:'right'}; totalRow.getCell(6).value = grandTotalAll; totalRow.getCell(6).numFmt = '#,##0'; wsSum.eachRow(row => row.eachCell(c => c.font = Object.assign({}, c.font, {name:'Times New Roman'}))); wb.worksheets.unshift(wb.worksheets.pop());
+            let totalRow = wsSum.getRow(srIdx); wsSum.mergeCells(`A${srIdx}:E${srIdx}`); totalRow.getCell(1).value = "TỔNG CỘNG TOÀN BỘ:"; totalRow.getCell(1).alignment = {horizontal:'right'}; totalRow.getCell(6).value = grandTotalAll; totalRow.getCell(6).numFmt = '#,##0'; wsSum.eachRow(function(row) { row.eachCell(function(c) { c.font = Object.assign({}, c.font, {name:'Times New Roman'}); }); }); wb.worksheets.unshift(wb.worksheets.pop());
         }
 
-        const buf = await wb.xlsx.writeBuffer(); saveAs(new Blob([buf]), `HoaDon_${cusName.replace(/\s+/g,'_')}_${Date.now()}.xlsx`); showToast("Đã tải File Excel thành công", "success");
-    }
-
-    function printUnit(btn) {
-        let box = btn.closest('.unit-box'); 
-        let rawProducts = []; box.querySelectorAll('tbody tr').forEach((r) => { let name = r.querySelector('.f-name').value; if(name) { rawProducts.push({ name: name, unit: r.querySelector('.f-unit').value, qty: parseFloat(r.querySelector('.f-qty').value) || 0, priceRaw: parseFloat(r.querySelector('.f-price').getAttribute('data-val')) || 0 }); } });
-        let grouped = groupProducts(rawProducts);
-        
-        let html = `<div style="text-align:left;"><b>${SELLER_INFO.name}</b><br>Đ/c: ${SELLER_INFO.addr}</div><div style="text-align:center; margin-top:20px;"><h2 style="margin:0">PHIẾU XUẤT KHO KIÊM GIAO HÀNG</h2>Phân loại: ${box.querySelector('.unit-name').value}<br>Ngày xuất: ${getInvoiceDateStr()}</div><div style="margin-top:20px;"><b>Đơn vị mua:</b> ${document.getElementById('cusSearch').value} - <b>Đại diện:</b> ${document.getElementById('cusPerson').value}</div><div style="margin-bottom:15px;"><b>Địa chỉ:</b> ${document.getElementById('cusAddr').value}</div><table class="print-table"><thead><tr><th width="5%">STT</th><th width="40%">Tên hàng hóa</th><th width="10%">ĐVT</th><th width="10%">SL</th><th width="15%">Đơn giá</th><th width="20%">Thành tiền</th></tr></thead><tbody>`;
-        let uTotal = 0; grouped.forEach((p, i) => { html += `<tr><td class="text-center">${i+1}</td><td>${p.name}</td><td class="text-center">${p.unit}</td><td class="text-right">${p.qty}</td><td class="text-right">${p.priceStr}</td><td class="text-right text-bold">${p.totalStr}</td></tr>`; uTotal += Math.round(p.qty * p.priceRaw); });
-        html += `</tbody></table><div class="text-right text-bold" style="margin-top:15px; font-size:18px;">Tổng cộng: ${uTotal.toLocaleString('vi-VN')} VNĐ</div><div style="display:flex; justify-content:space-between; margin-top:50px; text-align:center;"><div style="width:33%;"><b>Người nhận</b><br><i>(Ký, họ tên)</i></div><div style="width:33%;"><b>Người giao</b><br><i>(Ký, họ tên)</i></div><div style="width:33%;"><b>Thủ kho</b><br><i>(Ký, họ tên)</i></div></div>`;
-        document.getElementById('printArea').innerHTML = html; window.print();
-    }
-
-    function printSummary() {
-        if(document.querySelectorAll('.unit-box').length === 1) { showToast("Vui lòng in trực tiếp tại khối phân loại!", "danger"); return; }
-        let summaryObj = {}; let totalAll = 0;
-        document.querySelectorAll('.unit-box').forEach(unit => { unit.querySelectorAll('tbody tr').forEach(r => { let n = r.querySelector('.f-name').value; let u = r.querySelector('.f-unit').value; if(n) { let t = parseFloat(r.querySelector('.f-total').value.replace(/\./g, '')) || 0; let sumKey = n + "|" + u; if (!summaryObj[sumKey]) summaryObj[sumKey] = { name: n, u: u, p: r.querySelector('.f-price').value, q: 0, t: 0 }; summaryObj[sumKey].q = Number((summaryObj[sumKey].q + (parseFloat(r.querySelector('.f-qty').value)||0)).toFixed(5)); summaryObj[sumKey].t += t; totalAll += t; } }); });
-        let html = `<div style="text-align:left;"><b>${SELLER_INFO.name}</b><br>Đ/c: ${SELLER_INFO.addr}</div><div style="text-align:center; margin-top:20px;"><h2 style="margin:0">BẢNG TỔNG HỢP XUẤT KHO</h2>Ngày xuất: ${getInvoiceDateStr()}</div><div style="margin-top:20px;"><b>Đơn vị mua:</b> ${document.getElementById('cusSearch').value}</div><div style="margin-bottom:15px;"><b>Địa chỉ:</b> ${document.getElementById('cusAddr').value}</div><table class="print-table"><thead><tr><th width="5%">STT</th><th width="40%">Tên hàng hóa</th><th width="10%">ĐVT</th><th width="10%">Tổng SL</th><th width="15%">Đơn giá</th><th width="20%">Tổng Tiền</th></tr></thead><tbody>`;
-        let stt = 1; for (let k in summaryObj) { let item = summaryObj[k]; html += `<tr><td class="text-center">${stt++}</td><td>${item.name}</td><td class="text-center">${item.u}</td><td class="text-right text-bold">${item.q}</td><td class="text-right">${item.p}</td><td class="text-right text-bold">${item.t.toLocaleString('vi-VN')}</td></tr>`; }
-        html += `</tbody></table><h2 class="text-right" style="margin-top:15px;">TỔNG TOÀN BỘ: ${totalAll.toLocaleString('vi-VN')} VNĐ</h2><div style="display:flex; justify-content:space-between; margin-top:50px; text-align:center;"><div style="width:50%;"><b>Kế toán</b><br><i>(Ký, họ tên)</i></div><div style="width:50%;"><b>Giám đốc</b><br><i>(Ký, họ tên)</i></div></div>`;
-        document.getElementById('printArea').innerHTML = html; window.print();
+        const buf = await wb.xlsx.writeBuffer(); saveAs(new Blob([buf]), `HoaDon_${cusName.replace(/\s+/g,'_')}_${data.dateStr.replace(/\//g,'-')}.xlsx`); showToast("Đã tải File Excel thành công", "success");
     }
 </script>
 
