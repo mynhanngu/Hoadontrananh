@@ -180,7 +180,6 @@
             .tab-menu { padding: 0 10px; }
             .navbar h1 { font-size: 15px; letter-spacing: 0px; line-height: 1.4; max-width: 70%; }
             #adminBadge { display: block !important; margin-left: 0; margin-top: 2px; }
-            .edit-btn { display: none !important; }
         }
     </style>
 </head>
@@ -189,7 +188,7 @@
 <div id="sessionLoader"></div>
 
 <div class="navbar">
-    <h1>TRẦN ANH - ENVOICE EX <span id="adminBadge" style="display:none; color:var(--danger); font-size:12px; margin-left:5px; text-transform:none;">(QUẢN TRỊ)</span></h1>
+    <h1>TRẦN ANH - EX ENVOICE <span id="adminBadge" style="display:none; color:var(--danger); font-size:12px; margin-left:5px; text-transform:none;">(QUẢN TRỊ)</span></h1>
     <div id="logoutBtn" class="user-badge" style="display: none;" onclick="logout()">
         <i class="fas fa-sign-out-alt"></i> Đăng xuất
     </div>
@@ -1177,7 +1176,7 @@
 
     document.addEventListener("click", function(e) { 
         if (!e.target.classList.contains("f-name") && !e.target.closest('.custom-dropdown')) { 
-            document.querySelectorAll("#unitsContainer .custom-dropdown").forEach(function(d) { d.style.display = "none"; }); 
+            document.querySelectorAll(".custom-dropdown").forEach(function(d) { d.style.display = "none"; }); 
             document.querySelectorAll('.autocomplete-container, tr, .table-responsive, .unit-box').forEach(function(el) { 
                 el.style.zIndex = ""; el.style.position = "";
             });
@@ -1198,16 +1197,24 @@
         if(!isAdmin) return; 
         let val = inputEl.value.toLowerCase().trim(); 
         let dropdown = document.getElementById("cusDropdown"); 
-        dropdown.innerHTML = "";
         
-        inputEl.closest('.autocomplete-container').style.zIndex = "9999";
-        
+        // SỬA LỖI SMARTBOX TÊN CÔNG TY BỊ NHÁY: Tách việc ẩn/hiện và tạo mới rõ ràng
+        if (val === "") {
+            dropdown.style.display = "none";
+            inputEl.closest('.autocomplete-container').style.zIndex = "";
+            return;
+        }
+
         let filtered = db.customers.filter(function(c) { return c.name.toLowerCase().includes(val); });
         
         if (filtered.length === 0) { 
             dropdown.style.display = "none"; 
+            inputEl.closest('.autocomplete-container').style.zIndex = "";
             return; 
         }
+
+        dropdown.innerHTML = "";
+        inputEl.closest('.autocomplete-container').style.zIndex = "9999";
         
         filtered.forEach(function(c) {
             let itemDiv = document.createElement("div"); 
