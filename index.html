@@ -98,7 +98,6 @@
         .btn-primary:hover { background: #004578; }
         .btn-outline-primary { background: white; border: 1px solid var(--primary); color: var(--primary); }
         .btn-outline-primary:hover { background: #e7f1ff; }
-        
         .btn-success { background: var(--success); color: white; border-color: var(--success); }
         .btn-success:hover { background: #218838; }
         .btn-info { background: var(--info); color: white; border-color: var(--info); }
@@ -107,7 +106,6 @@
         .btn-warning:hover { background: #e0a800; }
         .btn-danger { background: var(--danger); color: white; border-color: var(--danger); }
         .btn-danger:hover { background: #c82333; }
-
         .btn-outline-orange { background: white; border: 1px solid var(--orange); color: var(--orange); }
         .btn-outline-orange:hover { background: #fff5eb; }
         .btn-outline-danger { background: white; border: 1px solid var(--danger); color: var(--danger); }
@@ -180,7 +178,8 @@
             .modal-actions { flex-direction: column; }
             .modal-actions button { width: 100%; }
             .tab-menu { padding: 0 10px; }
-            .navbar h1 { font-size: 18px; }
+            .navbar h1 { font-size: 15px; letter-spacing: 0px; line-height: 1.4; max-width: 70%; }
+            #adminBadge { display: block !important; margin-left: 0; margin-top: 2px; }
         }
     </style>
 </head>
@@ -345,7 +344,10 @@
     <div class="modal-content">
         <div class="modal-title" id="confirmTitle"><i class="fas fa-question-circle"></i> Xác nhận</div>
         <div class="modal-body" id="confirmBody">Bạn có chắc chắn không?</div>
-        <div class="modal-actions"><button class="btn btn-outline" onclick="closeConfirm(true)">Hủy bỏ</button><button class="btn" id="confirmBtn" onclick="executeConfirm()">Đồng ý</button></div>
+        <div class="modal-actions">
+            <button class="btn btn-outline" id="cancelConfirmBtn" onclick="closeConfirm(true)">Hủy bỏ</button>
+            <button class="btn" id="confirmBtn" onclick="executeConfirm()">Đồng ý</button>
+        </div>
     </div>
 </div>
 
@@ -599,14 +601,16 @@
         }, 3000); 
     }
 
-    function showConfirm(titleHtml, bodyHtml, btnText, btnClass, onConfirm, onCancel = null) { 
+    function showConfirm(titleHtml, bodyHtml, btnText, btnClass, onConfirm, hideCancel = false) { 
         document.getElementById("confirmTitle").innerHTML = titleHtml; 
         document.getElementById("confirmBody").innerHTML = bodyHtml; 
         let btn = document.getElementById("confirmBtn"); 
         btn.innerHTML = btnText; 
         btn.className = "btn " + btnClass; 
+        let cancelBtn = document.getElementById("cancelConfirmBtn");
+        if(cancelBtn) cancelBtn.style.display = hideCancel ? "none" : "inline-flex";
         confirmCallback = onConfirm; 
-        cancelCallback = onCancel; 
+        cancelCallback = null;
         document.getElementById("customConfirmModal").style.display = "flex"; 
     }
 
@@ -948,10 +952,6 @@
                     function() { 
                         restoreDataToForm(draft, false); 
                         showToast("Đã khôi phục an toàn!", "success"); 
-                    },
-                    function() { 
-                        localStorage.removeItem('localDraft_' + loggedInCustomer.mst); 
-                        resetForm(); 
                     }
                 );
             } catch(e) { 
@@ -1489,8 +1489,8 @@
             return;
         }
         
-        if (!isAdmin && todayObj.getHours() >= CUTOFF_HOUR) {
-            showToast(`LỖI: Đã qua giờ chốt sổ (${CUTOFF_HOUR}h00). Không thể gửi chốt bảng kê lúc này!`, "danger");
+        if (!isAdmin && todayObj.getHours() >= CUTOFF_HOUR && invDateStr === todayStr) {
+            showToast(`LỖI: Đã qua giờ chốt sổ (${CUTOFF_HOUR}h00). Không thể gửi chốt bảng kê cho ngày hôm nay!`, "danger");
             return;
         }
         
@@ -1511,6 +1511,11 @@
                 function() { 
                     closeConfirm(); 
                     if (isDiffDay) {
+                        if (!isAdmin && todayObj.getHours() >= CUTOFF_HOUR) {
+                            showToast(`LỖI: Đã qua giờ chốt sổ (${CUTOFF_HOUR}h00) của ngày hiện tại, không thể gửi!`, "danger");
+                            pendingSubmitData = null;
+                            return;
+                        }
                         pendingSubmitData.dataObj.invoiceDate = todayStr;
                         document.getElementById("invoiceDate").value = todayStr;
                     }
@@ -1583,6 +1588,12 @@
         if(pendingSubmitData) {
             pendingSubmitData.dataObj.mergeOption = option; 
             if (isDiffDay) {
+                let todayObj = new Date();
+                if (!isAdmin && todayObj.getHours() >= CUTOFF_HOUR) {
+                    showToast(`LỖI: Đã qua giờ chốt sổ (${CUTOFF_HOUR}h00) của ngày hiện tại, không thể gửi!`, "danger");
+                    closeMergeModal();
+                    return;
+                }
                 pendingSubmitData.dataObj.invoiceDate = todayStr;
                 document.getElementById("invoiceDate").value = todayStr;
             }
@@ -1860,7 +1871,8 @@
                 'Thiết bị di động chỉ hỗ trợ Xem lịch sử, Gửi chốt và Tải Excel.<br><br>Để <b>Mở / Sửa</b> hoặc xem chi tiết bảng kê, vui lòng đăng nhập hệ thống trên <b>Máy tính (PC/Laptop)</b>!', 
                 '<i class="fas fa-check"></i> Đã hiểu', 
                 'btn-warning', 
-                function() { closeConfirm(); }
+                function() { closeConfirm(); },
+                true
             );
             return; 
         }
