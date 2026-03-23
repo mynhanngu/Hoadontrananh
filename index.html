@@ -210,7 +210,7 @@
 <div id="sessionLoader"></div>
 
 <div class="navbar">
-    <h1>CÔNG TY TNHH TM PT TRẦN ANH <span id="adminBadge" style="display:none; color:var(--danger); font-size:12px; margin-left:5px; text-transform:none;">(QUẢN TRỊ)</span></h1>
+    <h1>TRẦN ANH - EX EXPORT<span id="adminBadge" style="display:none; color:var(--danger); font-size:12px; margin-left:5px; text-transform:none;">(QUẢN TRỊ)</span></h1>
     <div id="logoutBtn" class="user-badge" style="display: none;" onclick="logout()">
         <i class="fas fa-sign-out-alt"></i> Đăng xuất
     </div>
@@ -397,7 +397,7 @@
     let WORK_END_HOUR = 24;  
     let CUTOFF_HOUR = 14; 
 
-    const SELLER_INFO = { name: "CÔNG TY TNHH THƯƠNG MẠI PHÁT TRIỂN TRẦN ANH", addr: "Khu Công Nghiệp An Xá, TP. Nam Định", mst: "0601162291", phone: "0228.388.8989" };
+    const SELLER_INFO = { name: "CÔNG TY TNHH THƯƠNG MẠI PHÁT TRIỂN TRẦN ANH", addr: "Số 26/442 Vũ Hữu Lợi, Phường Nam Định, Tỉnh Ninh Bình, Việt Nam", mst: "0601162291", phone: "0228.388.8989" };
 
     let db = { customers: [], products: [], drafts: [], admins: [], settings: {} };
     let undoStack = []; let tempExportData = null; let confirmCallback = null; let cancelCallback = null;
@@ -625,11 +625,24 @@
         setTimeout(function() { toast.classList.remove("show"); setTimeout(function() { toast.remove(); }, 300); }, 3000); 
     }
 
-    function showConfirm(titleHtml, bodyHtml, btnText, btnClass, onConfirm, hideCancel = false) { 
-        document.getElementById("confirmTitle").innerHTML = titleHtml; document.getElementById("confirmBody").innerHTML = bodyHtml; 
-        let btn = document.getElementById("confirmBtn"); btn.innerHTML = btnText; btn.className = "btn " + btnClass; 
-        let cancelBtn = document.getElementById("cancelConfirmBtn"); if(cancelBtn) cancelBtn.style.display = hideCancel ? "none" : "inline-flex";
-        confirmCallback = onConfirm; cancelCallback = null; document.getElementById("customConfirmModal").style.display = "flex"; 
+    // NÂNG CẤP HÀM SHOWCONFIRM HỖ TRỢ NÚT HỦY CÓ CHỨC NĂNG
+    function showConfirm(titleHtml, bodyHtml, btnText, btnClass, onConfirm, hideCancel = false, onCancel = null, cancelText = "Hủy bỏ") { 
+        document.getElementById("confirmTitle").innerHTML = titleHtml; 
+        document.getElementById("confirmBody").innerHTML = bodyHtml; 
+        
+        let btn = document.getElementById("confirmBtn"); 
+        btn.innerHTML = btnText; 
+        btn.className = "btn " + btnClass; 
+        
+        let cancelBtn = document.getElementById("cancelConfirmBtn"); 
+        if(cancelBtn) {
+            cancelBtn.style.display = hideCancel ? "none" : "inline-flex";
+            cancelBtn.innerHTML = cancelText;
+        }
+        
+        confirmCallback = onConfirm; 
+        cancelCallback = onCancel; 
+        document.getElementById("customConfirmModal").style.display = "flex"; 
     }
 
     function closeConfirm(isCancel = true) { 
@@ -638,7 +651,6 @@
         confirmCallback = null; cancelCallback = null; 
     }
 
-    // FIX LỖI KẸT POPUP KHI BẤM CÓ
     function executeConfirm() { 
         let cb = confirmCallback; 
         closeConfirm(false); 
@@ -773,14 +785,30 @@
         document.getElementById('autoSaveStatus').style.display = 'flex'; document.getElementById('autoSaveStatus').innerHTML = `<i class="fas fa-check-circle" style="color:var(--success); margin-right:5px;"></i> Hệ thống đã ghi nhận tạm thời lúc ${timeStr}`;
     }
 
+    // ==========================================
+    // ĐÃ THÊM NÚT "BỎ QUA VÀ TẠO MỚI" CHO HỘP THOẠI KHÔI PHỤC
+    // ==========================================
     function checkLocalDraft() {
         let savedDraftStr = localStorage.getItem('localDraft_' + loggedInCustomer.mst);
         if (savedDraftStr) {
             try {
                 let draft = JSON.parse(savedDraftStr); if(!draft.customer || !draft.units || !Array.isArray(draft.units)) throw "Bản nháp hỏng";
-                showConfirm('<i class="fas fa-undo" style="color:var(--info)"></i> Khôi phục dữ liệu', 'Hệ thống đang giữ một bảng kê dở dang của bạn. Bạn có muốn khôi phục lại để làm tiếp không?', '<i class="fas fa-check"></i> Khôi phục ngay', 'btn-info', function() { restoreDataToForm(draft, false); showToast("Đã khôi phục an toàn!", "success"); }, true);
-            } catch(e) { localStorage.removeItem('localDraft_' + loggedInCustomer.mst); resetForm(); }
-        } else { resetForm(); }
+                showConfirm(
+                    '<i class="fas fa-undo" style="color:var(--info)"></i> Khôi phục dữ liệu', 
+                    'Hệ thống đang giữ một bảng kê dở dang của bạn. Bạn có muốn khôi phục lại để làm tiếp không?', 
+                    '<i class="fas fa-check"></i> Khôi phục ngay', 
+                    'btn-info', 
+                    function() { restoreDataToForm(draft, false); showToast("Đã khôi phục an toàn!", "success"); }, 
+                    false, // Không ẩn nút Hủy
+                    function() { 
+                        localStorage.removeItem('localDraft_' + loggedInCustomer.mst); 
+                        resetForm(true); 
+                        showToast("Đã tạo bảng kê mới tinh!", "info");
+                    },
+                    '<i class="fas fa-times"></i> Bỏ qua & Xóa nháp' // Tên nút Hủy mới
+                );
+            } catch(e) { localStorage.removeItem('localDraft_' + loggedInCustomer.mst); resetForm(true); }
+        } else { resetForm(true); }
     }
 
     function resetForm(forceClear = false) {
@@ -808,7 +836,6 @@
         if (invDate < today) return true; if (invDate.getTime() === today.getTime()) { if (now.getHours() >= CUTOFF_HOUR) return true; return false; } return false;
     }
 
-    // FIX MỞ SỬA LỖI TRÊN MOBILE VÀ ÉP CHUYỂN TAB ĐỂ TÍNH ĐỘ CAO KHUNG TEXT
     function loadDraft(id, isViewOnly) {
         if (checkMobileLimit()) return;
         let draftRec = db.drafts.find(function(d) { return d.id === id; }); if (!draftRec) return; let draft = JSON.parse(draftRec.json);
@@ -872,7 +899,6 @@
     function autoHeight(el) { el.style.height = 'auto'; el.style.height = (el.scrollHeight) + 'px'; }
     function updateSTT() { document.querySelectorAll('.unit-box').forEach(function(box) { box.querySelectorAll('tbody tr').forEach(function(tr, index) { let sttTd = tr.querySelector('.stt-col'); if(sttTd) sttTd.innerText = index + 1; }); }); }
 
-    // BẢO VỆ SMARTBOX & ÉP HIỂN THỊ TOÀN BỘ KHI CLICK VÀO Ô TRỐNG
     document.addEventListener("click", function(e) { 
         if (!e.target.classList.contains("f-name") && !e.target.closest('.custom-dropdown')) { 
             document.querySelectorAll('#unitsContainer .custom-dropdown').forEach(function(d) { d.style.display = "none"; }); 
@@ -1033,10 +1059,7 @@
             toggleBtnLoading(btnEl, false);
             if(res.success) {
                 let existingIdx = db.drafts.findIndex(function(d) { return d.id === draftId; }); let localDraftRecord = { id: draftId, customer: { name: dataObj.customer.name, mst: dataObj.customer.mst }, dateStr: timestampStr, json: payload.json, status: dataObj.status };
-                
-                // Thay đổi từ unshift sang push để data trên cùng server và local khớp nhau
                 if (existingIdx > -1) { db.drafts[existingIdx] = localDraftRecord; } else { db.drafts.push(localDraftRecord); }
-                
                 if(!isAdmin) localStorage.removeItem('localDraft_' + loggedInCustomer.mst); document.getElementById('autoSaveStatus').style.display = 'none';
                 
                 if (dataObj.status === 'chot') { if(isAdmin) { showToast("Kế toán đã lưu bảng kê thành công!", "success"); } else { showToast("Đã gửi chốt bảng kê thành công!", "success"); } resetForm(true); location.hash = '#lichsu'; handleRouting(); } 
@@ -1060,7 +1083,37 @@
         });
     }
 
-    // ĐÃ KHÔI PHỤC HÀM XUẤT EXCEL CÁ NHÂN
+    function confirmDuplicate(id) {
+        if (checkMobileLimit()) return;
+        showConfirm(
+            '<i class="fas fa-copy" style="color:var(--orange)"></i> Xác nhận nhân bản',
+            'Bạn muốn nhân bản bảng kê này chứ?',
+            '<i class="fas fa-check"></i> Có',
+            'btn-outline-orange',
+            function() { duplicateDraft(id); }
+        );
+    }
+
+    function duplicateDraft(id) {
+        let draftRec = db.drafts.find(function(d) { return d.id === id; });
+        if (!draftRec) return;
+        let draft = JSON.parse(draftRec.json);
+        
+        draft.id = ""; 
+        draft.status = 'nhap'; 
+        
+        let todayObj = new Date();
+        draft.invoiceDate = ("0" + todayObj.getDate()).slice(-2) + "/" + ("0" + (todayObj.getMonth() + 1)).slice(-2) + "/" + todayObj.getFullYear();
+        
+        forceSwitchToEditTab();
+        setFormViewMode(false);
+        restoreDataToForm(draft, false);
+        saveLocalDraft();
+        
+        showToast("Đã nhân bản! Đơn giá đã được cập nhật mới nhất.", "success");
+        setTimeout(function() { document.querySelectorAll('.f-name').forEach(function(ta) { autoHeight(ta); }); }, 100);
+    }
+
     function prepareExport(draftId) { 
         let draftRec = db.drafts.find(function(d) { return d.id === draftId; }); 
         if (!draftRec) return; 
@@ -1143,44 +1196,6 @@
         const buf = await wb.xlsx.writeBuffer(); saveAs(new Blob([buf]), `HoaDon_${cusName.replace(/\s+/g,'_')}_${data.dateStr.replace(/\//g,'-')}.xlsx`); showToast("Đã tải File Excel thành công", "success");
     }
 
-    // ==========================================
-    // CẤY POPUP BẢO VỆ CHO NÚT NHÂN BẢN
-    // ==========================================
-    function confirmDuplicate(id) {
-        if (checkMobileLimit()) return;
-        showConfirm(
-            '<i class="fas fa-copy" style="color:var(--orange)"></i> Xác nhận nhân bản',
-            'Bạn muốn nhân bản bảng kê này chứ?',
-            '<i class="fas fa-check"></i> Có',
-            'btn-outline-orange',
-            function() { duplicateDraft(id); }
-        );
-    }
-
-    function duplicateDraft(id) {
-        let draftRec = db.drafts.find(function(d) { return d.id === id; });
-        if (!draftRec) return;
-        let draft = JSON.parse(draftRec.json);
-        
-        draft.id = ""; 
-        draft.status = 'nhap'; 
-        
-        let todayObj = new Date();
-        draft.invoiceDate = ("0" + todayObj.getDate()).slice(-2) + "/" + ("0" + (todayObj.getMonth() + 1)).slice(-2) + "/" + todayObj.getFullYear();
-        
-        // Ép giao diện chuyển sang tab Tạo mới ngay lập tức để tính chiều cao ô chữ
-        forceSwitchToEditTab();
-        setFormViewMode(false);
-        restoreDataToForm(draft, false);
-        saveLocalDraft();
-        
-        showToast("Đã nhân bản! Đơn giá đã được cập nhật mới nhất.", "success");
-        setTimeout(function() { document.querySelectorAll('.f-name').forEach(function(ta) { autoHeight(ta); }); }, 100);
-    }
-
-    // ==========================================
-    // CĂN GIỮA TIÊU ĐỀ BẢNG VÀ GIAO DIỆN BẢN IN PDF
-    // ==========================================
     function viewPDF(id) {
         let draftRec = db.drafts.find(function(d) { return d.id === id; });
         if (!draftRec) return;
@@ -1267,10 +1282,7 @@
     function changeItemsPerPage(selectEl) { itemsPerPage = parseInt(selectEl.value); currentPage = 1; renderDraftList(document.getElementById("searchDraft").value); }
 
     function renderDraftList(searchQuery = "") {
-        let container = document.getElementById("draftListContainer"); 
-        let paginationContainer = document.getElementById("paginationContainer");
-        container.innerHTML = "";
-        
+        let container = document.getElementById("draftListContainer"); let paginationContainer = document.getElementById("paginationContainer"); container.innerHTML = "";
         let filterStartDate = null, filterEndDate = null;
         if(isAdmin) {
             let fp = document.getElementById("filterDateRange")._flatpickr;
@@ -1283,8 +1295,7 @@
 
         let filteredDrafts = db.drafts.filter(function(d) { 
             try {
-                let data = JSON.parse(d.json); 
-                let jsonMst = data.customer ? String(data.customer.mst).trim() : "";
+                let data = JSON.parse(d.json); let jsonMst = data.customer ? String(data.customer.mst).trim() : "";
                 if (isAdmin) { if (data.status !== 'chot') return false; } 
                 else { if (jsonMst === "" || jsonMst !== String(loggedInCustomer.mst).trim()) return false; }
                 let textMatch = true;
@@ -1307,29 +1318,18 @@
         
         if(filteredDrafts.length === 0) { 
             container.innerHTML = "<div style='color:#6c757d; font-size: 14px; text-align:center; padding: 20px;'>Không tìm thấy dữ liệu phù hợp.</div>"; 
-            paginationContainer.style.display = "none";
-            return; 
+            paginationContainer.style.display = "none"; return; 
         }
 
-        // ĐẢO NGƯỢC DANH SÁCH TỪ MỚI ĐẾN CŨ TRƯỚC KHI CẮT TRANG
         let reversedDrafts = filteredDrafts.slice().reverse();
-
-        let totalItems = reversedDrafts.length;
-        let totalPages = Math.ceil(totalItems / itemsPerPage);
-        if (currentPage > totalPages) currentPage = totalPages;
-        if (currentPage < 1) currentPage = 1;
-
-        let startIndex = (currentPage - 1) * itemsPerPage;
-        let endIndex = startIndex + itemsPerPage;
+        let totalItems = reversedDrafts.length; let totalPages = Math.ceil(totalItems / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages; if (currentPage < 1) currentPage = 1;
+        let startIndex = (currentPage - 1) * itemsPerPage; let endIndex = startIndex + itemsPerPage;
         let paginatedDrafts = reversedDrafts.slice(startIndex, endIndex);
 
         paginatedDrafts.forEach(function(d) {
-            let data = JSON.parse(d.json); 
-            let dateString = d.dateStr || d.timestampStr; 
-            let mergeText = data.mergeOption ? ` - ${data.mergeOption}` : ''; 
-            
-            let isFinal = data.status === 'chot'; 
-            let statusBadge = isFinal ? `<span class="badge-chot"><i class="fas fa-check-circle"></i> ĐÃ GỬI</span>` : `<span class="badge-nhap"><i class="fas fa-pen"></i> NHÁP</span>`; 
+            let data = JSON.parse(d.json); let dateString = d.dateStr || d.timestampStr; let mergeText = data.mergeOption ? ` - ${data.mergeOption}` : ''; 
+            let isFinal = data.status === 'chot'; let statusBadge = isFinal ? `<span class="badge-chot"><i class="fas fa-check-circle"></i> ĐÃ GỬI</span>` : `<span class="badge-nhap"><i class="fas fa-pen"></i> NHÁP</span>`; 
             let nameHtml = isAdmin ? `<strong style="color:var(--primary); font-size:15px;">[${data.customer.name}] - Phiếu: ${data.invoiceDate || 'Không ngày'}</strong> ${statusBadge}` : `<strong style="color:var(--primary); font-size:15px;">Phiếu: ${data.invoiceDate || 'Không ngày'}</strong> ${statusBadge}`;
             
             let btnHtml = ``;
@@ -1361,7 +1361,6 @@
             }
             
             let div = document.createElement('div'); div.className = "draft-item"; if(isFinal) div.style.background = "#f8f9fa"; 
-            
             div.innerHTML = `
                 <div>
                     ${nameHtml}
@@ -1372,7 +1371,6 @@
             `; 
             container.appendChild(div);
         });
-        
         renderPaginationUI(totalPages);
     }
 
@@ -1381,11 +1379,7 @@
         let html = `
             <div class="page-size-selector">
                 Hiển thị: 
-                <select onchange="changeItemsPerPage(this)">
-                    <option value="10" ${itemsPerPage === 10 ? 'selected' : ''}>10</option>
-                    <option value="20" ${itemsPerPage === 20 ? 'selected' : ''}>20</option>
-                    <option value="50" ${itemsPerPage === 50 ? 'selected' : ''}>50</option>
-                </select> dòng
+                <select onchange="changeItemsPerPage(this)"><option value="10" ${itemsPerPage === 10 ? 'selected' : ''}>10</option><option value="20" ${itemsPerPage === 20 ? 'selected' : ''}>20</option><option value="50" ${itemsPerPage === 50 ? 'selected' : ''}>50</option></select> dòng
             </div>
             <div class="pagination-controls">
                 <button class="page-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i></button>
