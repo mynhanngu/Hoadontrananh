@@ -1162,23 +1162,59 @@
         let dataObj = getFormData(); 
         if(!dataObj) { showToast("Vui lòng nhập đầy đủ thông tin!", "danger"); return; } 
         if(!dataObj.invoiceDate) { showToast("Vui lòng chọn Ngày lập phiếu!", "warning"); return; }
-        dataObj.status = 'chot'; doSaveCloudData(dataObj, true, btnEl); 
+        
+        let unitCount = dataObj.units.length; 
+        if(unitCount >= 2) { 
+            let isMissingName = false; 
+            for(let i = 0; i < unitCount; i++) { 
+                if(!dataObj.units[i].unitName || dataObj.units[i].unitName.trim() === "") { isMissingName = true; break; } 
+            } 
+            if(isMissingName) { showToast("Bạn có nhiều phân loại. Vui lòng nhập đầy đủ TÊN PHÂN LOẠI ở các ô gạch chân!", "warning"); return; } 
+        }
+        
+        dataObj.status = 'chot'; 
+        triggerFinalValidation(dataObj, btnEl); 
     }
 
     function triggerFinalValidation(dataObj, btnEl) {
         let unitCount = dataObj.units.length; let invDateStr = dataObj.invoiceDate || document.getElementById("invoiceDate").value; 
         if (!invDateStr) { showToast("Vui lòng chọn Ngày lập phiếu!", "warning"); return; }
+        
         let todayObj = new Date(); let todayStr = ("0" + todayObj.getDate()).slice(-2) + "/" + ("0" + (todayObj.getMonth() + 1)).slice(-2) + "/" + todayObj.getFullYear();
         let parts = invDateStr.split('/'); let invDateObj = new Date(parts[2], parts[1] - 1, parts[0]); let todayMidnight = new Date(todayObj.getFullYear(), todayObj.getMonth(), todayObj.getDate());
-        if (invDateObj > todayMidnight) { showToast("LỖI: Không thể gửi bảng kê cho ngày tương lai!", "danger"); return; }
+        
+        if (invDateObj > todayMidnight) { showToast("LỖI: Không thể lưu bảng kê cho ngày tương lai!", "danger"); return; }
         if (!isAdmin && todayObj.getHours() >= CUTOFF_HOUR && invDateStr === todayStr) { showToast(`LỖI: Đã qua giờ chốt sổ (${CUTOFF_HOUR}h00). Không thể gửi chốt bảng kê cho ngày hôm nay!`, "danger"); return; }
         
         let isDiffDay = (invDateStr !== todayStr); let isMulti = (unitCount >= 2); pendingSubmitData = { dataObj: dataObj, btnEl: btnEl };
-        let redWarning = `<div style="color: var(--danger); font-size: 15px; font-weight: 800; margin-bottom: 12px; border: 1px dashed var(--danger); padding: 10px; background: #fff5f5; border-radius: 6px;"><i class="fas fa-exclamation-triangle"></i> KHI GỬI CHỐT BẢNG KÊ SẼ KHÔNG THỂ SỬA. BẠN CHẮC CHẮN GỬI CHỨ?</div>`;
-        let dayWarning = isDiffDay ? `<div style="margin-bottom: 10px;">Bạn đang gửi dữ liệu ngày <b style="color:var(--danger); font-size:16px;">${invDateStr}</b>.<br>Khi gửi sẽ tự động trả về ngày hiện tại (<b style="color:var(--primary); font-size:16px;">${todayStr}</b>).<br>Bạn vẫn sẽ gửi bảng kê này chứ?</div>` : "";
+        
+        let redWarning = isAdmin
+            ? `<div style="color: var(--primary); font-size: 15px; font-weight: 800; margin-bottom: 12px; border: 1px dashed var(--primary); padding: 10px; background: #e7f1ff; border-radius: 6px;"><i class="fas fa-save"></i> BẠN ĐANG LƯU BẢNG KÊ BẰNG QUYỀN QUẢN TRỊ</div>`
+            : `<div style="color: var(--danger); font-size: 15px; font-weight: 800; margin-bottom: 12px; border: 1px dashed var(--danger); padding: 10px; background: #fff5f5; border-radius: 6px;"><i class="fas fa-exclamation-triangle"></i> KHI GỬI CHỐT BẢNG KÊ SẼ KHÔNG THỂ SỬA. BẠN CHẮC CHẮN GỬI CHỨ?</div>`;
+
+        let dayWarning = "";
+        if (isDiffDay && !isAdmin) {
+            dayWarning = `<div style="margin-bottom: 10px;">Bạn đang gửi dữ liệu ngày <b style="color:var(--danger); font-size:16px;">${invDateStr}</b>.<br>Khi gửi sẽ tự động trả về ngày hiện tại (<b style="color:var(--primary); font-size:16px;">${todayStr}</b>).<br>Bạn vẫn sẽ gửi bảng kê này chứ?</div>`;
+        } else if (isDiffDay && isAdmin) {
+            dayWarning = `<div style="margin-bottom: 10px;">Hệ thống sẽ cập nhật bảng kê vào đúng ngày cũ: <b style="color:var(--danger); font-size:16px;">${invDateStr}</b>.</div>`;
+        }
 
         if (!isMulti) {
-            showConfirm('<i class="fas fa-paper-plane" style="color:var(--primary)"></i> Xác nhận gửi chốt', redWarning + dayWarning, '<i class="fas fa-check"></i> Chắc chắn gửi', 'btn-primary', function() { closeConfirm(); if (isDiffDay) { if (!isAdmin && todayObj.getHours() >= CUTOFF_HOUR) { showToast(`LỖI: Đã qua giờ chốt sổ (${CUTOFF_HOUR}h00) của ngày hiện tại, không thể gửi!`, "danger"); pendingSubmitData = null; return; } pendingSubmitData.dataObj.invoiceDate = todayStr; document.getElementById("invoiceDate").value = todayStr; } doSaveCloudData(pendingSubmitData.dataObj, true, pendingSubmitData.btnEl); pendingSubmitData = null; });
+            showConfirm(
+                isAdmin ? '<i class="fas fa-save" style="color:var(--warning)"></i> Xác nhận lưu' : '<i class="fas fa-paper-plane" style="color:var(--primary)"></i> Xác nhận gửi chốt', 
+                redWarning + dayWarning, 
+                isAdmin ? '<i class="fas fa-save"></i> Lưu' : '<i class="fas fa-check"></i> Chắc chắn gửi', 
+                isAdmin ? 'btn-warning' : 'btn-primary', 
+                function() { 
+                    closeConfirm(); 
+                    if (isDiffDay && !isAdmin) { 
+                        if (todayObj.getHours() >= CUTOFF_HOUR) { showToast(`LỖI: Đã qua giờ chốt sổ (${CUTOFF_HOUR}h00) của ngày hiện tại, không thể gửi!`, "danger"); pendingSubmitData = null; return; } 
+                        pendingSubmitData.dataObj.invoiceDate = todayStr; document.getElementById("invoiceDate").value = todayStr; 
+                    } 
+                    doSaveCloudData(pendingSubmitData.dataObj, true, pendingSubmitData.btnEl); 
+                    pendingSubmitData = null; 
+                }
+            );
         } else {
             document.getElementById('mergeModalBodyText').innerHTML = redWarning + dayWarning + `Bảng kê có <b style="color: var(--danger)">${unitCount}</b> phân loại. Bạn muốn xuất hóa đơn kiểu gì?`;
             document.getElementById('mergeModalActions').innerHTML = `<button class="btn btn-primary" style="flex: 1; padding: 12px; font-size: 14px;" onclick="submitWithMergeOption('gộp hóa đơn', ${isDiffDay}, '${todayStr}')"><i class="fas fa-object-group"></i> Hợp nhất</button><button class="btn btn-outline-orange" style="flex: 1; padding: 12px; font-size: 14px;" onclick="submitWithMergeOption('tách hóa đơn', ${isDiffDay}, '${todayStr}')"><i class="fas fa-object-ungroup"></i> Tách riêng</button>`; 
@@ -1204,7 +1240,15 @@
     function closeMergeModal() { document.getElementById('mergeOptionModal').style.display = 'none'; pendingSubmitData = null; }
 
     function submitWithMergeOption(option, isDiffDay, todayStr) {
-        if(pendingSubmitData) { pendingSubmitData.dataObj.mergeOption = option; if (isDiffDay) { let todayObj = new Date(); if (!isAdmin && todayObj.getHours() >= CUTOFF_HOUR) { showToast(`LỖI: Đã qua giờ chốt sổ (${CUTOFF_HOUR}h00) của ngày hiện tại, không thể gửi!`, "danger"); closeMergeModal(); return; } pendingSubmitData.dataObj.invoiceDate = todayStr; document.getElementById("invoiceDate").value = todayStr; } doSaveCloudData(pendingSubmitData.dataObj, true, pendingSubmitData.btnEl); }
+        if(pendingSubmitData) { 
+            pendingSubmitData.dataObj.mergeOption = option; 
+            if (isDiffDay && !isAdmin) { 
+                let todayObj = new Date(); 
+                if (todayObj.getHours() >= CUTOFF_HOUR) { showToast(`LỖI: Đã qua giờ chốt sổ (${CUTOFF_HOUR}h00) của ngày hiện tại, không thể gửi!`, "danger"); closeMergeModal(); return; } 
+                pendingSubmitData.dataObj.invoiceDate = todayStr; document.getElementById("invoiceDate").value = todayStr; 
+            } 
+            doSaveCloudData(pendingSubmitData.dataObj, true, pendingSubmitData.btnEl); 
+        }
         closeMergeModal();
     }
 
