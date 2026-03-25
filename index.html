@@ -1657,11 +1657,32 @@
         let rIdx = 9; let stt = 1; let grandTotalAll = 0;
         filteredDrafts.forEach(function(d) {
             let data = JSON.parse(d.json); let cName = data.customer.name || ""; let cMst = data.customer.mst || "";
-            let totalNum = parseFloat((data.grandTotal || "0").replace(/\./g, '')) || 0;
-            let row = ws.getRow(rIdx); row.values = [stt++, cName, cMst, totalNum];
-            row.getCell(1).alignment = {horizontal:'center'}; row.getCell(2).alignment = {horizontal:'left', wrapText: true}; row.getCell(3).alignment = {horizontal:'center'}; row.getCell(4).numFmt = '#,##0'; 
-            row.eachCell(function(c) { c.font = {name:'Times New Roman', size: 12}; c.border = {top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}}; });
-            grandTotalAll += totalNum; rIdx++;
+            let isMerged = data.mergeOption !== 'tách hóa đơn';
+
+            if (!isMerged && data.units && data.units.length > 1) {
+                data.units.forEach(function(unit) {
+                    let unitTotal = 0;
+                    if(unit.products) {
+                        unit.products.forEach(function(p) {
+                            let price = parseFloat(p.priceRaw) || 0;
+                            let qty = parseFloat(p.qty) || 0;
+                            let total = parseFloat(p.totalRaw) || (qty * price);
+                            unitTotal += total;
+                        });
+                    }
+                    let dispName = cName + (unit.unitName ? ' - ' + unit.unitName : '');
+                    let row = ws.getRow(rIdx); row.values = [stt++, dispName, cMst, unitTotal];
+                    row.getCell(1).alignment = {horizontal:'center'}; row.getCell(2).alignment = {horizontal:'left', wrapText: true}; row.getCell(3).alignment = {horizontal:'center'}; row.getCell(4).numFmt = '#,##0'; 
+                    row.eachCell(function(c) { c.font = {name:'Times New Roman', size: 12}; c.border = {top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}}; });
+                    grandTotalAll += unitTotal; rIdx++;
+                });
+            } else {
+                let totalNum = parseFloat((data.grandTotal || "0").replace(/\./g, '')) || 0;
+                let row = ws.getRow(rIdx); row.values = [stt++, cName, cMst, totalNum];
+                row.getCell(1).alignment = {horizontal:'center'}; row.getCell(2).alignment = {horizontal:'left', wrapText: true}; row.getCell(3).alignment = {horizontal:'center'}; row.getCell(4).numFmt = '#,##0'; 
+                row.eachCell(function(c) { c.font = {name:'Times New Roman', size: 12}; c.border = {top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}}; });
+                grandTotalAll += totalNum; rIdx++;
+            }
         });
 
         let totalRow = ws.getRow(rIdx); ws.mergeCells(`A${rIdx}:C${rIdx}`); 
