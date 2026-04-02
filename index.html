@@ -63,11 +63,12 @@
         .blinking-text { font-size: 13px; font-weight: 500; color: #6c757d; font-family: 'Roboto', sans-serif; animation: blinkText 1.5s infinite; letter-spacing: 0.5px; }
         @keyframes blinkText { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         
-        .container { max-width: 1200px; margin: 0 auto 20px auto; padding: 0 15px; display: none; flex: 1; width: 100%; box-sizing: border-box;}
+        .container { max-width: 1300px; margin: 0 auto 20px auto; padding: 0 15px; display: none; flex: 1; width: 100%; box-sizing: border-box;}
         .card { background: #ffffff; border: none; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
         .card-header { font-size: 15px; font-weight: 700; color: var(--text); border-bottom: 2px solid var(--secondary); padding-bottom: 12px; margin-bottom: 20px; text-transform: uppercase; display: flex; align-items: center; justify-content: space-between;}
         .card-header-title { display: flex; align-items: center; gap: 8px; }
         .card-header-title i { color: var(--primary); font-size: 16px;}
+        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 15px; margin-top: 15px;}
         .form-group { margin-bottom: 5px; }
@@ -88,6 +89,10 @@
         .f-total { color: var(--danger); font-weight: 700; background: #fffcfc !important;}
         .text-center { text-align: center !important; }
         .text-right { text-align: right !important; }
+        
+        .input-error { border-color: var(--danger) !important; color: var(--danger) !important; background-color: #fff5f5 !important; box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15) !important; font-weight: 600;}
+        #validationWarning { color: var(--danger); font-weight: bold; font-size: 14px; margin-right: auto; display: none; align-items: center; gap: 6px; animation: popIn 0.3s ease;}
+
         .autocomplete-container { position: relative; }
         .custom-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid var(--primary); border-radius: 0 0 6px 6px; max-height: 250px; overflow-y: auto; z-index: 9999; box-shadow: 0 10px 25px rgba(0,0,0,0.15); display: none; margin-top: -1px; }
         .dropdown-item { padding: 10px 15px; cursor: pointer; border-bottom: 1px solid var(--secondary); display: flex; justify-content: space-between; align-items: center; gap: 15px; transition: 0.2s; }
@@ -97,34 +102,37 @@
         .dd-price-item { font-size: 11px; color: var(--danger); font-weight: 500; background: #fff1f0; padding: 4px 8px; border-radius: 4px; border: 1px solid #f5c2c7; white-space: nowrap;}
         
         .btn { padding: 9px 15px; font-size: 13px; font-weight: 500; border: 1px solid transparent; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s; font-family: 'Roboto', sans-serif;}
+        .btn:disabled { opacity: 0.6; cursor: not-allowed !important; }
         .btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
-        .btn-primary:hover { background: #004578; }
+        .btn-primary:hover:not(:disabled) { background: #004578; }
         .btn-outline-primary { background: white; border: 1px solid var(--primary); color: var(--primary); }
-        .btn-outline-primary:hover { background: #e7f1ff; }
+        .btn-outline-primary:hover:not(:disabled) { background: #e7f1ff; }
         .btn-success { background: var(--success); color: white; border-color: var(--success); }
-        .btn-success:hover { background: #218838; }
+        .btn-success:hover:not(:disabled) { background: #218838; }
         .btn-info { background: var(--info); color: white; border-color: var(--info); }
-        .btn-info:hover { background: #117a8b; }
+        .btn-info:hover:not(:disabled) { background: #117a8b; }
         .btn-warning { background: var(--warning); color: #000; border-color: var(--warning); }
-        .btn-warning:hover { background: #e0a800; }
+        .btn-warning:hover:not(:disabled) { background: #e0a800; }
         .btn-danger { background: var(--danger); color: white; border-color: var(--danger); }
-        .btn-danger:hover { background: #c82333; }
+        .btn-danger:hover:not(:disabled) { background: #c82333; }
         .btn-outline-orange { background: white; border: 1px solid var(--orange); color: var(--orange); }
-        .btn-outline-orange:hover { background: #fff5eb; }
+        .btn-outline-orange:hover:not(:disabled) { background: #fff5eb; }
         .btn-outline-danger { background: white; border: 1px solid var(--danger); color: var(--danger); }
-        .btn-outline-danger:hover { background: #dc3545; color: white; }
+        .btn-outline-danger:hover:not(:disabled) { background: #dc3545; color: white; }
         .btn-outline { background: white; border: 1px solid var(--border); color: #495057; }
-        .btn-outline:hover { background: #f8f9fa; border-color: #adb5bd;}
+        .btn-outline:hover:not(:disabled) { background: #f8f9fa; border-color: #adb5bd;}
+        
         .btn-trash { color: #adb5bd; font-size: 16px; cursor: pointer; background: none; border: none; padding: 6px; transition: 0.2s;}
-        .btn-trash:hover { color: var(--danger); background: #fde7e9; border-radius: 6px;}
+        .btn-trash:hover:not(:disabled) { color: var(--danger); background: #fde7e9; border-radius: 6px;}
+        .btn-trash:disabled { opacity: 0.4; cursor: not-allowed; }
         
         .btn-submit-block { background: var(--success); color: white; padding: 12px 24px; font-size: 15px; font-weight: 800; font-family: 'Roboto', sans-serif; border: none; border-radius: 8px; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.35); cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px;}
         .btn-submit-block:hover:not(:disabled) { background: #218838; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(40, 167, 69, 0.45); color: white;}
-        .btn-submit-block:disabled { background: #e9ecef; color: #6c757d; cursor: not-allowed; box-shadow: none; border: 1px solid var(--border); }
+        .btn-submit-block:disabled { background: #e9ecef !important; color: #adb5bd !important; cursor: not-allowed !important; box-shadow: none !important; border: 1px solid var(--border) !important; transform: none !important;}
         
         .btn-draft-block { background: var(--secondary); color: var(--text); padding: 12px 24px; font-size: 15px; font-weight: 700; font-family: 'Roboto', sans-serif; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px;}
         .btn-draft-block:hover:not(:disabled) { background: #e2e6ea; }
-        .btn-draft-block:disabled { background: #e9ecef; color: #adb5bd; cursor: not-allowed; }
+        .btn-draft-block:disabled { background: #f8f9fa !important; color: #adb5bd !important; cursor: not-allowed !important; border: 1px solid #e9ecef !important;}
 
         .unit-box { border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 20px; background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.02);}
         .unit-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed var(--border);}
@@ -149,7 +157,7 @@
         .page-btn:disabled { background: #f8f9fa; color: #ced4da; cursor: not-allowed; border-color: #e9ecef; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(2px); display: none; align-items: center; justify-content: center; z-index: 100000; padding: 20px;}
-        .modal-content { background: #fff; padding: 25px; border-radius: 12px; width: 100%; max-width: 420px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
+        .modal-content { background: #fff; padding: 25px; border-radius: 12px; width: 100%; max-width: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.25); animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; }
         @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--text); display: flex; align-items: center; gap: 8px;}
         .modal-body { font-size: 14.5px; margin-bottom: 25px; color: #495057; line-height: 1.5; }
@@ -171,6 +179,8 @@
         
         .app-footer { position: fixed; bottom: 0; left: 0; right: 0; background: #fff3cd; color: #856404; text-align: center; padding: 12px 15px; font-size: 14px; font-weight: 600; border-top: 1px solid #ffeeba; display: none; z-index: 9999; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); line-height: 1.5;}
 
+        .warning-box { background: #fff5f5; border: 1px dashed var(--danger); padding: 12px; border-radius: 6px; margin-bottom: 15px; color: var(--danger); font-size: 14.5px; line-height: 1.6; }
+
         @media print {
             @page { size: A4 portrait; margin: 15mm; }
             body { margin: 0 !important; padding: 0 !important; background: #fff !important; }
@@ -190,7 +200,7 @@
 
         @media (max-width: 768px) {
             .mobile-alert { display: block; }
-            .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 10px; }
+            .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 10px; }
             #dualFilterBox { flex-direction: column; align-items: stretch !important; }
             #dualFilterBox > div { width: 100% !important; }
             #dualFilterBox input { width: 100% !important; }
@@ -221,6 +231,7 @@
     <a href="#taomoi" class="tab-link active" id="link-taomoi"><i class="fas fa-edit"></i> Tạo Bảng Kê</a>
     <a href="#lichsu" class="tab-link" id="link-lichsu"><i class="fas fa-history"></i> Lịch Sử Hóa Đơn</a>
     <a href="#sanpham" class="tab-link" id="link-sanpham" style="display:none;"><i class="fas fa-box"></i> Kho Sản Phẩm</a>
+    <a href="#khachhang" class="tab-link" id="link-khachhang" style="display:none;"><i class="fas fa-users"></i> Khách Hàng</a>
 </div>
 
 <div id="loginApp">
@@ -272,8 +283,8 @@
                     <input type="text" id="invoiceDate" class="form-control" style="background-color: #fff; cursor: pointer;" autocomplete="off">
                 </div>
                 <div class="form-group autocomplete-container">
-                    <label>Tên đơn vị mua</label>
-                    <input type="text" id="cusSearch" class="form-control" readonly style="background:#f8f9fa;" oninput="showCusSuggestions(this)" onfocus="showCusSuggestions(this)" autocomplete="off">
+                    <label>Tên đơn vị mua (*)</label>
+                    <input type="text" id="cusSearch" class="form-control" readonly style="background:#f8f9fa;" oninput="showCusSuggestions(this)" onfocus="showCusSuggestions(this)" autocomplete="off" data-region="tp">
                     <div class="custom-dropdown" id="cusDropdown"></div>
                 </div>
                 <div class="form-group">
@@ -301,6 +312,7 @@
             <div class="grand-total">TỔNG THANH TOÁN: <span id="grandTotal">0</span> VNĐ</div>
             
             <div class="actions-bar" id="mainActionsBar">
+                <div id="validationWarning"><i class="fas fa-exclamation-triangle"></i> Lỗi: Tên sản phẩm ô màu đỏ cấm bán tại vùng này hoặc nhập sai tên! Đã khóa thao tác!</div>
                 <div id="autoSaveStatus" style="font-size:12px; color:#6c757d; margin-right:auto; display:none; align-items:center; font-weight: 500;"></div>
                 
                 <button class="btn-draft-block" id="btnUserDraft" onclick="saveAsDraft(this)">
@@ -344,14 +356,17 @@
     <div class="card" id="productSection" style="display:none;">
         <div class="card-header">
             <div class="card-header-title"><i class="fas fa-box"></i> Quản Lý Kho Sản Phẩm</div>
-            <button class="btn btn-primary" onclick="openProductModal()"><i class="fas fa-plus"></i> Thêm Sản Phẩm Mới</button>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-success" onclick="openImportModal('product')"><i class="fas fa-file-import"></i> Import Kho</button>
+                <button class="btn btn-primary" onclick="openProductModal()"><i class="fas fa-plus"></i> Thêm Sản Phẩm Mới</button>
+            </div>
         </div>
         <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom: 15px;">
             <div style="position:relative; width: 250px; flex-grow: 1;">
                 <i class="fas fa-search" style="position: absolute; left: 12px; top: 10px; color: #adb5bd;"></i>
                 <input type="text" id="searchProduct" class="form-control" style="padding-left:35px; border-radius:20px;" placeholder="Tìm tên sản phẩm..." oninput="filterProducts()" autocomplete="off">
             </div>
-            <button class="btn btn-success" style="height: 38px; white-space: nowrap;" onclick="exportProductExcel()">
+            <button class="btn btn-outline-success" style="height: 38px; white-space: nowrap;" onclick="exportProductExcel()">
                 <i class="fas fa-file-excel"></i> Tải Excel
             </button>
         </div>
@@ -360,11 +375,13 @@
                 <thead>
                     <tr>
                         <th width="5%">STT</th>
-                        <th width="35%">Tên Sản Phẩm</th>
-                        <th width="15%">ĐVT 1</th>
-                        <th width="15%">Đơn Giá 1</th>
-                        <th width="15%">ĐVT 2</th>
-                        <th width="15%">Đơn Giá 2</th>
+                        <th width="25%">Tên Sản Phẩm</th>
+                        <th width="10%">ĐVT 1</th>
+                        <th width="12%">Giá TP 1</th>
+                        <th width="12%">Giá Huyện 1</th>
+                        <th width="10%">ĐVT 2</th>
+                        <th width="12%">Giá TP 2</th>
+                        <th width="12%">Giá Huyện 2</th>
                         <th width="10%">Thao Tác</th>
                     </tr>
                 </thead>
@@ -373,6 +390,37 @@
         </div>
         <div id="productPaginationContainer" class="pagination-wrapper" style="display:none;"></div>
     </div>
+    
+    <div class="card" id="customerSection" style="display:none;">
+        <div class="card-header">
+            <div class="card-header-title"><i class="fas fa-users"></i> Quản Lý Khách Hàng</div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-success" onclick="openImportModal('customer')"><i class="fas fa-file-import"></i> Import Khách</button>
+                <button class="btn btn-primary" onclick="openCustomerModal()"><i class="fas fa-plus"></i> Thêm Khách Hàng</button>
+            </div>
+        </div>
+        <div style="margin-bottom: 15px; position:relative; max-width: 300px;">
+            <i class="fas fa-search" style="position: absolute; left: 12px; top: 10px; color: #adb5bd;"></i>
+            <input type="text" id="searchCustomer" class="form-control" style="padding-left:35px; border-radius:20px;" placeholder="Tìm tên khách, MST..." oninput="changeCusPage(1); renderCustomerList()" autocomplete="off">
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th width="5%">STT</th>
+                        <th width="25%">Tên Khách Hàng</th>
+                        <th width="15%">MST</th>
+                        <th width="15%">Mật khẩu</th>
+                        <th width="20%">Địa chỉ</th>
+                        <th width="10%">Khu Vực</th>
+                        <th width="10%">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody id="customerListContainer"></tbody>
+            </table>
+        </div>
+        <div id="customerPaginationContainer" class="pagination-wrapper" style="display:none;"></div>
+    </div>
 </div>
 
 <div class="app-footer" id="appFooter"></div>
@@ -380,11 +428,14 @@
 <div id="printSection" style="display: none;"></div>
 
 <div id="mergeOptionModal" class="modal-overlay">
-    <div class="modal-content" style="padding-top: 35px;">
+    <div class="modal-content" style="max-width: 500px;">
         <button class="close-modal-x" onclick="closeMergeModal()"><i class="fas fa-times"></i></button>
-        <div class="modal-title" style="color: var(--primary);"><i class="fas fa-question-circle"></i> Tùy chọn xuất hóa đơn</div>
+        <div class="modal-title" style="color: var(--primary); font-size: 20px;"><i class="fas fa-paper-plane"></i> Gửi Chốt Bảng Kê</div>
         <div class="modal-body" id="mergeModalBodyText" style="font-size: 15px; margin-top: 15px;"></div>
-        <div class="modal-actions" id="mergeModalActions" style="display: flex; gap: 10px; justify-content: center; margin-top: 25px;"></div>
+        <div class="modal-actions" id="mergeModalActions" style="display: flex; gap: 10px; margin-top: 25px;">
+            <button class="btn btn-primary" style="flex: 1; padding: 12px; font-size: 14px;" onclick="submitWithMergeOption('gộp hóa đơn')"><i class="fas fa-object-group"></i> HỢP NHẤT 1 TỜ</button>
+            <button class="btn btn-success" style="flex: 1; padding: 12px; font-size: 14px;" onclick="submitWithMergeOption('tách hóa đơn')"><i class="fas fa-object-ungroup"></i> TÁCH RIÊNG LOẠI</button>
+        </div>
     </div>
 </div>
 
@@ -429,24 +480,97 @@
 </div>
 
 <div id="productModal" class="modal-overlay">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width: 650px;">
         <button class="close-modal-x" onclick="closeProductModal()"><i class="fas fa-times"></i></button>
         <div class="modal-title" style="color: var(--primary);" id="prodModalTitle"><i class="fas fa-box"></i> Thêm Sản Phẩm</div>
         <div class="modal-body">
             <input type="hidden" id="pmOldName" value="">
-            <div class="form-group"><label>Tên sản phẩm (*)</label><input type="text" id="pmName" class="form-control" placeholder="Nhập tên SP..."></div>
-            <div class="grid-2" style="grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div class="form-group"><label>Đơn vị tính 1 (*)</label><input type="text" id="pmU1" class="form-control" placeholder="VD: Cái, Kg..."></div>
-                <div class="form-group"><label>Đơn giá 1 (*)</label><input type="number" id="pmP1" class="form-control" placeholder="0"></div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Tên sản phẩm (*)</label>
+                <input type="text" id="pmName" class="form-control" placeholder="Nhập tên SP...">
             </div>
-            <div class="grid-2" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                <div class="form-group"><label>Đơn vị tính 2 (Tùy chọn)</label><input type="text" id="pmU2" class="form-control" placeholder="Thùng, Hộp..."></div>
-                <div class="form-group"><label>Đơn giá 2 (Tùy chọn)</label><input type="number" id="pmP2" class="form-control" placeholder="0"></div>
+            
+            <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 12px;">
+                <div class="grid-3" style="gap: 10px; align-items: flex-end;">
+                    <div class="form-group"><label style="color: var(--primary);"><b>Đơn vị tính 1 (*)</b></label><input type="text" id="pmU1" class="form-control" placeholder="VD: Cái, Kg..."></div>
+                    <div class="form-group"><label>Giá Thành Phố 1</label><input type="number" id="pmP1_TP" class="form-control" placeholder="0"></div>
+                    <div class="form-group"><label>Giá Huyện 1</label><input type="number" id="pmP1_NT" class="form-control" placeholder="0"></div>
+                </div>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; border: 1px solid var(--border);">
+                <div class="grid-3" style="gap: 10px; align-items: flex-end;">
+                    <div class="form-group"><label style="color: var(--primary);"><b>Đơn vị tính 2 (Tùy chọn)</b></label><input type="text" id="pmU2" class="form-control" placeholder="Thùng, Hộp..."></div>
+                    <div class="form-group"><label>Giá Thành Phố 2</label><input type="number" id="pmP2_TP" class="form-control" placeholder="0"></div>
+                    <div class="form-group"><label>Giá Huyện 2</label><input type="number" id="pmP2_NT" class="form-control" placeholder="0"></div>
+                </div>
             </div>
         </div>
         <div class="modal-actions">
             <button class="btn btn-outline" onclick="closeProductModal()">Hủy</button>
             <button class="btn btn-primary" id="btnSaveProduct" onclick="saveProduct()">Lưu Sản Phẩm</button>
+        </div>
+    </div>
+</div>
+
+<div id="customerModal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-modal-x" onclick="closeCustomerModal()"><i class="fas fa-times"></i></button>
+        <div class="modal-title" style="color: var(--primary);" id="cusModalTitle"><i class="fas fa-user"></i> Thêm Khách Hàng</div>
+        <div class="modal-body">
+            <input type="hidden" id="cmOldMST" value="">
+            <div class="form-group"><label>Tên Công ty / Khách hàng (*)</label><input type="text" id="cmName" class="form-control" placeholder="Nhập tên..."></div>
+            <div class="grid-2" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                <div class="form-group"><label>Mã số thuế / Tài khoản (*)</label><input type="text" id="cmMST" class="form-control" placeholder="Nhập MST..."></div>
+                <div class="form-group"><label>Mật khẩu (*)</label><input type="text" id="cmPass" class="form-control" placeholder="Mật khẩu đăng nhập..."></div>
+            </div>
+            <div class="form-group" style="margin-top: 10px;"><label>Địa chỉ</label><input type="text" id="cmAddr" class="form-control" placeholder="Nhập địa chỉ..."></div>
+            <div class="grid-2" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                <div class="form-group"><label>Email</label><input type="text" id="cmEmail" class="form-control" placeholder="Nhập email..."></div>
+                <div class="form-group">
+                    <label>Khu vực (Quyết định Bảng giá) (*)</label>
+                    <select id="cmRegion" class="form-control" style="font-weight: 600; color: var(--primary);">
+                        <option value="tp">Thành phố</option>
+                        <option value="nt">Huyện</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-outline" onclick="closeCustomerModal()">Hủy</button>
+            <button class="btn btn-primary" id="btnSaveCustomer" onclick="saveCustomer()">Lưu Khách Hàng</button>
+        </div>
+    </div>
+</div>
+
+<div id="importModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 800px; max-height: 90vh; display: flex; flex-direction: column;">
+        <button class="close-modal-x" onclick="closeImportModal()"><i class="fas fa-times"></i></button>
+        <div class="modal-title" style="color: var(--primary);" id="importModalTitle"><i class="fas fa-file-import"></i> Nhập Dữ Liệu Hàng Loạt</div>
+        <div class="modal-body" style="overflow-y: auto; flex: 1; margin-bottom: 10px;">
+            <div class="warning-box" style="font-size: 13px;">
+                <b>QUY TẮC NHẬP LIỆU:</b><br>
+                1. Hãy tải Bảng Mẫu bên dưới và điền dữ liệu đúng định dạng.<br>
+                2. Nếu Tên Sản Phẩm (hoặc MST khách hàng) đã tồn tại trong kho, hệ thống sẽ <b>TỰ ĐỘNG LƯU ĐÈ (CẬP NHẬT)</b> giá và thông tin mới.
+            </div>
+            <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                <button class="btn btn-outline-success" onclick="downloadImportTemplate()"><i class="fas fa-download"></i> Tải Bảng Mẫu (.xlsx)</button>
+                <input type="file" id="importFile" accept=".xlsx, .xls" style="display: none;" onchange="handleFileSelect(event)">
+                <button class="btn btn-primary" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> Chọn File Excel Đã Điền</button>
+            </div>
+            
+            <div id="importStatus" style="font-size: 14px; font-weight: 600; color: var(--info); margin-bottom: 10px;"></div>
+            
+            <div class="table-responsive" style="max-height: 350px; overflow-y: auto; display: none;" id="previewTableContainer">
+                <table id="previewTable">
+                    <thead id="previewThead"></thead>
+                    <tbody id="previewTbody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-actions" style="margin-top: 10px; padding-top: 15px; border-top: 1px solid var(--secondary);">
+            <button class="btn btn-outline" onclick="closeImportModal()">Hủy bỏ</button>
+            <button class="btn btn-success" id="btnConfirmImport" onclick="executeImport()" disabled><i class="fas fa-check-circle"></i> Xác nhận Import Dữ Liệu</button>
         </div>
     </div>
 </div>
@@ -461,6 +585,7 @@
     let WORK_START_HOUR = 6; 
     let WORK_END_HOUR = 24;  
     let CUTOFF_HOUR = 14; 
+    let CUTOFF_MINUTE = 55;
 
     const SELLER_INFO = { name: "CÔNG TY TNHH THƯƠNG MẠI PHÁT TRIỂN TRẦN ANH", addr: "Số 26/442 Vũ Hữu Lợi, Phường Nam Định, Tỉnh Ninh Bình, Việt Nam", mst: "0601162291", phone: "0228.388.8989" };
 
@@ -469,6 +594,10 @@
     let loggedInCustomer = null; let isAdmin = false; let isViewOnlyMode = false; let saveDraftTimeout; 
     let currentPage = 1; let itemsPerPage = 10; let pendingSubmitData = null;
     let prodCurrentPage = 1; let prodItemsPerPage = 50;
+    let cusCurrentPage = 1; let cusItemsPerPage = 50;
+    
+    let currentImportType = ''; 
+    let parsedImportData = [];
 
     function handleRouting() {
         let hash = location.hash || '#taomoi';
@@ -477,6 +606,7 @@
         document.getElementById('editorSection').style.display = 'none';
         document.getElementById('historySection').style.display = 'none';
         if(document.getElementById('productSection')) document.getElementById('productSection').style.display = 'none';
+        if(document.getElementById('customerSection')) document.getElementById('customerSection').style.display = 'none';
 
         if(hash === '#lichsu') {
             document.getElementById('historySection').style.display = 'block';
@@ -486,6 +616,10 @@
             document.getElementById('productSection').style.display = 'block';
             document.getElementById('link-sanpham').classList.add('active');
             renderProductList();
+        } else if(hash === '#khachhang' && isAdmin) {
+            document.getElementById('customerSection').style.display = 'block';
+            document.getElementById('link-khachhang').classList.add('active');
+            renderCustomerList();
         } else {
             document.getElementById('editorSection').style.display = 'block';
             document.getElementById('link-taomoi').classList.add('active');
@@ -495,14 +629,20 @@
             document.getElementById("editorSection").style.display = "none"; 
         }
         
-        if (isAdmin) document.getElementById('link-sanpham').style.display = 'flex';
-        else document.getElementById('link-sanpham').style.display = 'none';
+        if (isAdmin) {
+            document.getElementById('link-sanpham').style.display = 'flex';
+            document.getElementById('link-khachhang').style.display = 'flex';
+        } else {
+            document.getElementById('link-sanpham').style.display = 'none';
+            document.getElementById('link-khachhang').style.display = 'none';
+        }
     }
     window.addEventListener('hashchange', handleRouting);
 
     function forceSwitchToEditTab() {
         document.getElementById('historySection').style.display = 'none';
         if(document.getElementById('productSection')) document.getElementById('productSection').style.display = 'none';
+        if(document.getElementById('customerSection')) document.getElementById('customerSection').style.display = 'none';
         document.getElementById('editorSection').style.display = 'block';
         document.querySelectorAll('.tab-link').forEach(function(el) { el.classList.remove('active'); });
         document.getElementById('link-taomoi').classList.add('active');
@@ -580,10 +720,16 @@
 
         document.addEventListener('input', function(e) {
             if(isViewOnlyMode) return; 
+            if(e.target.matches('.f-name')) { validateInvoiceProducts(); }
             if(e.target.matches('.f-name, .unit-name-input, #cusPerson, #invoiceDate, .f-qty, .f-total')) {
                 clearTimeout(saveDraftTimeout); 
                 saveDraftTimeout = setTimeout(saveLocalDraft, 500);
             }
+        });
+
+        document.addEventListener('focusout', function(e) {
+            if(isViewOnlyMode) return;
+            if(e.target.matches('.f-name')) { validateInvoiceProducts(); }
         });
     }
 
@@ -620,11 +766,19 @@
                 setRes.data.forEach(s => {
                     if (s.setting_key === 'GioMoCua') db.settings.startHour = s.setting_value;
                     if (s.setting_key === 'GioDongCua') db.settings.endHour = s.setting_value;
-                    if (s.setting_key === 'GioChotSo') db.settings.cutoffHour = s.setting_value;
+                    if (s.setting_key === 'GioChotSo') {
+                        let val = String(s.setting_value);
+                        if(val.includes(':')) {
+                            let p = val.split(':');
+                            CUTOFF_HOUR = parseInt(p[0]) || 14;
+                            CUTOFF_MINUTE = parseInt(p[1]) || 0;
+                        } else {
+                            CUTOFF_HOUR = parseInt(val) || 14;
+                        }
+                    }
                 });
                 WORK_START_HOUR = db.settings.startHour || 6;
                 WORK_END_HOUR = db.settings.endHour || 24;
-                CUTOFF_HOUR = db.settings.cutoffHour || 14;
             }
 
             db.admins = admRes.data || [];
@@ -642,7 +796,8 @@
             }
 
             let startH = WORK_START_HOUR < 10 ? "0" + WORK_START_HOUR : WORK_START_HOUR;
-            document.getElementById("appFooter").innerHTML = `🔔 <b>Lưu ý:</b> Hệ thống chốt sổ (ngừng nhận dữ liệu) vào lúc <b>${CUTOFF_HOUR}h00</b> hàng ngày. Thời gian bảo trì hệ thống từ <b>${WORK_END_HOUR}h00</b> đến <b>${startH}h00</b> sáng hôm sau phần mềm sẽ không thể truy cập.`;
+            let cutoffM = CUTOFF_MINUTE < 10 ? "0" + CUTOFF_MINUTE : CUTOFF_MINUTE;
+            document.getElementById("appFooter").innerHTML = `🔔 <b>Lưu ý:</b> Hệ thống chốt sổ (ngừng nhận dữ liệu) vào lúc <b>${CUTOFF_HOUR}h${cutoffM}</b> hàng ngày. Thời gian bảo trì hệ thống từ <b>${WORK_END_HOUR}h00</b> đến <b>${startH}h00</b> sáng hôm sau phần mềm sẽ không thể truy cập.`;
 
             if (activeSession) {
                 document.getElementById("sessionLoader").style.display = "none";
@@ -667,7 +822,8 @@
             let defaultD = new Date();
             if (!isAdmin) {
                 let minD = new Date();
-                if (minD.getHours() >= CUTOFF_HOUR) { 
+                let isPastCutoff = minD.getHours() > CUTOFF_HOUR || (minD.getHours() === CUTOFF_HOUR && minD.getMinutes() >= CUTOFF_MINUTE);
+                if (isPastCutoff) { 
                     minD.setDate(minD.getDate() + 1); 
                     defaultD = new Date(minD); 
                 }
@@ -699,7 +855,10 @@
             document.getElementById("btnAdminExportSummary").style.display = "none";
             document.getElementById("btnAdminExportData").style.display = "none";
             let cus = db.customers.find(function(c) { return String(c.mst).trim() === String(mst).trim(); });
-            if(cus) { loggedInCustomer = cus; } 
+            if(cus) { 
+                loggedInCustomer = cus; 
+                document.getElementById("cusSearch").dataset.region = cus.region || 'tp';
+            } 
             else { 
                 sessionStorage.removeItem("activeSessionMST"); 
                 document.getElementById("mainApp").style.display = "none"; 
@@ -739,19 +898,11 @@
     function showConfirm(titleHtml, bodyHtml, btnText, btnClass, onConfirm, hideCancel = false, onCancel = null, cancelText = "Hủy bỏ") { 
         document.getElementById("confirmTitle").innerHTML = titleHtml; 
         document.getElementById("confirmBody").innerHTML = bodyHtml; 
-        
         let btn = document.getElementById("confirmBtn"); 
-        btn.innerHTML = btnText; 
-        btn.className = "btn " + btnClass; 
-        
+        btn.innerHTML = btnText; btn.className = "btn " + btnClass; 
         let cancelBtn = document.getElementById("cancelConfirmBtn"); 
-        if(cancelBtn) {
-            cancelBtn.style.display = hideCancel ? "none" : "inline-flex";
-            cancelBtn.innerHTML = cancelText;
-        }
-        
-        confirmCallback = onConfirm; 
-        cancelCallback = onCancel; 
+        if(cancelBtn) { cancelBtn.style.display = hideCancel ? "none" : "inline-flex"; cancelBtn.innerHTML = cancelText; }
+        confirmCallback = onConfirm; cancelCallback = onCancel; 
         document.getElementById("customConfirmModal").style.display = "flex"; 
     }
 
@@ -762,9 +913,7 @@
     }
 
     function executeConfirm() { 
-        let cb = confirmCallback; 
-        closeConfirm(false); 
-        if (cb) cb(); 
+        let cb = confirmCallback; closeConfirm(false); if (cb) cb(); 
     }
 
     function checkAutoLogin() {
@@ -790,6 +939,7 @@
                 let currentHour = new Date().getHours();
                 if (currentHour < WORK_START_HOUR || currentHour >= WORK_END_HOUR) { status.innerText = `Ngoài giờ làm việc. Hệ thống chỉ mở từ ${WORK_START_HOUR}h đến ${WORK_END_HOUR}h!`; setBtnReady(); return; }
                 loggedInCustomer = cus;
+                document.getElementById("cusSearch").dataset.region = cus.region || 'tp'; 
             }
 
             sessionStorage.setItem("activeSessionMST", mst);
@@ -816,59 +966,33 @@
     function closeChangePassModal() { document.getElementById("changePassModal").style.display = "none"; }
 
     async function executeChangePass() {
-        let mst = document.getElementById("cpMST").value.trim(); 
-        let oldP = document.getElementById("cpOld").value.trim(); 
-        let newP = document.getElementById("cpNew").value.trim(); 
-        let confirmP = document.getElementById("cpConfirm").value.trim(); let status = document.getElementById("cpStatus");
+        let mst = document.getElementById("cpMST").value.trim(); let oldP = document.getElementById("cpOld").value.trim(); let newP = document.getElementById("cpNew").value.trim(); let confirmP = document.getElementById("cpConfirm").value.trim(); let status = document.getElementById("cpStatus");
         
         if(!mst || !oldP || !newP || !confirmP) { status.innerText = "Vui lòng điền đầy đủ!"; return; }
         if(newP !== confirmP) { status.innerText = "Mật khẩu xác nhận không khớp!"; return; }
         if(newP.length < 4) { status.innerText = "Mật khẩu quá ngắn!"; return; }
         
-        let cus = db.customers.find(c => c.mst === mst); 
-        let adminAcc = db.admins.find(a => a.username === mst);
-
+        let cus = db.customers.find(c => c.mst === mst); let adminAcc = db.admins.find(a => a.username === mst);
         if (!cus && !adminAcc) { status.innerText = "Tên đăng nhập không tồn tại!"; return; }
         
-        let validPass = "";
-        let tableToUpdate = "";
-        let idColumn = "";
-
-        if (cus) {
-            validPass = cus.password ? String(cus.password).trim() : (localStorage.getItem("customPass_" + mst) || mst);
-            tableToUpdate = 'customers';
-            idColumn = 'mst';
-        } else if (adminAcc) {
-            validPass = String(adminAcc.password).trim();
-            tableToUpdate = 'admins';
-            idColumn = 'username';
-        }
+        let validPass = ""; let tableToUpdate = ""; let idColumn = "";
+        if (cus) { validPass = cus.password ? String(cus.password).trim() : (localStorage.getItem("customPass_" + mst) || mst); tableToUpdate = 'customers'; idColumn = 'mst'; } 
+        else if (adminAcc) { validPass = String(adminAcc.password).trim(); tableToUpdate = 'admins'; idColumn = 'username'; }
 
         if (oldP !== validPass) { status.innerText = "Mật khẩu cũ không chính xác!"; return; }
         
         status.style.color = "var(--primary)"; status.innerText = "Đang cập nhật...";
-        
         const { error } = await supaClient.from(tableToUpdate).update({ password: newP }).eq(idColumn, mst);
 
         if (error) { 
-            if (cus) {
-                cus.password = newP; localStorage.setItem("customPass_" + mst, newP); 
-                if(localStorage.getItem("savedMST") === mst) { localStorage.setItem("savedPass", newP); } 
-            }
-            closeChangePassModal(); showToast("Đã đổi Mật khẩu (Lưu cục bộ do lỗi mạng).", "warning");
-            return; 
+            if (cus) { cus.password = newP; localStorage.setItem("customPass_" + mst, newP); if(localStorage.getItem("savedMST") === mst) { localStorage.setItem("savedPass", newP); } }
+            closeChangePassModal(); showToast("Đã đổi Mật khẩu (Lưu cục bộ do lỗi mạng).", "warning"); return; 
         }
 
-        if (cus) {
-            cus.password = newP; localStorage.setItem("customPass_" + mst, newP); 
-            if(localStorage.getItem("savedMST") === mst) { localStorage.setItem("savedPass", newP); } 
-        } else if (adminAcc) {
-            adminAcc.password = newP;
-            if(localStorage.getItem("savedMST") === mst) { localStorage.setItem("savedPass", newP); } 
-        }
+        if (cus) { cus.password = newP; localStorage.setItem("customPass_" + mst, newP); if(localStorage.getItem("savedMST") === mst) { localStorage.setItem("savedPass", newP); } } 
+        else if (adminAcc) { adminAcc.password = newP; if(localStorage.getItem("savedMST") === mst) { localStorage.setItem("savedPass", newP); } }
 
-        closeChangePassModal(); showToast("Đổi mật khẩu thành công!", "success"); 
-        document.getElementById("loginPass").value = newP; 
+        closeChangePassModal(); showToast("Đổi mật khẩu thành công!", "success"); document.getElementById("loginPass").value = newP; 
     }
 
     function setFormViewMode(isLocked) {
@@ -891,6 +1015,57 @@
                 document.getElementById('btnUserDraft').style.display = 'inline-flex'; document.getElementById('btnUserSubmit').style.display = 'inline-flex'; document.getElementById('btnAdminSave').style.display = 'none';
             }
         }
+    }
+
+    function validateInvoiceProducts() {
+        if (isViewOnlyMode) return;
+        let hasError = false;
+        let currentRegion = document.getElementById("cusSearch").dataset.region || 'tp';
+        
+        document.querySelectorAll('.f-name').forEach(function(el) {
+            let val = el.value.trim();
+            if (val !== "") {
+                let dbProd = db.products.find(function(p) { return p.name === val; });
+                if (!dbProd) {
+                    el.classList.add('input-error'); hasError = true;
+                } else {
+                    let price1 = currentRegion === 'nt' ? (parseFloat(dbProd.p1_nt) || 0) : (parseFloat(dbProd.p1_tp) || 0);
+                    if (price1 <= 0) {
+                        el.classList.add('input-error'); hasError = true;
+                    } else {
+                        el.classList.remove('input-error');
+                    }
+                }
+            } else {
+                el.classList.remove('input-error');
+            }
+        });
+
+        let addRowBtns = document.querySelectorAll('.btn-outline-success');
+        let addUnitBtn = document.getElementById('btnAddUnitBtn');
+        let btnDraft = document.getElementById('btnUserDraft');
+        let btnSubmit = document.getElementById('btnUserSubmit');
+        let btnAdminSave = document.getElementById('btnAdminSave');
+        let warningText = document.getElementById('validationWarning');
+        let autoSaveText = document.getElementById('autoSaveStatus');
+
+        if (hasError) {
+            addRowBtns.forEach(btn => btn.disabled = true);
+            if(addUnitBtn) addUnitBtn.disabled = true;
+            if(btnDraft) btnDraft.disabled = true;
+            if(btnSubmit) btnSubmit.disabled = true;
+            if(btnAdminSave) btnAdminSave.disabled = true;
+            if(warningText) warningText.style.display = 'flex';
+            if(autoSaveText) autoSaveText.style.display = 'none';
+        } else {
+            addRowBtns.forEach(btn => btn.disabled = false);
+            if(addUnitBtn) addUnitBtn.disabled = false;
+            if(btnDraft) btnDraft.disabled = false;
+            if(btnSubmit) btnSubmit.disabled = false;
+            if(btnAdminSave) btnAdminSave.disabled = false;
+            if(warningText) warningText.style.display = 'none';
+        }
+        return hasError;
     }
 
     function initClientPortal() { handleRouting(); setFormViewMode(false); if(!isAdmin) { checkLocalDraft(); } else { resetForm(true); } }
@@ -917,11 +1092,30 @@
 
     function saveLocalDraft() {
         if (isAdmin || isViewOnlyMode || !loggedInCustomer) { document.getElementById('autoSaveStatus').style.display = 'none'; return; }
+        if (validateInvoiceProducts()) return;
+
         let dataObj = getFormData(); if (!dataObj) return; 
         if (dataObj.empty) { localStorage.removeItem('localDraft_' + loggedInCustomer.mst); document.getElementById('autoSaveStatus').style.display = 'none'; return; } 
         localStorage.setItem('localDraft_' + loggedInCustomer.mst, JSON.stringify(dataObj));
         let now = new Date(); let timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0') + ':' + now.getSeconds().toString().padStart(2,'0');
         document.getElementById('autoSaveStatus').style.display = 'flex'; document.getElementById('autoSaveStatus').innerHTML = `<i class="fas fa-check-circle" style="color:var(--success); margin-right:5px;"></i> Hệ thống đã ghi nhận tạm thời lúc ${timeStr}`;
+    }
+
+    function saveAsDraft(btnEl) {
+        let dataObj = getFormData(); 
+        if(!dataObj) { showToast("Vui lòng chọn khách hàng và nhập hàng hóa!", "danger"); return; }
+        
+        let unitCount = dataObj.units.length; 
+        if(unitCount >= 2) { 
+            let isMissingName = false; 
+            for(let i = 0; i < unitCount; i++) { 
+                if(!dataObj.units[i].unitName || dataObj.units[i].unitName.trim() === "") { isMissingName = true; break; } 
+            } 
+            if(isMissingName) { showToast("Bạn có nhiều phân loại. Vui lòng nhập đầy đủ TÊN PHÂN LOẠI ở các ô gạch chân!", "warning"); return; } 
+        }
+        
+        dataObj.status = 'nhap'; 
+        doSaveCloudData(dataObj, false, btnEl); 
     }
 
     function checkLocalDraft() {
@@ -949,8 +1143,14 @@
 
     function resetForm(forceClear = false) {
         setFormViewMode(false); document.getElementById("currentDraftId").value = ""; document.getElementById("cusPerson").value = ""; initDatePickers(); 
-        if(isAdmin) { document.getElementById("cusSearch").value = ""; document.getElementById("cusMST").value = ""; document.getElementById("cusAddr").value = ""; document.getElementById("cusEmail").value = ""; } 
-        else if(loggedInCustomer) { document.getElementById("cusSearch").value = loggedInCustomer.name || ""; document.getElementById("cusMST").value = loggedInCustomer.mst || ""; document.getElementById("cusAddr").value = loggedInCustomer.address || ""; document.getElementById("cusEmail").value = loggedInCustomer.email || ""; }
+        if(isAdmin) { 
+            document.getElementById("cusSearch").value = ""; document.getElementById("cusMST").value = ""; document.getElementById("cusAddr").value = ""; document.getElementById("cusEmail").value = ""; 
+            document.getElementById("cusSearch").dataset.region = "tp";
+        } 
+        else if(loggedInCustomer) { 
+            document.getElementById("cusSearch").value = loggedInCustomer.name || ""; document.getElementById("cusMST").value = loggedInCustomer.mst || ""; document.getElementById("cusAddr").value = loggedInCustomer.address || ""; document.getElementById("cusEmail").value = loggedInCustomer.email || ""; 
+            document.getElementById("cusSearch").dataset.region = loggedInCustomer.region || 'tp';
+        }
 
         let templateBox = document.createElement("div"); templateBox.className = "unit-box";
         templateBox.innerHTML = `
@@ -963,13 +1163,20 @@
             </div><div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;"><button class="btn btn-outline-success" onclick="addRow(this)"><i class="fas fa-plus"></i> Thêm Dòng</button><div class="unit-summary">Cộng tiền hàng: <span class="u-total-val">0</span> đ</div></div>
         `;
         let container = document.getElementById("unitsContainer"); container.innerHTML = ""; container.appendChild(templateBox); 
-        undoStack = []; updateAllTotals(); updateSTT(); if(!forceClear) saveLocalDraft();
+        undoStack = []; updateAllTotals(); updateSTT(); 
+        validateInvoiceProducts(); 
+        if(!forceClear) saveLocalDraft();
     }
 
     function isTimePastCutoff(dateStr) {
         if(!dateStr) return false; let parts = dateStr.split('/'); if(parts.length !== 3) return false;
         let invDate = new Date(parts[2], parts[1] - 1, parts[0]); invDate.setHours(0,0,0,0); let now = new Date(); let today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        if (invDate < today) return true; if (invDate.getTime() === today.getTime()) { if (now.getHours() >= CUTOFF_HOUR) return true; return false; } return false;
+        if (invDate < today) return true; 
+        if (invDate.getTime() === today.getTime()) { 
+            if (now.getHours() > CUTOFF_HOUR || (now.getHours() === CUTOFF_HOUR && now.getMinutes() >= CUTOFF_MINUTE)) return true; 
+            return false; 
+        } 
+        return false;
     }
 
     function loadDraft(id, isViewOnly) {
@@ -997,17 +1204,26 @@
     function restoreDataToForm(draft, isViewOnly = false) {
         undoStack = []; document.getElementById("currentDraftId").value = draft.id || ""; 
         try {
-            if (draft.invoiceDate === "") {
-                document.getElementById("invoiceDate")._flatpickr.clear();
-            } else {
-                document.getElementById("invoiceDate")._flatpickr.setDate(draft.invoiceDate || new Date(), true, "d/m/Y");
-            }
+            if (draft.invoiceDate === "") { document.getElementById("invoiceDate")._flatpickr.clear(); } 
+            else { document.getElementById("invoiceDate")._flatpickr.setDate(draft.invoiceDate || new Date(), true, "d/m/Y"); }
         } catch(e){} 
-        if(draft.customer) { document.getElementById("cusPerson").value = draft.customer.person || ""; document.getElementById("cusSearch").value = draft.customer.name || ""; document.getElementById("cusMST").value = draft.customer.mst || ""; document.getElementById("cusAddr").value = draft.customer.addr || ""; document.getElementById("cusEmail").value = draft.customer.email || ""; }
+        
+        if(draft.customer) { 
+            document.getElementById("cusPerson").value = draft.customer.person || ""; 
+            document.getElementById("cusSearch").value = draft.customer.name || ""; 
+            document.getElementById("cusMST").value = draft.customer.mst || ""; 
+            document.getElementById("cusAddr").value = draft.customer.addr || ""; 
+            document.getElementById("cusEmail").value = draft.customer.email || ""; 
+            
+            let cusDb = db.customers.find(c => c.mst === draft.customer.mst);
+            document.getElementById("cusSearch").dataset.region = cusDb ? (cusDb.region || 'tp') : 'tp';
+        }
 
         let container = document.getElementById("unitsContainer"); container.innerHTML = "";
         if(!draft.units || !Array.isArray(draft.units)) return; 
+        
         let pastCutoff = isTimePastCutoff(draft.invoiceDate); let shouldUpdatePrice = !pastCutoff; 
+        let currentRegion = document.getElementById("cusSearch").dataset.region || 'tp';
 
         draft.units.forEach(function(u) {
             let div = document.createElement("div"); div.className = "unit-box";
@@ -1018,14 +1234,32 @@
             `;
             if(u.products && Array.isArray(u.products)) {
                 u.products.forEach(function(p) {
-                    let dbProd = db.products.find(function(x) { return x.name === p.name; }); let currentPrice = parseFloat(p.priceRaw) || 0; let currentUnit = p.unit || "";
-                    if (!isViewOnly && shouldUpdatePrice && dbProd) { if (currentUnit === dbProd.u1) { currentPrice = dbProd.p1; } else if (dbProd.u2 && currentUnit === dbProd.u2) { currentPrice = dbProd.p2; } }
-                    let totalRaw = parseFloat(p.totalRaw) || ((parseFloat(p.qty) || 0) * (parseFloat(p.priceRaw) || 0));
+                    let dbProd = db.products.find(function(x) { return x.name === p.name; }); 
+                    let currentPrice = parseFloat(p.priceRaw) || 0; 
+                    let currentUnit = p.unit || "";
+                    
+                    if (!isViewOnly && shouldUpdatePrice && dbProd) { 
+                        let p1 = currentRegion === 'nt' ? (parseFloat(dbProd.p1_nt) || 0) : (parseFloat(dbProd.p1_tp) || 0);
+                        let p2 = currentRegion === 'nt' ? (parseFloat(dbProd.p2_nt) || 0) : (parseFloat(dbProd.p2_tp) || 0);
+                        
+                        if (currentUnit === dbProd.u1) { currentPrice = p1; } 
+                        else if (dbProd.u2 && currentUnit === dbProd.u2) { currentPrice = p2; } 
+                    }
+                    
+                    let totalRaw = parseFloat(p.totalRaw) || ((parseFloat(p.qty) || 0) * currentPrice);
                     if (!isViewOnly && shouldUpdatePrice && dbProd) { totalRaw = (parseFloat(p.qty) || 0) * currentPrice; }
 
-                    let priceStr = currentPrice ? currentPrice.toLocaleString('vi-VN') : "0"; let totalStr = Math.round(totalRaw).toLocaleString('vi-VN');
+                    let priceStr = currentPrice ? currentPrice.toLocaleString('vi-VN') : "0"; 
+                    let totalStr = Math.round(totalRaw).toLocaleString('vi-VN');
+                    
                     let optionsHtml = `<option value="${currentUnit}" data-price="${currentPrice}">${currentUnit}</option>`;
-                    if(dbProd) { optionsHtml = `<option value="${dbProd.u1}" data-price="${dbProd.p1}" ${currentUnit === dbProd.u1 ? 'selected' : ''}>${dbProd.u1}</option>`; if(dbProd.u2) { optionsHtml += `<option value="${dbProd.u2}" data-price="${dbProd.p2}" ${currentUnit === dbProd.u2 ? 'selected' : ''}>${dbProd.u2}</option>`; } }
+                    if(dbProd) { 
+                        let p1 = currentRegion === 'nt' ? (parseFloat(dbProd.p1_nt) || 0) : (parseFloat(dbProd.p1_tp) || 0);
+                        let p2 = currentRegion === 'nt' ? (parseFloat(dbProd.p2_nt) || 0) : (parseFloat(dbProd.p2_tp) || 0);
+                        
+                        optionsHtml = `<option value="${dbProd.u1}" data-price="${p1}" ${currentUnit === dbProd.u1 ? 'selected' : ''}>${dbProd.u1}</option>`; 
+                        if(dbProd.u2) { optionsHtml += `<option value="${dbProd.u2}" data-price="${p2}" ${currentUnit === dbProd.u2 ? 'selected' : ''}>${dbProd.u2}</option>`; } 
+                    }
                     
                     html += `<tr><td class="stt-col"></td><td class="autocomplete-container"><textarea class="form-control f-name" rows="1" oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)" autocomplete="off">${p.name || ''}</textarea><div class="custom-dropdown"></div></td><td><select class="form-control f-unit" onchange="changeUnit(this)">${optionsHtml}</select></td><td><input type="number" class="form-control f-qty" value="${p.qty||''}" step="any" oninput="calcRow(this, 'qty')" autocomplete="off"></td><td><input type="text" class="form-control f-price" value="${priceStr}" readonly data-val="${currentPrice}" autocomplete="off"></td><td><input type="text" class="form-control f-total" value="${totalStr}" oninput="calcRow(this, 'total')" onblur="formatTotal(this)" autocomplete="off"></td><td class="text-center"><button class="btn-trash" onclick="deleteRow(this)"><i class="fas fa-times"></i></button></td></tr>`;
                 });
@@ -1036,6 +1270,7 @@
         
         setTimeout(function() { document.querySelectorAll('.f-name').forEach(function(ta) { autoHeight(ta); }); }, 50);
         updateAllTotals(); updateSTT(); window.scrollTo(0, 0); 
+        validateInvoiceProducts(); 
     }
 
     function autoHeight(el) { el.style.height = 'auto'; el.style.height = (el.scrollHeight) + 'px'; }
@@ -1053,6 +1288,37 @@
         }
     });
 
+    function updateAllPricesByRegion() {
+        let currentRegion = document.getElementById("cusSearch").dataset.region || 'tp';
+        let rows = document.querySelectorAll('#unitsContainer tbody tr');
+        
+        rows.forEach(function(row) {
+            let nameInput = row.querySelector('.f-name').value.trim();
+            if (nameInput) {
+                let dbProd = db.products.find(p => p.name === nameInput);
+                if (dbProd) {
+                    let selectUnit = row.querySelector('.f-unit');
+                    let currentUnit = selectUnit.value;
+                    
+                    let price1 = currentRegion === 'nt' ? (parseFloat(dbProd.p1_nt) || 0) : (parseFloat(dbProd.p1_tp) || 0);
+                    let price2 = currentRegion === 'nt' ? (parseFloat(dbProd.p2_nt) || 0) : (parseFloat(dbProd.p2_tp) || 0);
+                    
+                    selectUnit.innerHTML = `<option value="${dbProd.u1}" data-price="${price1}">${dbProd.u1}</option>`; 
+                    if (dbProd.u2 && price2 > 0) { selectUnit.innerHTML += `<option value="${dbProd.u2}" data-price="${price2}" ${currentUnit === dbProd.u2 ? 'selected' : ''}>${dbProd.u2}</option>`; } 
+                    
+                    let activePrice = (currentUnit === dbProd.u2 && dbProd.u2 && price2 > 0) ? price2 : price1;
+                    
+                    let pInput = row.querySelector(".f-price"); 
+                    pInput.value = activePrice.toLocaleString('vi-VN'); 
+                    pInput.setAttribute('data-val', activePrice); 
+                    
+                    calcRow(row.querySelector(".f-qty"), 'qty'); 
+                }
+            }
+        });
+        validateInvoiceProducts(); 
+    }
+
     function showCusSuggestions(inputEl) {
         if(!isAdmin) return; 
         let val = inputEl.value.toLowerCase().trim(); let dropdown = document.getElementById("cusDropdown"); 
@@ -1063,13 +1329,39 @@
         dropdown.innerHTML = ""; inputEl.closest('.autocomplete-container').style.zIndex = "9999";
         filtered.forEach(function(c) {
             let itemDiv = document.createElement("div"); itemDiv.className = "dropdown-item"; itemDiv.innerHTML = `<span class="dd-name">${c.name}</span>`;
-            itemDiv.onclick = function() { inputEl.value = c.name; document.getElementById("cusMST").value = c.mst; document.getElementById("cusAddr").value = c.address; document.getElementById("cusEmail").value = c.email || ""; dropdown.style.display = "none"; inputEl.closest('.autocomplete-container').style.zIndex = ""; saveLocalDraft(); };
+            itemDiv.onclick = function() { 
+                inputEl.value = c.name; 
+                document.getElementById("cusMST").value = c.mst; 
+                document.getElementById("cusAddr").value = c.address || ""; 
+                document.getElementById("cusEmail").value = c.email || ""; 
+                
+                let oldRegion = inputEl.dataset.region || 'tp';
+                let newRegion = c.region || 'tp';
+                inputEl.dataset.region = newRegion;
+                
+                dropdown.style.display = "none"; 
+                inputEl.closest('.autocomplete-container').style.zIndex = ""; 
+                
+                if(oldRegion !== newRegion) {
+                    updateAllPricesByRegion();
+                    showToast(`Đã tự động cập nhật lại bảng giá theo khu vực của Khách hàng mới!`, "info");
+                }
+                saveLocalDraft(); 
+            };
             dropdown.appendChild(itemDiv);
         }); 
         dropdown.style.display = "block";
     }
 
     function showSuggestions(inputEl) {
+        let cusName = document.getElementById("cusSearch").value.trim();
+        if(!cusName && isAdmin) {
+            document.getElementById("cusSearch").classList.add('input-error');
+            showToast("Hãy chọn Khách hàng trước để lấy bảng giá chính xác!", "warning");
+            return;
+        }
+        document.getElementById("cusSearch").classList.remove('input-error');
+
         let val = inputEl.value.toLowerCase().trim(); let dropdown = inputEl.nextElementSibling; 
         document.querySelectorAll('#unitsContainer .custom-dropdown').forEach(function(d) { if(d !== dropdown) d.style.display = "none"; });
         document.querySelectorAll('.autocomplete-container, tr, .table-responsive, .unit-box').forEach(function(el) { el.style.zIndex = "1"; });
@@ -1077,27 +1369,52 @@
         let tableResp = inputEl.closest('.table-responsive'); if (tableResp) { tableResp.style.overflow = "visible"; tableResp.style.position = "relative"; tableResp.style.zIndex = "9999"; }
         let unitBox = inputEl.closest('.unit-box'); if (unitBox) { unitBox.style.position = "relative"; unitBox.style.zIndex = "9999"; }
 
+        let currentRegion = document.getElementById("cusSearch").dataset.region || 'tp';
+
         dropdown.innerHTML = "";
-        let filtered = db.products;
-        if (val !== "") { filtered = db.products.filter(function(p) { return p.name.toLowerCase().includes(val); }); }
+        
+        let filtered = db.products.filter(function(p) {
+            if (!p.name.toLowerCase().includes(val)) return false;
+            let checkPrice = currentRegion === 'nt' ? (parseFloat(p.p1_nt) || 0) : (parseFloat(p.p1_tp) || 0);
+            return checkPrice > 0; 
+        });
+
         if (filtered.length === 0) { dropdown.style.display = "none"; return; }
         
         let displayCount = 0;
         filtered.forEach(function(p) {
             if (displayCount >= 30) return; displayCount++;
+            
+            let price1 = currentRegion === 'nt' ? (parseFloat(p.p1_nt) || 0) : (parseFloat(p.p1_tp) || 0);
+            let price2 = currentRegion === 'nt' ? (parseFloat(p.p2_nt) || 0) : (parseFloat(p.p2_tp) || 0);
+
             let itemDiv = document.createElement("div"); itemDiv.className = "dropdown-item";
-            let priceHtml = `<div class="dd-price-group"><span class="dd-price-item">${p.p1.toLocaleString()}đ / ${p.u1}</span>`; if (p.u2 && p.p2) { priceHtml += `<span class="dd-price-item">${p.p2.toLocaleString()}đ / ${p.u2}</span>`; } priceHtml += `</div>`;
+            let priceHtml = `<div class="dd-price-group"><span class="dd-price-item">${price1.toLocaleString()}đ / ${p.u1}</span>`; 
+            if (p.u2 && price2 > 0) { priceHtml += `<span class="dd-price-item">${price2.toLocaleString()}đ / ${p.u2}</span>`; } 
+            priceHtml += `</div>`;
+            
             itemDiv.innerHTML = `<span class="dd-name">${p.name}</span> ${priceHtml}`;
-            itemDiv.onclick = function() { inputEl.value = p.name; autoHeight(inputEl); dropdown.style.display = "none"; if(tableResp) { tableResp.style.overflow = ""; tableResp.style.zIndex = ""; tableResp.style.position = ""; } if(unitBox) { unitBox.style.zIndex = ""; unitBox.style.position = ""; } applyProductData(inputEl, p); }; 
+            itemDiv.onclick = function() { 
+                let dynamicP = { ...p, current_p1: price1, current_p2: price2 };
+                inputEl.value = p.name; autoHeight(inputEl); dropdown.style.display = "none"; 
+                if(tableResp) { tableResp.style.overflow = ""; tableResp.style.zIndex = ""; tableResp.style.position = ""; } 
+                if(unitBox) { unitBox.style.zIndex = ""; unitBox.style.position = ""; } 
+                applyProductData(inputEl, dynamicP); 
+            }; 
             dropdown.appendChild(itemDiv);
         }); 
         dropdown.style.display = "block";
     }
 
     function applyProductData(inputEl, p) { 
-        let row = inputEl.closest('tr'); let selectUnit = row.querySelector(".f-unit"); selectUnit.innerHTML = `<option value="${p.u1}" data-price="${p.p1}">${p.u1}</option>`; 
-        if (p.u2 && p.p2) { selectUnit.innerHTML += `<option value="${p.u2}" data-price="${p.p2}">${p.u2}</option>`; } 
-        let pInput = row.querySelector(".f-price"); pInput.value = p.p1.toLocaleString('vi-VN'); pInput.setAttribute('data-val', p.p1); row.querySelector(".f-qty").value = 1; calcRow(row.querySelector(".f-qty"), 'qty'); saveLocalDraft(); 
+        let row = inputEl.closest('tr'); let selectUnit = row.querySelector(".f-unit"); 
+        selectUnit.innerHTML = `<option value="${p.u1}" data-price="${p.current_p1}">${p.u1}</option>`; 
+        if (p.u2 && p.current_p2 > 0) { selectUnit.innerHTML += `<option value="${p.u2}" data-price="${p.current_p2}">${p.u2}</option>`; } 
+        let pInput = row.querySelector(".f-price"); 
+        pInput.value = p.current_p1.toLocaleString('vi-VN'); pInput.setAttribute('data-val', p.current_p1); 
+        row.querySelector(".f-qty").value = 1; calcRow(row.querySelector(".f-qty"), 'qty'); 
+        validateInvoiceProducts();
+        saveLocalDraft(); 
     }
 
     function changeUnit(selectEl) { 
@@ -1129,6 +1446,7 @@
         let tr = btn.closest('tr'); let tbody = btn.closest('tbody'); 
         if(tbody.querySelectorAll("tr").length > 1) { undoStack.push({ type: 'deleteRow', tbody: tbody, tr: tr, nextSibling: tr.nextElementSibling }); tr.remove(); updateAllTotals(); updateSTT(); showToast("Đã xóa dòng", "info"); } 
         else { tr.querySelector('.f-name').value = ''; tr.querySelector('.f-unit').innerHTML = ''; tr.querySelector('.f-qty').value = ''; tr.querySelector('.f-price').value = ''; tr.querySelector('.f-price').setAttribute('data-val', 0); tr.querySelector('.f-total').value = ''; updateAllTotals(); showToast("Đã làm mới dòng hiện tại", "info"); } 
+        validateInvoiceProducts(); 
         saveLocalDraft(); 
     }
 
@@ -1147,15 +1465,8 @@
 
     function deleteUnit(btn) { 
         let box = btn.closest('.unit-box'); let container = document.getElementById("unitsContainer"); 
-        if(document.querySelectorAll('.unit-box').length > 1) { showConfirm('<i class="fas fa-trash-alt" style="color:var(--danger)"></i> Xóa Phân Loại', 'Bạn có chắc chắn muốn xóa toàn bộ khối phân loại này không?', 'Xóa khối', 'btn-danger', function() { undoStack.push({ type: 'deleteUnit', container: container, box: box, nextSibling: box.nextElementSibling }); box.remove(); updateAllTotals(); updateSTT(); saveLocalDraft(); showToast("Đã xóa khối", "info"); }); } 
-        else { box.querySelector('.unit-name').value = ''; box.querySelector('tbody').innerHTML = `<tr><td class="stt-col">1</td><td class="autocomplete-container"><textarea class="form-control f-name" rows="1" oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)" autocomplete="off"></textarea><div class="custom-dropdown"></div></td><td><select class="form-control f-unit" onchange="changeUnit(this)"></select></td><td><input type="number" class="form-control f-qty" value="" placeholder="0" step="any" oninput="calcRow(this, 'qty')" autocomplete="off"></td><td><input type="text" class="form-control f-price" readonly data-val="0" placeholder="0" autocomplete="off"></td><td><input type="text" class="form-control f-total" value="" placeholder="0" oninput="calcRow(this, 'total')" onblur="formatTotal(this)" autocomplete="off"></td><td class="text-center"><button class="btn-trash" onclick="deleteRow(this)"><i class="fas fa-times"></i></button></td></tr>`; updateAllTotals(); updateSTT(); saveLocalDraft(); showToast("Đã làm mới khối phân loại", "info"); } 
-    }
-
-    function saveAsDraft(btnEl) { 
-        let dataObj = getFormData(); 
-        if(!dataObj) { showToast("Vui lòng chọn khách hàng và nhập hàng hóa!", "danger"); return; } 
-        if(!dataObj.invoiceDate) { showToast("Vui lòng chọn Ngày lập phiếu!", "warning"); return; }
-        dataObj.status = 'nhap'; doSaveCloudData(dataObj, false, btnEl); 
+        if(document.querySelectorAll('.unit-box').length > 1) { showConfirm('<i class="fas fa-trash-alt" style="color:var(--danger)"></i> Xóa Phân Loại', 'Bạn có chắc chắn muốn xóa toàn bộ khối phân loại này không?', 'Xóa khối', 'btn-danger', function() { undoStack.push({ type: 'deleteUnit', container: container, box: box, nextSibling: box.nextElementSibling }); box.remove(); updateAllTotals(); updateSTT(); validateInvoiceProducts(); saveLocalDraft(); showToast("Đã xóa khối", "info"); }); } 
+        else { box.querySelector('.unit-name').value = ''; box.querySelector('tbody').innerHTML = `<tr><td class="stt-col">1</td><td class="autocomplete-container"><textarea class="form-control f-name" rows="1" oninput="autoHeight(this); showSuggestions(this)" onfocus="showSuggestions(this)" autocomplete="off"></textarea><div class="custom-dropdown"></div></td><td><select class="form-control f-unit" onchange="changeUnit(this)"></select></td><td><input type="number" class="form-control f-qty" value="" placeholder="0" step="any" oninput="calcRow(this, 'qty')" autocomplete="off"></td><td><input type="text" class="form-control f-price" readonly data-val="0" placeholder="0" autocomplete="off"></td><td><input type="text" class="form-control f-total" value="" placeholder="0" oninput="calcRow(this, 'total')" onblur="formatTotal(this)" autocomplete="off"></td><td class="text-center"><button class="btn-trash" onclick="deleteRow(this)"><i class="fas fa-times"></i></button></td></tr>`; updateAllTotals(); updateSTT(); validateInvoiceProducts(); saveLocalDraft(); showToast("Đã làm mới khối phân loại", "info"); } 
     }
 
     function adminSaveFinal(btnEl) { 
@@ -1184,31 +1495,33 @@
         let parts = invDateStr.split('/'); let invDateObj = new Date(parts[2], parts[1] - 1, parts[0]); let todayMidnight = new Date(todayObj.getFullYear(), todayObj.getMonth(), todayObj.getDate());
         
         if (invDateObj > todayMidnight) { showToast("LỖI: Không thể lưu bảng kê cho ngày tương lai!", "danger"); return; }
-        if (!isAdmin && todayObj.getHours() >= CUTOFF_HOUR && invDateStr === todayStr) { showToast(`LỖI: Đã qua giờ chốt sổ (${CUTOFF_HOUR}h00). Không thể gửi chốt bảng kê cho ngày hôm nay!`, "danger"); return; }
+        let isPastCutoff = todayObj.getHours() > CUTOFF_HOUR || (todayObj.getHours() === CUTOFF_HOUR && todayObj.getMinutes() >= CUTOFF_MINUTE);
+        if (!isAdmin && isPastCutoff && invDateStr === todayStr) { 
+            let cutoffM = CUTOFF_MINUTE < 10 ? "0" + CUTOFF_MINUTE : CUTOFF_MINUTE;
+            showToast(`LỖI: Đã qua giờ chốt sổ (${CUTOFF_HOUR}h${cutoffM}). Không thể gửi chốt bảng kê cho ngày hôm nay!`, "danger"); return; 
+        }
         
         let isDiffDay = (invDateStr !== todayStr); let isMulti = (unitCount >= 2); pendingSubmitData = { dataObj: dataObj, btnEl: btnEl };
         
-        let redWarning = isAdmin
-            ? `<div style="color: var(--primary); font-size: 15px; font-weight: 800; margin-bottom: 12px; border: 1px dashed var(--primary); padding: 10px; background: #e7f1ff; border-radius: 6px;"><i class="fas fa-save"></i> BẠN ĐANG LƯU BẢNG KÊ BẰNG QUYỀN QUẢN TRỊ</div>`
-            : `<div style="color: var(--danger); font-size: 15px; font-weight: 800; margin-bottom: 12px; border: 1px dashed var(--danger); padding: 10px; background: #fff5f5; border-radius: 6px;"><i class="fas fa-exclamation-triangle"></i> KHI GỬI CHỐT BẢNG KÊ SẼ KHÔNG THỂ SỬA. BẠN CHẮC CHẮN GỬI CHỨ?</div>`;
-
-        let dayWarning = "";
-        if (isDiffDay && !isAdmin) {
-            dayWarning = `<div style="margin-bottom: 10px;">Bạn đang gửi dữ liệu ngày <b style="color:var(--danger); font-size:16px;">${invDateStr}</b>.<br>Khi gửi sẽ tự động trả về ngày hiện tại (<b style="color:var(--primary); font-size:16px;">${todayStr}</b>).<br>Bạn vẫn sẽ gửi bảng kê này chứ?</div>`;
-        } else if (isDiffDay && isAdmin) {
-            dayWarning = `<div style="margin-bottom: 10px;">Hệ thống sẽ cập nhật bảng kê vào đúng ngày cũ: <b style="color:var(--danger); font-size:16px;">${invDateStr}</b>.</div>`;
-        }
-
         if (!isMulti) {
+            let msg = `<div class="warning-box"><b>⚠️ QUAN TRỌNG:</b><br>• Bảng kê sẽ <b>KHÔNG THỂ SỬA</b> sau khi gửi.<br>`;
+            if (isDiffDay && !isAdmin) { msg += `• Hệ thống sẽ tự động cập nhật ngày phiếu thành hôm nay (<b>${todayStr}</b>).</div>`; } 
+            else if (isDiffDay && isAdmin) { msg += `• Hệ thống sẽ lưu lùi lại đúng ngày cũ (<b>${invDateStr}</b>).</div>`; }
+            else { msg += `</div>`; }
+
             showConfirm(
-                isAdmin ? '<i class="fas fa-save" style="color:var(--warning)"></i> Xác nhận lưu' : '<i class="fas fa-paper-plane" style="color:var(--primary)"></i> Xác nhận gửi chốt', 
-                redWarning + dayWarning, 
-                isAdmin ? '<i class="fas fa-save"></i> Lưu' : '<i class="fas fa-check"></i> Chắc chắn gửi', 
+                isAdmin ? '<i class="fas fa-save" style="color:var(--warning)"></i> Cảnh báo Lưu' : '<i class="fas fa-paper-plane" style="color:var(--primary)"></i> Cảnh báo Gửi', 
+                msg, 
+                isAdmin ? '<i class="fas fa-save"></i> Đã hiểu & Lưu' : '<i class="fas fa-check"></i> Đã hiểu & Gửi', 
                 isAdmin ? 'btn-warning' : 'btn-primary', 
                 function() { 
                     closeConfirm(); 
                     if (isDiffDay && !isAdmin) { 
-                        if (todayObj.getHours() >= CUTOFF_HOUR) { showToast(`LỖI: Đã qua giờ chốt sổ (${CUTOFF_HOUR}h00) của ngày hiện tại, không thể gửi!`, "danger"); pendingSubmitData = null; return; } 
+                        let checkPastCutoff = todayObj.getHours() > CUTOFF_HOUR || (todayObj.getHours() === CUTOFF_HOUR && todayObj.getMinutes() >= CUTOFF_MINUTE);
+                        if (checkPastCutoff) { 
+                            let cutoffM = CUTOFF_MINUTE < 10 ? "0" + CUTOFF_MINUTE : CUTOFF_MINUTE;
+                            showToast(`LỖI: Đã qua giờ chốt sổ (${CUTOFF_HOUR}h${cutoffM}) của ngày hiện tại, không thể gửi!`, "danger"); pendingSubmitData = null; return; 
+                        } 
                         pendingSubmitData.dataObj.invoiceDate = todayStr; document.getElementById("invoiceDate").value = todayStr; 
                     } 
                     doSaveCloudData(pendingSubmitData.dataObj, true, pendingSubmitData.btnEl); 
@@ -1216,8 +1529,15 @@
                 }
             );
         } else {
-            document.getElementById('mergeModalBodyText').innerHTML = redWarning + dayWarning + `Bảng kê có <b style="color: var(--danger)">${unitCount}</b> phân loại. Bạn muốn xuất hóa đơn kiểu gì?`;
-            document.getElementById('mergeModalActions').innerHTML = `<button class="btn btn-primary" style="flex: 1; padding: 12px; font-size: 14px;" onclick="submitWithMergeOption('gộp hóa đơn', ${isDiffDay}, '${todayStr}')"><i class="fas fa-object-group"></i> Hợp nhất</button><button class="btn btn-outline-orange" style="flex: 1; padding: 12px; font-size: 14px;" onclick="submitWithMergeOption('tách hóa đơn', ${isDiffDay}, '${todayStr}')"><i class="fas fa-object-ungroup"></i> Tách riêng</button>`; 
+            let noticeHtml = `<div class="warning-box"><b>⚠️ QUAN TRỌNG:</b><br>• Bảng kê sẽ <b>KHÔNG THỂ SỬA</b> sau khi gửi.<br>`;
+            if (isDiffDay && !isAdmin) { noticeHtml += `• Hệ thống sẽ tự động cập nhật ngày phiếu thành hôm nay (<b>${todayStr}</b>).</div>`; } 
+            else if (isDiffDay && isAdmin) { noticeHtml += `• Hệ thống sẽ lưu lùi lại đúng ngày cũ (<b>${invDateStr}</b>).</div>`; }
+            else { noticeHtml += `</div>`; }
+
+            noticeHtml += `<p style="font-weight:600; font-size:16px;">Bảng kê có <span style="color:red">${unitCount}</span> phân loại. Bạn muốn xuất hóa đơn kiểu gì?</p>`;
+            
+            document.getElementById('mergeModalBodyText').innerHTML = noticeHtml;
+            document.getElementById('mergeModalActions').innerHTML = `<button class="btn btn-primary" style="flex: 1; padding: 12px; font-size: 14px;" onclick="submitWithMergeOption('gộp hóa đơn', ${isDiffDay}, '${todayStr}')"><i class="fas fa-object-group"></i> HỢP NHẤT 1 TỜ</button><button class="btn btn-success" style="flex: 1; padding: 12px; font-size: 14px;" onclick="submitWithMergeOption('tách hóa đơn', ${isDiffDay}, '${todayStr}')"><i class="fas fa-object-ungroup"></i> TÁCH RIÊNG LOẠI</button>`; 
             document.getElementById('mergeOptionModal').style.display = 'flex';
         }
     }
@@ -1244,7 +1564,11 @@
             pendingSubmitData.dataObj.mergeOption = option; 
             if (isDiffDay && !isAdmin) { 
                 let todayObj = new Date(); 
-                if (todayObj.getHours() >= CUTOFF_HOUR) { showToast(`LỖI: Đã qua giờ chốt sổ (${CUTOFF_HOUR}h00) của ngày hiện tại, không thể gửi!`, "danger"); closeMergeModal(); return; } 
+                let checkPastCutoff = todayObj.getHours() > CUTOFF_HOUR || (todayObj.getHours() === CUTOFF_HOUR && todayObj.getMinutes() >= CUTOFF_MINUTE);
+                if (checkPastCutoff) { 
+                    let cutoffM = CUTOFF_MINUTE < 10 ? "0" + CUTOFF_MINUTE : CUTOFF_MINUTE;
+                    showToast(`LỖI: Đã qua giờ chốt sổ (${CUTOFF_HOUR}h${cutoffM}) của ngày hiện tại, không thể gửi!`, "danger"); closeMergeModal(); return; 
+                } 
                 pendingSubmitData.dataObj.invoiceDate = todayStr; document.getElementById("invoiceDate").value = todayStr; 
             } 
             doSaveCloudData(pendingSubmitData.dataObj, true, pendingSubmitData.btnEl); 
@@ -1353,10 +1677,20 @@
         const wb = new ExcelJS.Workbook(); let summaryData = {}; let grandTotalAll = 0; let cusName = data.customer.name || "Chua_Chon_Khach";
         let pastCutoff = isTimePastCutoff(data.invoiceDate);
         if (!pastCutoff) {
+            let currentRegion = 'tp';
+            let cDb = db.customers.find(x => x.mst === data.customer.mst);
+            if(cDb) currentRegion = cDb.region || 'tp';
+
             data.units.forEach(function(u) {
                 u.products.forEach(function(p) {
                     let dbProd = db.products.find(function(x) { return x.name === p.name; });
-                    if (dbProd) { if (p.unit === dbProd.u1) { p.priceRaw = dbProd.p1; } else if (dbProd.u2 && p.unit === dbProd.u2) { p.priceRaw = dbProd.p2; } p.totalRaw = (parseFloat(p.qty) || 0) * p.priceRaw; }
+                    if (dbProd) { 
+                        let p1 = currentRegion === 'nt' ? (parseFloat(dbProd.p1_nt) || 0) : (parseFloat(dbProd.p1_tp) || 0);
+                        let p2 = currentRegion === 'nt' ? (parseFloat(dbProd.p2_nt) || 0) : (parseFloat(dbProd.p2_tp) || 0);
+                        if (p.unit === dbProd.u1) { p.priceRaw = p1; } 
+                        else if (dbProd.u2 && p.unit === dbProd.u2) { p.priceRaw = p2; } 
+                        p.totalRaw = (parseFloat(p.qty) || 0) * p.priceRaw; 
+                    }
                 });
             });
         }
@@ -1832,7 +2166,7 @@
         if(q) list = db.products.filter(p => p.name.toLowerCase().includes(q));
 
         if(list.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="color:#6c757d; padding:20px;">Không tìm thấy sản phẩm.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="9" class="text-center" style="color:#6c757d; padding:20px;">Không tìm thấy sản phẩm.</td></tr>`;
             paginationContainer.style.display = "none";
             return;
         }
@@ -1849,13 +2183,26 @@
         paginatedList.forEach((p, idx) => {
             let actualIdx = startIndex + idx + 1;
             let tr = document.createElement('tr');
+            
+            let p1_tp = parseFloat(p.p1_tp) || 0;
+            let p1_nt = parseFloat(p.p1_nt) || 0;
+            let p2_tp = parseFloat(p.p2_tp) || 0;
+            let p2_nt = parseFloat(p.p2_nt) || 0;
+
+            let h_p1_tp = p1_tp > 0 ? p1_tp.toLocaleString('vi-VN') : '-';
+            let h_p1_nt = p1_nt > 0 ? p1_nt.toLocaleString('vi-VN') : '-';
+            let h_p2_tp = p.u2 && p2_tp > 0 ? p2_tp.toLocaleString('vi-VN') : '-';
+            let h_p2_nt = p.u2 && p2_nt > 0 ? p2_nt.toLocaleString('vi-VN') : '-';
+
             tr.innerHTML = `
                 <td class="text-center">${actualIdx}</td>
                 <td style="font-weight:600; color:var(--primary);">${p.name}</td>
                 <td class="text-center">${p.u1}</td>
-                <td class="text-right">${(p.p1||0).toLocaleString('vi-VN')}</td>
+                <td class="text-right" style="color:#004085; background:#e7f1ff;">${h_p1_tp}</td>
+                <td class="text-right" style="color:#383d41; background:#e2e3e5;">${h_p1_nt}</td>
                 <td class="text-center">${p.u2 || '-'}</td>
-                <td class="text-right">${(p.p2||0).toLocaleString('vi-VN')}</td>
+                <td class="text-right" style="color:#004085; background:#e7f1ff;">${h_p2_tp}</td>
+                <td class="text-right" style="color:#383d41; background:#e2e3e5;">${h_p2_nt}</td>
                 <td class="text-center" style="white-space:nowrap;">
                     <button class="btn btn-outline-primary btn-sm" onclick="openProductModal('${p.name.replace(/'/g, "\\'")}')"><i class="fas fa-edit"></i></button>
                     <button class="btn btn-outline-danger btn-sm" onclick="deleteProduct('${p.name.replace(/'/g, "\\'")}')"><i class="fas fa-trash-alt"></i></button>
@@ -1893,47 +2240,37 @@
         const ws = wb.addWorksheet("KHO_SAN_PHAM"); 
         ws.columns = [ 
             { header: 'STT', width: 8 }, 
-            { header: 'Tên Sản Phẩm', width: 45 }, 
-            { header: 'ĐVT 1', width: 15 }, 
-            { header: 'Đơn Giá 1', width: 20 },
+            { header: 'Tên Sản Phẩm (*)', width: 45 }, 
+            { header: 'ĐVT 1 (*)', width: 15 }, 
+            { header: 'Giá TP 1', width: 15 },
+            { header: 'Giá Huyện 1', width: 15 },
             { header: 'ĐVT 2', width: 15 },
-            { header: 'Đơn Giá 2', width: 20 }
+            { header: 'Giá TP 2', width: 15 },
+            { header: 'Giá Huyện 2', width: 15 }
         ];
         
         ws.getRow(1).font = { bold: true, name: 'Times New Roman', size: 12 };
         ws.getRow(1).alignment = { horizontal: 'center', vertical: 'middle' };
+        ws.getRow(1).fill = {type: 'pattern', pattern:'solid', fgColor:{argb:'F2F2F2'}};
         
         db.products.forEach((p, idx) => {
             let r = ws.addRow([
-                idx + 1,
-                p.name,
-                p.u1,
-                p.p1 || 0,
+                idx + 1, p.name, p.u1,
+                p.p1_tp || 0,
+                p.p1_nt || 0,
                 p.u2 || '',
-                p.p2 || 0
+                p.p2_tp || 0,
+                p.p2_nt || 0
             ]);
-            r.getCell(4).numFmt = '#,##0';
-            if(p.p2) r.getCell(6).numFmt = '#,##0';
+            r.getCell(4).numFmt = '#,##0'; r.getCell(5).numFmt = '#,##0';
+            if(p.u2) { r.getCell(7).numFmt = '#,##0'; r.getCell(8).numFmt = '#,##0'; }
             
-            r.eachCell(function(c) { 
-                c.font = {name:'Times New Roman', size: 12}; 
-                c.border = {top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}}; 
-            });
-        });
-
-        ws.eachRow(function(row, rowNumber) { 
-            if(rowNumber === 1) {
-                row.eachCell(function(c) { 
-                    c.fill = {type:'pattern',pattern:'solid',fgColor:{argb:'F2F2F2'}};
-                    c.border = {top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}};
-                });
-            }
+            r.eachCell(function(c) { c.font = {name:'Times New Roman', size: 12}; c.border = {top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}}; });
         });
 
         const buf = await wb.xlsx.writeBuffer(); 
         let timestamp = new Date().getTime();
-        saveAs(new Blob([buf]), `Kho_San_Pham_${timestamp}.xlsx`); 
-        showToast("Đã tải File Kho Sản Phẩm thành công", "success");
+        saveAs(new Blob([buf]), `Kho_San_Pham_${timestamp}.xlsx`); showToast("Đã tải File Kho Sản Phẩm thành công", "success");
     }
 
     function openProductModal(prodName = null) {
@@ -1943,12 +2280,18 @@
         if (prodName) {
             let p = db.products.find(x => x.name === prodName);
             document.getElementById('pmName').value = p.name;
-            document.getElementById('pmU1').value = p.u1; document.getElementById('pmP1').value = p.p1;
-            document.getElementById('pmU2').value = p.u2 || ''; document.getElementById('pmP2').value = p.p2 || '';
+            document.getElementById('pmU1').value = p.u1; 
+            document.getElementById('pmP1_TP').value = p.p1_tp || '';
+            document.getElementById('pmP1_NT').value = p.p1_nt || '';
+            document.getElementById('pmU2').value = p.u2 || ''; 
+            document.getElementById('pmP2_TP').value = p.p2_tp || '';
+            document.getElementById('pmP2_NT').value = p.p2_nt || '';
         } else {
             document.getElementById('pmName').value = '';
-            document.getElementById('pmU1').value = ''; document.getElementById('pmP1').value = '';
-            document.getElementById('pmU2').value = ''; document.getElementById('pmP2').value = '';
+            document.getElementById('pmU1').value = ''; 
+            document.getElementById('pmP1_TP').value = ''; document.getElementById('pmP1_NT').value = '';
+            document.getElementById('pmU2').value = ''; 
+            document.getElementById('pmP2_TP').value = ''; document.getElementById('pmP2_NT').value = '';
         }
         document.getElementById('productModal').style.display = 'flex';
     }
@@ -1960,12 +2303,14 @@
         let p = {
             name: document.getElementById('pmName').value.trim(),
             u1: document.getElementById('pmU1').value.trim(),
-            p1: parseFloat(document.getElementById('pmP1').value) || 0,
+            p1_tp: parseFloat(document.getElementById('pmP1_TP').value) || null,
+            p1_nt: parseFloat(document.getElementById('pmP1_NT').value) || null,
             u2: document.getElementById('pmU2').value.trim() || null,
-            p2: parseFloat(document.getElementById('pmP2').value) || null
+            p2_tp: parseFloat(document.getElementById('pmP2_TP').value) || null,
+            p2_nt: parseFloat(document.getElementById('pmP2_NT').value) || null
         };
 
-        if(!p.name || !p.u1 || p.p1 <= 0) { showToast("Vui lòng điền đủ Tên, ĐVT 1 và Giá 1 lớn hơn 0!", "warning"); return; }
+        if(!p.name || !p.u1) { showToast("Vui lòng điền đủ Tên và ĐVT 1!", "warning"); return; }
         
         let btn = document.getElementById('btnSaveProduct'); toggleBtnLoading(btn, true);
 
@@ -1994,6 +2339,349 @@
             showToast("Đã xóa sản phẩm!", "success"); filterProducts();
         });
     }
+
+    function changeCusPage(page) { cusCurrentPage = page; renderCustomerList(); }
+    function changeCusItemsPerPage(selectEl) { cusItemsPerPage = parseInt(selectEl.value); cusCurrentPage = 1; renderCustomerList(); }
+
+    function renderCustomerList() {
+        let q = document.getElementById('searchCustomer').value.toLowerCase().trim();
+        let tbody = document.getElementById('customerListContainer');
+        let paginationContainer = document.getElementById('customerPaginationContainer');
+        tbody.innerHTML = '';
+        
+        let list = db.customers;
+        if(q) list = db.customers.filter(c => c.name.toLowerCase().includes(q) || String(c.mst).toLowerCase().includes(q));
+
+        if(list.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="color:#6c757d; padding:20px;">Không tìm thấy khách hàng.</td></tr>`;
+            paginationContainer.style.display = "none";
+            return;
+        }
+
+        let totalItems = list.length; 
+        let totalPages = Math.ceil(totalItems / cusItemsPerPage);
+        if (cusCurrentPage > totalPages) cusCurrentPage = totalPages; 
+        if (cusCurrentPage < 1) cusCurrentPage = 1;
+        
+        let startIndex = (cusCurrentPage - 1) * cusItemsPerPage; 
+        let endIndex = startIndex + cusItemsPerPage;
+        let paginatedList = list.slice(startIndex, endIndex);
+
+        paginatedList.forEach((c, idx) => {
+            let actualIdx = startIndex + idx + 1;
+            let tr = document.createElement('tr');
+            let regionBadge = c.region === 'nt' ? '<span class="badge-nhap" style="background:#e2e3e5; color:#383d41; border-color:#d6d8db;">Huyện</span>' : '<span class="badge-chot" style="background:#cce5ff; color:#004085; border-color:#b8daff;">Thành phố</span>';
+            tr.innerHTML = `
+                <td class="text-center">${actualIdx}</td>
+                <td style="font-weight:600; color:var(--primary);">${c.name}</td>
+                <td class="text-center">${c.mst}</td>
+                <td class="text-center">${c.password || 'Mặc định'}</td>
+                <td>${c.address || ''}</td>
+                <td class="text-center">${regionBadge}</td>
+                <td class="text-center" style="white-space:nowrap;">
+                    <button class="btn btn-outline-primary btn-sm" onclick="openCustomerModal('${c.mst}')"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="deleteCustomer('${c.mst}')"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+        renderCustomerPaginationUI(totalPages);
+    }
+
+    function renderCustomerPaginationUI(totalPages) {
+        let container = document.getElementById("customerPaginationContainer"); container.style.display = "flex";
+        let html = `
+            <div class="page-size-selector">
+                Hiển thị: 
+                <select onchange="changeCusItemsPerPage(this)">
+                    <option value="10" ${cusItemsPerPage === 10 ? 'selected' : ''}>10</option>
+                    <option value="50" ${cusItemsPerPage === 50 ? 'selected' : ''}>50</option>
+                    <option value="100" ${cusItemsPerPage === 100 ? 'selected' : ''}>100</option>
+                </select> dòng
+            </div>
+            <div class="pagination-controls">
+                <button class="page-btn" onclick="changeCusPage(${cusCurrentPage - 1})" ${cusCurrentPage === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i></button>
+        `;
+        let startP = Math.max(1, cusCurrentPage - 2); let endP = Math.min(totalPages, startP + 4); if (endP - startP < 4) { startP = Math.max(1, endP - 4); }
+        for (let i = startP; i <= endP; i++) { html += `<button class="page-btn ${i === cusCurrentPage ? 'active' : ''}" onclick="changeCusPage(${i})">${i}</button>`; }
+        html += `<button class="page-btn" onclick="changeCusPage(${cusCurrentPage + 1})" ${cusCurrentPage === totalPages ? 'disabled' : ''}><i class="fas fa-chevron-right"></i></button></div>`; 
+        container.innerHTML = html;
+    }
+
+    function openCustomerModal(mst = null) {
+        document.getElementById('cmOldMST').value = mst || '';
+        document.getElementById('cusModalTitle').innerHTML = mst ? '<i class="fas fa-edit"></i> Sửa Khách Hàng' : '<i class="fas fa-user-plus"></i> Thêm Khách Hàng';
+        
+        if (mst) {
+            let c = db.customers.find(x => x.mst === mst);
+            document.getElementById('cmName').value = c.name;
+            document.getElementById('cmMST').value = c.mst;
+            document.getElementById('cmPass').value = c.password || '';
+            document.getElementById('cmAddr').value = c.address || '';
+            document.getElementById('cmEmail').value = c.email || '';
+            document.getElementById('cmRegion').value = c.region || 'tp';
+        } else {
+            document.getElementById('cmName').value = '';
+            document.getElementById('cmMST').value = '';
+            document.getElementById('cmPass').value = '';
+            document.getElementById('cmAddr').value = '';
+            document.getElementById('cmEmail').value = '';
+            document.getElementById('cmRegion').value = 'tp';
+        }
+        document.getElementById('customerModal').style.display = 'flex';
+    }
+
+    function closeCustomerModal() { document.getElementById('customerModal').style.display = 'none'; }
+
+    async function saveCustomer() {
+        let oldMST = document.getElementById('cmOldMST').value;
+        let c = {
+            name: document.getElementById('cmName').value.trim(),
+            mst: document.getElementById('cmMST').value.trim(),
+            password: document.getElementById('cmPass').value.trim() || null,
+            address: document.getElementById('cmAddr').value.trim() || null,
+            email: document.getElementById('cmEmail').value.trim() || null,
+            region: document.getElementById('cmRegion').value
+        };
+
+        if(!c.name || !c.mst) { showToast("Vui lòng điền đủ Tên và MST!", "warning"); return; }
+        
+        let btn = document.getElementById('btnSaveCustomer'); toggleBtnLoading(btn, true);
+
+        if (oldMST && oldMST !== c.mst) {
+            await supaClient.from('customers').delete().eq('mst', oldMST);
+            db.customers = db.customers.filter(x => x.mst !== oldMST);
+        }
+
+        const { error } = await supaClient.from('customers').upsert([c]);
+        toggleBtnLoading(btn, false);
+
+        if (error) { showToast("Lỗi Database: " + error.message, "danger"); return; }
+
+        let existIdx = db.customers.findIndex(x => x.mst === c.mst);
+        if (existIdx > -1) db.customers[existIdx] = c; else db.customers.push(c);
+
+        closeCustomerModal(); showToast("Lưu khách hàng thành công!", "success"); renderCustomerList();
+    }
+
+    function deleteCustomer(mst) {
+        showConfirm('<i class="fas fa-trash-alt" style="color:var(--danger)"></i> Xóa Khách Hàng', `Bạn có chắc chắn muốn xóa khách hàng MST <b>${mst}</b>?`, 'Xóa', 'btn-danger', async function() {
+            const { error } = await supaClient.from('customers').delete().eq('mst', mst);
+            if(error) { showToast("Lỗi DB: " + error.message, "danger"); return; }
+            
+            db.customers = db.customers.filter(x => x.mst !== mst);
+            showToast("Đã xóa khách hàng!", "success"); renderCustomerList();
+        });
+    }
+
+    function openImportModal(type) {
+        currentImportType = type;
+        parsedImportData = [];
+        document.getElementById('importFile').value = '';
+        document.getElementById('previewTableContainer').style.display = 'none';
+        document.getElementById('importStatus').innerHTML = '';
+        document.getElementById('btnConfirmImport').disabled = true;
+        
+        document.getElementById('importModalTitle').innerHTML = type === 'product' 
+            ? '<i class="fas fa-box"></i> Nhập Sản Phẩm Hàng Loạt' 
+            : '<i class="fas fa-users"></i> Nhập Khách Hàng Hàng Loạt';
+            
+        document.getElementById('importModal').style.display = 'flex';
+    }
+
+    function closeImportModal() { document.getElementById('importModal').style.display = 'none'; }
+
+    async function downloadImportTemplate() {
+        const wb = new ExcelJS.Workbook();
+        const ws = wb.addWorksheet("Template");
+        
+        if (currentImportType === 'product') {
+            ws.columns = [
+                { header: 'Tên Sản Phẩm (*)', key: 'name', width: 35 },
+                { header: 'ĐVT 1 (*)', key: 'u1', width: 10 },
+                { header: 'Giá TP 1', key: 'p1_tp', width: 15 },
+                { header: 'Giá Huyện 1', key: 'p1_nt', width: 15 },
+                { header: 'ĐVT 2', key: 'u2', width: 10 },
+                { header: 'Giá TP 2', key: 'p2_tp', width: 15 },
+                { header: 'Giá Huyện 2', key: 'p2_nt', width: 15 }
+            ];
+            ws.addRow(['Sản phẩm mẫu A', 'Cái', 50000, 48000, 'Thùng', 500000, 480000]);
+        } else {
+            ws.columns = [
+                { header: 'Tên Khách Hàng (*)', key: 'name', width: 35 },
+                { header: 'MST / Tài khoản (*)', key: 'mst', width: 20 },
+                { header: 'Mật khẩu', key: 'password', width: 15 },
+                { header: 'Địa chỉ', key: 'address', width: 40 },
+                { header: 'Email', key: 'email', width: 25 },
+                { header: 'Khu vực (tp/nt)', key: 'region', width: 15 }
+            ];
+            ws.addRow(['Công ty TNHH Mẫu', '0123456789', '1234', 'Hà Nội', 'email@congty.com', 'tp']);
+        }
+        
+        ws.getRow(1).font = { bold: true };
+        ws.getRow(1).fill = {type: 'pattern', pattern:'solid', fgColor:{argb:'F2F2F2'}};
+        
+        const buf = await wb.xlsx.writeBuffer();
+        saveAs(new Blob([buf]), `Mau_Import_${currentImportType}.xlsx`);
+    }
+
+    async function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        document.getElementById('importStatus').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang đọc dữ liệu...';
+        document.getElementById('btnConfirmImport').disabled = true;
+        
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const wb = new ExcelJS.Workbook();
+                await wb.xlsx.load(data);
+                const ws = wb.worksheets[0];
+                
+                parsedImportData = [];
+                
+                ws.eachRow(function(row, rowNumber) {
+                    if (rowNumber > 1) {
+                        if (currentImportType === 'product') {
+                            let name = row.getCell(1).value ? String(row.getCell(1).value).trim() : '';
+                            let u1 = row.getCell(2).value ? String(row.getCell(2).value).trim() : '';
+                            if (name && u1) {
+                                parsedImportData.push({
+                                    name: name,
+                                    u1: u1,
+                                    p1_tp: parseFloat(row.getCell(3).value) || null,
+                                    p1_nt: parseFloat(row.getCell(4).value) || null,
+                                    u2: row.getCell(5).value ? String(row.getCell(5).value).trim() : null,
+                                    p2_tp: parseFloat(row.getCell(6).value) || null,
+                                    p2_nt: parseFloat(row.getCell(7).value) || null
+                                });
+                            }
+                        } else {
+                            let name = row.getCell(1).value ? String(row.getCell(1).value).trim() : '';
+                            let mst = row.getCell(2).value ? String(row.getCell(2).value).trim() : '';
+                            if (name && mst) {
+                                parsedImportData.push({
+                                    name: name,
+                                    mst: mst,
+                                    password: row.getCell(3).value ? String(row.getCell(3).value).trim() : null,
+                                    address: row.getCell(4).value ? String(row.getCell(4).value).trim() : null,
+                                    email: row.getCell(5).value ? String(row.getCell(5).value).trim() : null,
+                                    region: row.getCell(6).value ? String(row.getCell(6).value).trim().toLowerCase() : 'tp'
+                                });
+                            }
+                        }
+                    }
+                });
+                
+                renderPreviewImport();
+            } catch (err) {
+                document.getElementById('importStatus').innerHTML = `<span style="color:var(--danger)">Lỗi đọc file: ${err.message}</span>`;
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    }
+    
+    function renderPreviewImport() {
+        let thead = document.getElementById('previewThead');
+        let tbody = document.getElementById('previewTbody');
+        thead.innerHTML = ''; tbody.innerHTML = '';
+        
+        if (parsedImportData.length === 0) {
+            document.getElementById('importStatus').innerHTML = '<span style="color:var(--danger)">⚠️ File rỗng hoặc không đúng chuẩn Bảng Mẫu!</span>';
+            document.getElementById('previewTableContainer').style.display = 'none';
+            document.getElementById('btnConfirmImport').disabled = true;
+            return;
+        }
+        
+        document.getElementById('importStatus').innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> Đã tìm thấy <b>${parsedImportData.length}</b> dòng hợp lệ. Vui lòng xem lướt qua trước khi Xác nhận.`;
+        document.getElementById('previewTableContainer').style.display = 'block';
+        document.getElementById('btnConfirmImport').disabled = false;
+        
+        if (currentImportType === 'product') {
+            thead.innerHTML = '<tr><th>Tên SP</th><th>ĐVT 1</th><th>Giá TP1</th><th>Giá Huyện1</th><th>ĐVT 2</th><th>Giá TP2</th><th>Giá Huyện2</th></tr>';
+            parsedImportData.slice(0, 50).forEach(p => {
+                let h_tp1 = p.p1_tp ? p.p1_tp.toLocaleString() : '-';
+                let h_nt1 = p.p1_nt ? p.p1_nt.toLocaleString() : '-';
+                let h_tp2 = p.p2_tp ? p.p2_tp.toLocaleString() : '-';
+                let h_nt2 = p.p2_nt ? p.p2_nt.toLocaleString() : '-';
+                tbody.innerHTML += `<tr><td>${p.name}</td><td class="text-center">${p.u1}</td><td class="text-right">${h_tp1}</td><td class="text-right">${h_nt1}</td><td class="text-center">${p.u2 || '-'}</td><td class="text-right">${h_tp2}</td><td class="text-right">${h_nt2}</td></tr>`;
+            });
+        } else {
+            thead.innerHTML = '<tr><th>Tên Khách Hàng</th><th>MST</th><th>Mật khẩu</th><th>Khu vực</th></tr>';
+            parsedImportData.slice(0, 50).forEach(c => {
+                tbody.innerHTML += `<tr><td>${c.name}</td><td class="text-center">${c.mst}</td><td class="text-center">${c.password || '-'}</td><td class="text-center">${c.region}</td></tr>`;
+            });
+        }
+        if(parsedImportData.length > 50) {
+            tbody.innerHTML += `<tr><td colspan="7" class="text-center" style="color:#6c757d; font-style:italic;">... và ${parsedImportData.length - 50} dòng khác (Đã ẩn bớt để Preview)</td></tr>`;
+        }
+    }
+
+    async function executeImport() {
+        if (parsedImportData.length === 0) return;
+        
+        let btn = document.getElementById('btnConfirmImport');
+        toggleBtnLoading(btn, true);
+        
+        let tableName = currentImportType === 'product' ? 'products' : 'customers';
+        let conflictColumn = currentImportType === 'product' ? 'name' : 'mst';
+        
+        let chunkSize = 500;
+        let successCount = 0;
+        let errorCount = 0;
+        
+        for (let i = 0; i < parsedImportData.length; i += chunkSize) {
+            const chunk = parsedImportData.slice(i, i + chunkSize);
+            const { error } = await supaClient.from(tableName).upsert(chunk, { onConflict: conflictColumn });
+            if (error) {
+                console.error("Import Error:", error);
+                errorCount += chunk.length;
+            } else {
+                successCount += chunk.length;
+            }
+        }
+        
+        toggleBtnLoading(btn, false);
+        
+        if (errorCount === 0) {
+            showToast(`Đã Import thành công ${successCount} dòng! Các dữ liệu trùng lặp đã được ghi đè.`, "success");
+        } else {
+            showToast(`Import xong ${successCount} dòng. Có lỗi ở ${errorCount} dòng!`, "warning");
+        }
+        
+        closeImportModal();
+        
+        let activeSession = sessionStorage.getItem("activeSessionMST");
+        if(activeSession) {
+            document.getElementById("sessionLoader").style.display = "flex";
+            document.getElementById("sessionLoader").style.background = "rgba(255,255,255,0.9)";
+            await loadSupabaseData(activeSession);
+            if (currentImportType === 'product') { filterProducts(); } 
+            else { renderCustomerList(); }
+        }
+    }
+
+    setInterval(function() {
+        if (document.getElementById("loginApp").style.display !== "none") return;
+        if (isAdmin) return;
+        
+        let currentHour = new Date().getHours();
+        
+        if (currentHour < WORK_START_HOUR || currentHour >= WORK_END_HOUR) {
+            showConfirm(
+                '<i class="fas fa-tools" style="color:var(--danger)"></i> HỆ THỐNG BẢO TRÌ',
+                'Đã đến giờ hệ thống bảo trì và dọn dẹp dữ liệu.<br><br>Phiên làm việc của bạn sẽ tự động đóng lại để đảm bảo an toàn!',
+                '<i class="fas fa-sign-out-alt"></i> Đăng xuất ngay',
+                'btn-danger',
+                function() { logout(); },
+                true
+            );
+            
+            setTimeout(function() { logout(); }, 8000);
+        }
+    }, 60000);
 </script>
 </body>
 </html>
